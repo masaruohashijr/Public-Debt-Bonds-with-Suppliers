@@ -24,10 +24,52 @@
             background-color: var(--background-color);
             color: var(--text-dark);
             margin: 0;
-            padding: 1.5rem;
+            padding: 0; /* Removido padding para o menu ocupar a largura toda */
+        }
+        
+        /* Barra de Menu Horizontal */
+        .top-nav {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .top-nav .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .top-nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .top-nav ul li a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        
+        .top-nav ul li a:hover,
+        .top-nav ul li a.active {
+            color: var(--primary-color);
         }
 
         /* Estrutura das Views */
+        .content-wrapper {
+            padding: 1.5rem; /* Adicionado padding ao redor do conteúdo principal */
+        }
+        
         .view {
             display: none; /* Esconde todas as views por padrão */
         }
@@ -249,116 +291,159 @@
 </head>
 <body>
 
-    <div id="grid-view" class="view active">
-        <main class="main-container">
-            <div class="header-controls">
-                <h1>Títulos Financeiros</h1>
-                <div class="controls">
-                    <div class="filter-container">
-                        <input type="text" id="filterInput" placeholder="Filtrar por qualquer campo...">
-                    </div>
-                    <div class="actions-container">
-                        <button id="btnAdd" class="btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            Incluir
-                        </button>
-                        <button id="btnView" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-                            Visualizar
-                        </button>
-                        <button id="btnEdit" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
-                            Alterar
-                        </button>
-                        <button id="btnPrint" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25" /></svg>
-                            Imprimir
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="grid-container">
-                <table class="data-grid">
-                    <thead>
-                        <tr>
-                            <th>Chave</th>
-                            <th>Titular</th>
-                            <th>Órgão DI</th>
-                            <th>Fonte</th>
-                            <th>Categoria</th>
-                            <th>Grupo</th>
-                            <th class="valor">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gridBody">
-                        <!-- Dados populados via JS -->
-                    </tbody>
-                </table>
-                 <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
-            </div>
-        </main>
-    </div>
+    <header class="top-nav">
+        <div class="logo">Dívida Pública</div>
+        <nav>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#" class="active">Títulos</a></li>
+                <li><a href="#">Parcelas</a></li>
+                <li><a href="#">Regras</a></li>
+                <li><a href="#">Suspensões</a></li>
+                <li><a href="#">Fornecedores</a></li>
+                <li><a href="#">Relatórios</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <div id="form-view" class="view">
-        <main class="main-container">
-            <h1>Detalhes do Título</h1>
-            <form action="#" method="post" onsubmit="event.preventDefault();">
-                <div class="form-grid">
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label for="form-chave">Chave</label>
-                        <div id="form-chave" class="form-field"></div>
-                    </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label for="form-titular">Titular</label>
-                        <div id="form-titular" class="form-field"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-orgao">Órgão DI</label>
-                        <div id="form-orgao" class="form-field"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-fonte">Fonte</label>
-                        <div id="form-fonte" class="form-field"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-categoria">Categoria</label>
-                        <div id="form-categoria" class="form-field"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-grupo">Grupo</label>
-                        <div id="form-grupo" class="form-field"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-valor">Valor do Título</label>
-                        <div id="form-valor" class="form-field currency"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-retencao">Valor da Retenção</label>
-                        <div id="form-retencao" class="form-field currency"></div>
+    <div class="content-wrapper">
+        <div id="grid-view" class="view active">
+            <main class="main-container">
+                <div class="header-controls">
+                    <h1>Títulos Financeiros</h1>
+                    <div class="controls">
+                        <div class="filter-container">
+                            <input type="text" id="filterInput" placeholder="Filtrar por qualquer campo...">
+                        </div>
+                        <div class="actions-container">
+                            <button id="btnAdd" class="btn btn-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                Incluir
+                            </button>
+                            <button id="btnView" class="btn btn-secondary" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                                Visualizar
+                            </button>
+                            <button id="btnEdit" class="btn btn-secondary" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+                                Alterar
+                            </button>
+                            <button id="btnPrint" class="btn btn-secondary" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25" /></svg>
+                                Imprimir
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="form-actions">
-                    <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar para o Grid</button>
-                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                <div class="grid-container">
+                    <table class="data-grid">
+                        <thead>
+                            <tr>
+                                <th>Chave</th>
+                                <th>Titular</th>
+                                <th>Sigla Órgão</th>
+                                <th>Grupo</th>
+                                <th class="valor">Valor Nominal</th>
+                                <th class="valor">Valor Pago</th>
+                                <th>Último Pagamento</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gridBody">
+                            <!-- Dados populados via JS -->
+                        </tbody>
+                    </table>
+                     <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
                 </div>
-            </form>
-        </main>
+            </main>
+        </div>
+
+        <div id="form-view" class="view">
+            <main class="main-container">
+                <h1>Detalhes do Título</h1>
+                <form action="#" method="post" onsubmit="event.preventDefault();">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="form-chave">Chave</label>
+                            <div id="form-chave" class="form-field"></div>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="form-titular">Titular</label>
+                            <div id="form-titular" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-sigla-orgao">Sigla do Órgão</label>
+                            <div id="form-sigla-orgao" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-codigo-orgao">Código do Órgão</label>
+                            <div id="form-codigo-orgao" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-fonte">Fonte</label>
+                            <div id="form-fonte" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-categoria">Categoria</label>
+                            <div id="form-categoria" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-grupo">Grupo</label>
+                            <div id="form-grupo" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-valor-nominal">Valor Nominal do Título</label>
+                            <div id="form-valor-nominal" class="form-field currency"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-valor-pago">Valor Pago</label>
+                            <div id="form-valor-pago" class="form-field currency"></div>
+                        </div>
+                         <div class="form-group">
+                            <label for="form-ultimo-pagamento">Último Pagamento</label>
+                            <div id="form-ultimo-pagamento" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-retencao">Valor da Retenção</label>
+                            <div id="form-retencao" class="form-field currency"></div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar para o Grid</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </main>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- DADOS ---
+            // --- DADOS E MAPEAMENTOS ---
+            const orgaoCodeMap = {
+                'SME': '1600',
+                'SMAS': '1700',
+                'SMS': '1800',
+                'RIOSAUDE': '1851',
+                'F-RIO': '3051',
+                'IPLANRIO': '1451',
+                'GM-RIO': '3931',
+                'SMFP': '0000', 
+                'COMLURB': '2200',
+                'PGM': '1552',
+                'CVL': '1101',
+                'MULTIRIO': '1651'
+            };
+
             const initialData = [
-                { cnpj: '20476731000115', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', orgao: 'RIOSAUDE', fonte: '208', categoria: '3-Corrente', valor: 489861.16 },
-                { cnpj: '33892738000160', titular: 'ABRIGO TERESA DE JESUS', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valor: 195000.00 },
-                { cnpj: '10189253000109', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', orgao: 'F-RIO', fonte: '100', categoria: '3-Corrente', valor: 185685.99 },
-                { cnpj: '04447582000100', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valor: 130000.00 },
-                { cnpj: '14883212000179', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', orgao: 'SMS', fonte: '181', categoria: '3-Corrente', valor: 61710.00 },
-                { cnpj: '00462017000160', titular: 'ABRIGO DOCE MORADA', orgao: 'SMAS', fonte: '100', categoria: '3-Corrente', valor: 57903.68 },
-                { cnpj: '26592256000129', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', orgao: 'SMFP', fonte: '100', categoria: '4-Capital', valor: 14999.60 }
+                { cnpj: '20476731000115', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', orgao: 'RIOSAUDE', fonte: '208', categoria: '3-Corrente', valorNominal: 489861.16, valorPago: 450000.00, ultimoPagamento: '2025-08-14' },
+                { cnpj: '33892738000160', titular: 'ABRIGO TERESA DE JESUS', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valorNominal: 195000.00, valorPago: 195000.00, ultimoPagamento: '2025-09-05' },
+                { cnpj: '10189253000109', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', orgao: 'F-RIO', fonte: '100', categoria: '3-Corrente', valorNominal: 185685.99, valorPago: 150000.00, ultimoPagamento: '2025-11-21' },
+                { cnpj: '04447582000100', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valorNominal: 130000.00, valorPago: 100000.00, ultimoPagamento: '2025-10-10' },
+                { cnpj: '14883212000179', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', orgao: 'SMS', fonte: '181', categoria: '3-Corrente', valorNominal: 61710.00, valorPago: 61710.00, ultimoPagamento: '2025-12-01' },
+                { cnpj: '00462017000160', titular: 'ABRIGO DOCE MORADA', orgao: 'SMAS', fonte: '100', categoria: '3-Corrente', valorNominal: 57903.68, valorPago: 50000.00, ultimoPagamento: '2025-07-30' },
+                { cnpj: '26592256000129', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', orgao: 'SMFP', fonte: '100', categoria: '4-Capital', valorNominal: 14999.60, valorPago: 14999.60, ultimoPagamento: '2025-10-28' }
             ];
 
-            // --- LÓGICA DE GRUPO ---
             function getGrupo(orgao) {
                 switch (orgao) {
                     case 'SMS': return '2 - SMS';
@@ -372,7 +457,7 @@
                     case 'MULTIRIO':
                         return '6 - INDIRETAS';
                     default:
-                        return '1 - Diretas'; // GM-RIO, SMFP, etc.
+                        return '1 - Diretas';
                 }
             }
 
@@ -392,8 +477,11 @@
             let selectedRow = null;
 
             // --- FUNÇÕES ---
-            const formatCurrency = (value) => {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const formatDate = (dateString) => {
+                if (!dateString) return '';
+                const [year, month, day] = dateString.split('-');
+                return `${day}/${month}/${year}`;
             };
 
             const populateGrid = () => {
@@ -402,21 +490,22 @@
                     const grupoString = getGrupo(item.orgao);
                     const grupoId = grupoString.split(' ')[0];
                     const categoriaId = item.categoria.split('-')[0];
-                    
-                    // Cria a nova chave composta
-                    const compositeKey = `${item.cnpj}_${item.fonte}_${categoriaId}_${grupoId}`;
+                    const orgaoCode = orgaoCodeMap[item.orgao] || 'N/A';
+                    const compositeKey = `${item.cnpj}_${orgaoCode}_${item.fonte}_${categoriaId}_${grupoId}`;
 
                     const row = document.createElement('tr');
-                    // Armazena os dados originais na linha para fácil acesso
-                    row.dataset.cnpj = item.cnpj; 
+                    Object.keys(item).forEach(key => {
+                        row.dataset[key] = item[key];
+                    });
+
                     row.innerHTML = `
                         <td>${compositeKey}</td>
                         <td>${item.titular}</td>
                         <td>${item.orgao}</td>
-                        <td>${item.fonte}</td>
-                        <td>${item.categoria}</td>
                         <td>${grupoString}</td>
-                        <td class="valor">${formatCurrency(item.valor)}</td>
+                        <td class="valor">${formatCurrency(item.valorNominal)}</td>
+                        <td class="valor">${formatCurrency(item.valorPago)}</td>
+                        <td>${formatDate(item.ultimoPagamento)}</td>
                     `;
                     gridBody.appendChild(row);
                 });
@@ -437,30 +526,36 @@
             const showFormForSelectedRow = () => {
                 if (!selectedRow) return;
 
-                const cells = selectedRow.cells;
-                const valorRaw = parseFloat(cells[6].textContent.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
-                const retencao = valorRaw * 0.015;
+                const data = selectedRow.dataset;
+                const valorNominal = parseFloat(data.valorNominal);
+                const retencao = valorNominal * 0.015;
+                const grupoString = getGrupo(data.orgao);
+                const categoriaId = data.categoria.split('-')[0];
+                const grupoId = grupoString.split(' ')[0];
+                const orgaoCode = orgaoCodeMap[data.orgao] || 'N/A';
+                const compositeKey = `${data.cnpj}_${orgaoCode}_${data.fonte}_${categoriaId}_${grupoId}`;
 
-                document.getElementById('form-chave').textContent = cells[0].textContent; // Chave composta
-                document.getElementById('form-titular').textContent = cells[1].textContent;
-                document.getElementById('form-orgao').textContent = cells[2].textContent;
-                document.getElementById('form-fonte').textContent = cells[3].textContent;
-                document.getElementById('form-categoria').textContent = cells[4].textContent;
-                document.getElementById('form-grupo').textContent = cells[5].textContent;
-                document.getElementById('form-valor').textContent = cells[6].textContent;
+                document.getElementById('form-chave').textContent = compositeKey;
+                document.getElementById('form-titular').textContent = data.titular;
+                document.getElementById('form-sigla-orgao').textContent = data.orgao;
+                document.getElementById('form-codigo-orgao').textContent = orgaoCode;
+                document.getElementById('form-fonte').textContent = data.fonte;
+                document.getElementById('form-categoria').textContent = data.categoria;
+                document.getElementById('form-grupo').textContent = grupoString;
+                document.getElementById('form-valor-nominal').textContent = formatCurrency(valorNominal);
+                document.getElementById('form-valor-pago').textContent = formatCurrency(parseFloat(data.valorPago));
+                document.getElementById('form-ultimo-pagamento').textContent = formatDate(data.ultimoPagamento);
                 document.getElementById('form-retencao').textContent = formatCurrency(retencao);
 
                 showView('form-view');
-};
+            };
 
             // --- EVENT LISTENERS ---
             gridBody.addEventListener('click', (event) => {
                 const clickedRow = event.target.closest('tr');
                 if (!clickedRow || clickedRow.id === 'no-results-row') return;
 
-                if (selectedRow) {
-                    selectedRow.classList.remove('selected');
-                }
+                if (selectedRow) selectedRow.classList.remove('selected');
                 if (selectedRow === clickedRow) {
                     selectedRow = null;
                 } else {
