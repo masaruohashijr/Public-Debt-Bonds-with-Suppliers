@@ -71,6 +71,13 @@
             padding: 1.5rem;
         }
         
+        .view {
+            display: none;
+        }
+        .view.active {
+            display: block;
+        }
+        
         .main-container {
             background-color: white;
             border-radius: 12px;
@@ -145,12 +152,35 @@
             cursor: pointer;
             transition: all 0.2s ease-in-out;
         }
+        
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        
         .btn-primary {
             background-color: var(--primary-color);
             color: var(--text-light);
         }
         .btn-primary:hover {
             background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: #fff;
+            color: var(--secondary-color);
+            border-color: var(--border-color);
+        }
+        .btn-secondary:hover {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .btn:disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            border-color: transparent;
         }
 
         /* Grid de Dados */
@@ -180,60 +210,146 @@
             background-color: #f9fafb;
         }
         
+        .data-grid tbody tr {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .data-grid tbody tr:hover {
+            background-color: var(--row-hover-color);
+        }
+
+        .data-grid tbody tr.selected {
+            background-color: var(--row-selected-color);
+            color: var(--primary-hover);
+            font-weight: 500;
+        }
+        
         .no-results {
             text-align: center;
             padding: 2rem;
             color: var(--secondary-color);
             font-style: italic;
         }
+        
+        /* Estilos do Formulário */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .form-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #f9fafb;
+            color: var(--text-dark);
+        }
+        
+        .form-actions {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
     </style>
 </head>
 <body>
 
     <header class="top-nav">
-        <a href="index.html" class="logo">Dívida Pública</a>
+        <a href="/public-debt-bonds-with-suppliers.github.io/titulo.html" class="logo">Dívida Pública</a>
         <nav>
             <ul>
                 <li><a href="#">Dashboard</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html" class="active">Títulos</a></li>
+                <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
                 <li><a href="#">Parcelas</a></li>
                 <li><a href="#">Regras</a></li>
                 <li><a href="#">Suspensões</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html">Fornecedores</a></li>
+                <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html" class="active">Fornecedores</a></li>
                 <li><a href="#">Relatórios</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="content-wrapper">
-        <main class="main-container">
-            <div class="header-controls">
-                <h1>Fornecedores</h1>
-                <div class="controls">
-                    <div class="filter-container">
-                        <input type="text" id="filterInput" placeholder="Filtrar por CNPJ ou Razão Social...">
+        <div id="grid-view" class="view active">
+            <main class="main-container">
+                <div class="header-controls">
+                    <h1>Fornecedores</h1>
+                    <div class="controls">
+                        <div class="filter-container">
+                            <input type="text" id="filterInput" placeholder="Filtrar por CNPJ ou Razão Social...">
+                        </div>
+                         <button id="btnAdd" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            Incluir
+                        </button>
+                        <button id="btnView" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            Visualizar
+                        </button>
+                        <button id="btnEdit" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+                            Alterar
+                        </button>
                     </div>
-                     <button id="btnAdd" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                        Incluir
-                    </button>
                 </div>
-            </div>
-            <div class="grid-container">
-                <table class="data-grid">
-                    <thead>
-                        <tr>
-                            <th>CNPJ</th>
-                            <th>Razão Social</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gridBody">
-                        <!-- Dados populados via JS -->
-                    </tbody>
-                </table>
-                 <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
-            </div>
-        </main>
+                <div class="grid-container">
+                    <table class="data-grid">
+                        <thead>
+                            <tr>
+                                <th>CNPJ</th>
+                                <th>Razão Social</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gridBody">
+                            <!-- Dados populados via JS -->
+                        </tbody>
+                    </table>
+                     <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
+                </div>
+            </main>
+        </div>
+
+        <div id="form-view" class="view">
+            <main class="main-container">
+                <h1>Detalhes do Fornecedor</h1>
+                <form action="#" method="post" onsubmit="event.preventDefault();">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="form-cnpj">CNPJ</label>
+                            <div id="form-cnpj" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-name">Razão Social</label>
+                            <div id="form-name" class="form-field"></div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </main>
+        </div>
     </div>
 
     <script>
@@ -264,9 +380,17 @@
                 { cnpj: '06351401000172', name: 'ACHEI DISTRIBUIDORA LTDA' }
             ];
 
+            const gridView = document.getElementById('grid-view');
+            const formView = document.getElementById('form-view');
             const gridBody = document.getElementById('gridBody');
             const filterInput = document.getElementById('filterInput');
             const noResultsRow = document.getElementById('no-results-row');
+            
+            const btnView = document.getElementById('btnView');
+            const btnEdit = document.getElementById('btnEdit');
+            const btnBackToGrid = document.getElementById('btnBackToGrid');
+
+            let selectedRow = null;
 
             const populateGrid = (data) => {
                 gridBody.innerHTML = '';
@@ -280,6 +404,25 @@
                 });
             };
 
+            const updateButtonState = () => {
+                const hasSelection = selectedRow !== null;
+                btnView.disabled = !hasSelection;
+                btnEdit.disabled = !hasSelection;
+            };
+
+            const showView = (viewId) => {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active');
+            };
+
+            const showFormForSelectedRow = () => {
+                if (!selectedRow) return;
+                const cells = selectedRow.cells;
+                document.getElementById('form-cnpj').textContent = cells[0].textContent;
+                document.getElementById('form-name').textContent = cells[1].textContent;
+                showView('form-view');
+            };
+
             filterInput.addEventListener('keyup', () => {
                 const filterText = filterInput.value.toLowerCase();
                 const filteredData = supplierData.filter(item => 
@@ -289,6 +432,35 @@
                 populateGrid(filteredData);
                 noResultsRow.style.display = filteredData.length === 0 ? '' : 'none';
             });
+            
+            gridBody.addEventListener('click', (event) => {
+                const clickedRow = event.target.closest('tr');
+                if (!clickedRow) return;
+
+                if (selectedRow) selectedRow.classList.remove('selected');
+                if (selectedRow === clickedRow) {
+                    selectedRow = null;
+                } else {
+                    clickedRow.classList.add('selected');
+                    selectedRow = clickedRow;
+                }
+                updateButtonState();
+            });
+
+            gridBody.addEventListener('dblclick', (event) => {
+                const clickedRow = event.target.closest('tr');
+                if (clickedRow) {
+                    if (!selectedRow || selectedRow !== clickedRow) {
+                       if (selectedRow) selectedRow.classList.remove('selected');
+                        clickedRow.classList.add('selected');
+                        selectedRow = clickedRow;
+                    }
+                    showFormForSelectedRow();
+                }
+            });
+            
+            btnView.addEventListener('click', showFormForSelectedRow);
+            btnBackToGrid.addEventListener('click', () => showView('grid-view'));
 
             populateGrid(supplierData);
         });
