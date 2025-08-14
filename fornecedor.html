@@ -477,7 +477,12 @@
                 }
             });
             
+            // Botões de ação
+            btnAdd.addEventListener('click', () => alert('Ação: Incluir novo fornecedor.'));
             btnView.addEventListener('click', showFormForSelectedRow);
+            btnEdit.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Alterar o fornecedor de chave ${selectedRow.cells[0].textContent}.`);
+            });
             btnBackToGrid.addEventListener('click', () => showView('grid-view'));
             btnPrint.addEventListener('click', () => {
                 if (selectedRow) {
@@ -485,7 +490,6 @@
                     // Em um caso real, aqui entraria a lógica para gerar um PDF ou chamar window.print()
                 }
             });
-
             populateGrid(supplierData);
         });
     </script>
