@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Regras</title>
+    <title>Gestão de Parcelas</title>
     <style>
         /* Estilos Gerais e Variaveis */
         :root {
@@ -70,7 +70,7 @@
         .content-wrapper {
             padding: 1.5rem;
         }
-        
+
         .view {
             display: none;
         }
@@ -109,6 +109,35 @@
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
+        }
+
+        .filter-container {
+            position: relative;
+        }
+
+        #filterInput {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 250px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #filterInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .filter-container::before {
+            content: '🔍';
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 1.1rem;
         }
         
         .btn {
@@ -191,6 +220,18 @@
             font-weight: 500;
         }
         
+        .data-grid td.valor {
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+        
         /* Estilos do Formulário */
         .form-grid {
             display: grid;
@@ -210,21 +251,20 @@
             font-size: 0.9rem;
         }
 
-        .form-field, select, textarea {
+        .form-field {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 1rem;
-            background-color: #ffffff;
+            background-color: #f9fafb;
             color: var(--text-dark);
-            font-family: var(--font-family);
         }
         
-        textarea {
-            resize: vertical;
-            min-height: 80px;
+        .form-field.currency {
+            font-weight: 600;
+            color: var(--primary-color);
         }
 
         .form-actions {
@@ -256,8 +296,11 @@
         <div id="grid-view" class="view active">
             <main class="main-container">
                 <div class="header-controls">
-                    <h1>Regras de Parcelamento</h1>
+                    <h1>Parcelas</h1>
                     <div class="controls">
+                        <div class="filter-container">
+                            <input type="text" id="filterInput" placeholder="Filtrar parcelas...">
+                        </div>
                          <button id="btnAdd" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                             Incluir
@@ -280,66 +323,50 @@
                     <table class="data-grid">
                         <thead>
                             <tr>
-                                <th>Descrição</th>
-                                <th>Periodicidade</th>
-                                <th>Grupo</th>
-                                <th>Categoria</th>
-                                <th>Fonte</th>
-                                <th>Órgão</th>
+                                <th>Cod.Pessoa</th>
+                                <th>FR</th>
+                                <th>ND:Cust/Cap</th>
+                                <th>Nome Pessoa</th>
+                                <th class="valor">Vlr. Parcela</th>
                             </tr>
                         </thead>
                         <tbody id="gridBody">
                             <!-- Dados populados via JS -->
                         </tbody>
                     </table>
+                     <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
                 </div>
             </main>
         </div>
 
         <div id="form-view" class="view">
             <main class="main-container">
-                <h1>Detalhes da Regra</h1>
-                <form id="rule-form">
+                <h1>Detalhes da Parcela</h1>
+                <form>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="periodicidade">Periodicidade</label>
-                            <select id="periodicidade" name="periodicidade">
-                                <option value="Anual">Anual</option>
-                                <option value="Semestral">Semestral</option>
-                                <option value="Quadrimestral">Quadrimestral</option>
-                                <option value="Trimestral">Trimestral</option>
-                                <option value="Bimestral">Bimestral</option>
-                                <option value="Mensal">Mensal</option>
-                            </select>
+                            <label for="form-codPessoa">Cod.Pessoa</label>
+                            <div id="form-codPessoa" class="form-field"></div>
                         </div>
                         <div class="form-group">
-                            <label for="grupo">Grupo</label>
-                            <select id="grupo" name="grupo"></select>
+                            <label for="form-fr">FR</label>
+                            <div id="form-fr" class="form-field"></div>
                         </div>
                         <div class="form-group">
-                            <label for="categoria">Categoria Econômica</label>
-                            <select id="categoria" name="categoria"></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="fonte">Fonte de Recurso</label>
-                            <select id="fonte" name="fonte"></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="orgao">Órgão DI</label>
-                            <select id="orgao" name="orgao"></select>
+                            <label for="form-nd">ND:Cust/Cap</label>
+                            <div id="form-nd" class="form-field"></div>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label for="incidencia">Expressão de Incidência</label>
-                            <textarea id="incidencia" name="incidencia" placeholder="Ex: grupo == 1 E fonte == '100'"></textarea>
+                            <label for="form-nome">Nome Pessoa</label>
+                            <div id="form-nome" class="form-field"></div>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label for="quitacao">Expressão de Quitação</label>
-                            <textarea id="quitacao" name="quitacao" placeholder="Ex: valorPago >= valorNominal"></textarea>
+                            <label for="form-valor">Vlr. Parcela</label>
+                            <div id="form-valor" class="form-field currency"></div>
                         </div>
                     </div>
                     <div class="form-actions">
                         <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
-                        <button type="submit" class="btn btn-primary">Projetar Parcelas</button>
                     </div>
                 </form>
             </main>
@@ -348,64 +375,57 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- DADOS E DOMÍNIOS ---
-            const ruleData = [
-                { id: 1, descricao: 'Regra para Órgãos da Administração Direta', periodicidade: 'Anual', grupo: '1', categoria: '3', fonte: '100', orgao: 'SMFP' },
-                { id: 2, descricao: 'Regra para Órgãos da Administração Indireta', periodicidade: 'Semestral', grupo: '6', categoria: '4', fonte: '208', orgao: 'RIOSAUDE' },
-                { id: 3, descricao: 'Regra Atual', periodicidade: 'Mensal', grupo: 'Todos', categoria: 'Todos', fonte: 'Todos', orgao: 'Todos' }
+            const parcelasData = [
+                { codPessoa: '00104659000198', fr: '100', nd: '3', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valor: 50000.00 },
+                { codPessoa: '00299904000160', fr: '100', nd: '3', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 161304.68 },
+                { codPessoa: '00299904000160', fr: '141', nd: '3', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 314510.89 },
+                { codPessoa: '00472805000308', fr: '100', nd: '3', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valor: 221050.87 },
+                { codPessoa: '00487626000174', fr: '100', nd: '3', nome: 'IPE ENGENHARIA LTDA', valor: 50000.00 },
+                { codPessoa: '00768165000108', fr: '100', nd: '3', nome: 'HB MULTISERVICOS LTDA', valor: 61558.17 },
+                { codPessoa: '00844903000159', fr: '100', nd: '3', nome: 'ICR COMERCIO ATACADISTA DE PRODUTOS BIOTERIOS LTDA', valor: 50000.00 },
+                { codPessoa: '01077145000153', fr: '100', nd: '3', nome: 'DATAMETRICA CONTACT CENTER LTDA', valor: 50424.11 },
+                { codPessoa: '01077145000153x', fr: '100', nd: '3', nome: 'DATAMETRICA CONTACT CENTER LTDAx', valor: 171594.99 },
+                { codPessoa: '01093429000133', fr: '100', nd: '3', nome: 'RGI EMPREENDIMENTOS LTDA', valor: 50000.00 },
+                { codPessoa: '01229958000111', fr: '100', nd: '3', nome: 'ATAC FIRE SEGURANCA CONTRA INCENDIO LTDA', valor: 50000.00 },
+                { codPessoa: '01771935000215', fr: '100', nd: '3', nome: 'INGRAM MICRO BRASIL LTDA', valor: 65265.87 },
+                { codPessoa: '01953247000195', fr: '100', nd: '3', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valor: 188763.49 },
+                { codPessoa: '02149434000183', fr: '100', nd: '4', nome: 'RL2 ENGENHARIA LTDA', valor: 50000.00 },
+                { codPessoa: '02149434000183', fr: '146', nd: '4', nome: 'RL2 ENGENHARIA LTDA', valor: 50000.00 },
+                { codPessoa: '02329307000166', fr: '100', nd: '3', nome: 'PETRA MG INDUSTRIA E COMERCIO DE AGREGADOS LTDA', valor: 67493.56 },
+                { codPessoa: '02539959000125', fr: '100', nd: '3', nome: 'ESPACO CIDADANIA E OPORTUNIDADES SOCIAIS - ECOS', valor: 175587.12 },
+                { codPessoa: '03253042000122', fr: '146', nd: '3', nome: 'RESITEC DE TERESOPOLIS CONSTRUCOES LTDA', valor: 50000.00 },
+                { codPessoa: '03285661000107', fr: '100', nd: '4', nome: 'ENGREST ENGENHARIA DE RECUPERACAO ESTRUTURAL LTDA', valor: 53297.78 },
+                { codPessoa: '03285661000107', fr: '146', nd: '3', nome: 'ENGREST ENGENHARIA DE RECUPERACAO ESTRUTURAL LTDA', valor: 50000.00 },
+                { codPessoa: '03319569000102', fr: '100', nd: '4', nome: 'PRODIGY CONSTRUTORA E PARTICIPACOES LTDA', valor: 50000.00 },
+                { codPessoa: '03506307000157', fr: '100', nd: '3', nome: 'TICKET SOLUCOES HDFGT S A', valor: 42602.28 },
+                { codPessoa: '03533879000125', fr: '100', nd: '3', nome: 'CENTRO BRASILEIRO DE ACOES SOCIAIS PARA A CIDADANIA CEBRAC', valor: 116950.29 }
             ];
-            
-            const dominios = {
-                fontes: ['100', '181', '208'],
-                orgaos: ['RIOSAUDE', 'SME', 'F-RIO', 'SMS', 'SMAS', 'SMFP'],
-                grupos: ['1', '2', '3', '4', '5', '6'],
-                categorias: ['3', '4']
-            };
 
-            // --- ELEMENTOS DO DOM ---
             const gridView = document.getElementById('grid-view');
             const formView = document.getElementById('form-view');
             const gridBody = document.getElementById('gridBody');
+            const filterInput = document.getElementById('filterInput');
+            const noResultsRow = document.getElementById('no-results-row');
             
             const btnView = document.getElementById('btnView');
             const btnEdit = document.getElementById('btnEdit');
             const btnPrint = document.getElementById('btnPrint');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
-            const ruleForm = document.getElementById('rule-form');
 
             let selectedRow = null;
 
-            // --- FUNÇÕES ---
-            const populateSelect = (selectId, options) => {
-                const select = document.getElementById(selectId);
-                select.innerHTML = '<option value="Todos">Todos</option>'; // Adiciona a opção "Todos"
-                options.forEach(option => {
-                    const opt = document.createElement('option');
-                    opt.value = option;
-                    opt.textContent = option;
-                    select.appendChild(opt);
-                });
-            };
+            const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-            const populateAllSelects = () => {
-                populateSelect('grupo', dominios.grupos);
-                populateSelect('categoria', dominios.categorias);
-                populateSelect('fonte', dominios.fontes);
-                populateSelect('orgao', dominios.orgaos);
-            };
-
-            const populateGrid = () => {
+            const populateGrid = (data) => {
                 gridBody.innerHTML = '';
-                ruleData.forEach(item => {
+                data.forEach(item => {
                     const row = document.createElement('tr');
-                    row.dataset.id = item.id;
                     row.innerHTML = `
-                        <td>${item.descricao}</td>
-                        <td>${item.periodicidade}</td>
-                        <td>${item.grupo}</td>
-                        <td>${item.categoria}</td>
-                        <td>${item.fonte}</td>
-                        <td>${item.orgao}</td>
+                        <td>${item.codPessoa}</td>
+                        <td>${item.fr}</td>
+                        <td>${item.nd}</td>
+                        <td>${item.nome}</td>
+                        <td class="valor">${formatCurrency(item.valor)}</td>
                     `;
                     gridBody.appendChild(row);
                 });
@@ -423,23 +443,27 @@
                 document.getElementById(viewId).classList.add('active');
             };
 
-            const showFormForRule = () => {
+            const showFormForSelectedRow = () => {
                 if (!selectedRow) return;
-                const ruleId = parseInt(selectedRow.dataset.id);
-                const data = ruleData.find(r => r.id === ruleId);
-
-                document.getElementById('periodicidade').value = data.periodicidade;
-                document.getElementById('grupo').value = data.grupo;
-                document.getElementById('categoria').value = data.categoria;
-                document.getElementById('fonte').value = data.fonte;
-                document.getElementById('orgao').value = data.orgao;
-                document.getElementById('incidencia').value = ""; // Limpa o campo
-                document.getElementById('quitacao').value = ""; // Limpa o campo
-                
+                const cells = selectedRow.cells;
+                document.getElementById('form-codPessoa').textContent = cells[0].textContent;
+                document.getElementById('form-fr').textContent = cells[1].textContent;
+                document.getElementById('form-nd').textContent = cells[2].textContent;
+                document.getElementById('form-nome').textContent = cells[3].textContent;
+                document.getElementById('form-valor').textContent = cells[4].textContent;
                 showView('form-view');
             };
 
-            // --- EVENT LISTENERS ---
+            filterInput.addEventListener('keyup', () => {
+                const filterText = filterInput.value.toLowerCase();
+                const filteredData = parcelasData.filter(item => 
+                    item.codPessoa.toLowerCase().includes(filterText) ||
+                    item.nome.toLowerCase().includes(filterText)
+                );
+                populateGrid(filteredData);
+                noResultsRow.style.display = filteredData.length === 0 ? '' : 'none';
+            });
+            
             gridBody.addEventListener('click', (event) => {
                 const clickedRow = event.target.closest('tr');
                 if (!clickedRow) return;
@@ -453,30 +477,31 @@
                 }
                 updateButtonState();
             });
-
+            
             gridBody.addEventListener('dblclick', (event) => {
-                if (event.target.closest('tr')) {
-                    showFormForRule();
+                const clickedRow = event.target.closest('tr');
+                if (clickedRow) {
+                    if (!selectedRow || selectedRow !== clickedRow) {
+                       if (selectedRow) selectedRow.classList.remove('selected');
+                        clickedRow.classList.add('selected');
+                        selectedRow = clickedRow;
+                    }
+                    showFormForSelectedRow();
                 }
             });
             
-            btnView.addEventListener('click', showFormForRule);
-            btnEdit.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Alterar a regra "${selectedRow.cells[0].textContent}".`);
-            });
-            btnPrint.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Imprimir a regra "${selectedRow.cells[0].textContent}".`);
-            });
+            btnView.addEventListener('click', showFormForSelectedRow);
             btnBackToGrid.addEventListener('click', () => showView('grid-view'));
             
-            ruleForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                alert('1000 parcelas projetadas com sucesso!');
+            // Botões de ação
+            btnEdit.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Alterar a parcela de ${selectedRow.cells[3].textContent}.`);
+            });
+            btnPrint.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Imprimir a parcela de ${selectedRow.cells[3].textContent}.`);
             });
 
-            // --- INICIALIZAÇÃO ---
-            populateGrid();
-            populateAllSelects();
+            populateGrid(parcelasData);
             updateButtonState();
         });
     </script>
