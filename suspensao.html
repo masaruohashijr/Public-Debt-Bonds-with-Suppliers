@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Parcelas</title>
+    <title>Gestão de Suspensões</title>
     <style>
         /* Estilos Gerais e Variaveis */
         :root {
@@ -17,6 +17,8 @@
             --text-light: #ffffff;
             --text-dark: #1f2937;
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
         }
 
         body {
@@ -70,7 +72,7 @@
         .content-wrapper {
             padding: 1.5rem;
         }
-
+        
         .view {
             display: none;
         }
@@ -108,7 +110,7 @@
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .filter-container {
@@ -170,6 +172,14 @@
             background-color: #f9fafb;
             border-color: #d1d5db;
         }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: var(--text-light);
+        }
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+        }
 
         .btn:disabled {
             background-color: #e5e7eb;
@@ -220,10 +230,16 @@
             font-weight: 500;
         }
         
-        .data-grid td.valor {
-            text-align: right;
-            font-weight: 500;
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
         }
+        .status-ativa { background-color: #fef3c7; color: #92400e; }
+        .status-cancelada { background-color: #fecaca; color: #991b1b; }
+        .status-encerrada { background-color: #d1d5db; color: #4b5563; }
         
         .no-results {
             text-align: center;
@@ -251,20 +267,32 @@
             font-size: 0.9rem;
         }
 
-        .form-field {
+        .form-field, select, textarea, input[type="text"], input[type="date"] {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 1rem;
-            background-color: #f9fafb;
+            background-color: #ffffff;
             color: var(--text-dark);
+            font-family: var(--font-family);
         }
         
-        .form-field.currency {
-            font-weight: 600;
-            color: var(--primary-color);
+        .form-field {
+            background-color: #f9fafb;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
         }
 
         .form-actions {
@@ -296,43 +324,34 @@
         <div id="grid-view" class="view active">
             <main class="main-container">
                 <div class="header-controls">
-                    <h1>Parcelas</h1>
+                    <h1>Manter Suspensão</h1>
                     <div class="controls">
                         <div class="filter-container">
-                            <input type="text" id="filterInput" placeholder="Filtrar parcelas...">
+                            <input type="text" id="filterInput" placeholder="Filtrar suspensões...">
                         </div>
-                         <button id="btnAdd" class="btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            Incluir
-                        </button>
-                        <button id="btnView" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-                            Visualizar
-                        </button>
-                        <button id="btnEdit" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
-                            Alterar
-                        </button>
-                        <button id="btnPrint" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25" /></svg>
-                            Imprimir
-                        </button>
+                         <button id="btnAdd" class="btn btn-primary">Incluir</button>
+                        <button id="btnView" class="btn btn-secondary" disabled>Visualizar</button>
+                        <button id="btnEdit" class="btn btn-secondary" disabled>Alterar</button>
+                        <button id="btnDelete" class="btn btn-secondary" disabled>Excluir</button>
+                        <button id="btnRevert" class="btn btn-secondary" disabled>Reverter</button>
+                        <button id="btnConvert" class="btn btn-danger" disabled>Converter</button>
                     </div>
                 </div>
                 <div class="grid-container">
                     <table class="data-grid">
                         <thead>
                             <tr>
-                                <th>Cod.Pessoa</th>
-                                <th>FR</th>
-                                <th>ND:Cust/Cap</th>
-                                <th>Nome Pessoa</th>
-                                <th class="valor">Vlr. Parcela</th>
+                                <th>Tipo</th>
+                                <th>Escopo</th>
+                                <th>CPF/CNPJ</th>
+                                <th>Fornecedor</th>
+                                <th>Início Vigência</th>
+                                <th>Fim Vigência</th>
+                                <th>Autor</th>
+                                <th>Situação</th>
                             </tr>
                         </thead>
-                        <tbody id="gridBody">
-                            <!-- Dados populados via JS -->
-                        </tbody>
+                        <tbody id="gridBody"></tbody>
                     </table>
                      <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
                 </div>
@@ -341,32 +360,79 @@
 
         <div id="form-view" class="view">
             <main class="main-container">
-                <h1>Detalhes da Parcela</h1>
-                <form>
+                <h1 id="form-title">Nova Suspensão</h1>
+                <form id="suspensao-form">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="form-codPessoa">Cod.Pessoa</label>
-                            <div id="form-codPessoa" class="form-field"></div>
+                            <label for="tipoImpedimento">Tipo de Impedimento</label>
+                            <select id="tipoImpedimento">
+                                <option value="Suspensão">Suspensão</option>
+                                <option value="Cancelamento">Cancelamento</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="form-fr">FR</label>
-                            <div id="form-fr" class="form-field"></div>
+                            <label for="escopo">Escopo da Suspensão</label>
+                            <select id="escopo">
+                                <option value="Fornecedor">Fornecedor</option>
+                                <option value="Título">Título</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="form-nd">ND:Cust/Cap</label>
-                            <div id="form-nd" class="form-field"></div>
+                            <label for="cpfCnpj">CPF/CNPJ do Fornecedor</label>
+                            <input type="text" id="cpfCnpj" placeholder="00.000.000/0000-00">
+                        </div>
+                        <div class="form-group">
+                            <label for="nomeFornecedor">Nome do Fornecedor</label>
+                            <div id="nomeFornecedor" class="form-field">Preenchido automaticamente</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="numeroTitulo">Número do Título</label>
+                            <input type="text" id="numeroTitulo" placeholder="Obrigatório se escopo for Título">
+                        </div>
+                         <div class="form-group">
+                            <label for="causa">Causa</label>
+                            <select id="causa">
+                                <option>Anexo 1</option>
+                                <option>Anexo 2</option>
+                                <option>Anexo 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inicioVigencia">Data de Início da Vigência</label>
+                            <input type="date" id="inicioVigencia">
+                        </div>
+                        <div class="form-group">
+                            <label for="fimVigencia">Data de Fim da Vigência</label>
+                            <input type="date" id="fimVigencia">
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label for="form-nome">Nome Pessoa</label>
-                            <div id="form-nome" class="form-field"></div>
+                            <label for="justificativa">Justificativa</label>
+                            <textarea id="justificativa" placeholder="Motivo que fundamenta a suspensão (mínimo 10 caracteres)"></textarea>
                         </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label for="form-valor">Vlr. Parcela</label>
-                            <div id="form-valor" class="form-field currency"></div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="motivoJudicial">
+                                <label for="motivoJudicial">Motivo Judicial?</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="processoJudicial">Número do Processo Judicial</label>
+                            <input type="text" id="processoJudicial" placeholder="Obrigatório se motivo for judicial">
+                        </div>
+                         <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="impactaTransferencia" checked>
+                                <label for="impactaTransferencia">Impacta Transferência para Curto Prazo?</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="autor">Autor</label>
+                            <div id="autor" class="form-field"></div>
                         </div>
                     </div>
                     <div class="form-actions">
                         <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
                     </div>
                 </form>
             </main>
@@ -375,30 +441,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const parcelasData = [
-                { codPessoa: '00104659000198', fr: '100', nd: '3', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valor: 50000.00 },
-                { codPessoa: '00299904000160', fr: '100', nd: '3', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 161304.68 },
-                { codPessoa: '00299904000160', fr: '141', nd: '3', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 314510.89 },
-                { codPessoa: '00472805000308', fr: '100', nd: '3', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valor: 221050.87 },
-                { codPessoa: '00487626000174', fr: '100', nd: '3', nome: 'IPE ENGENHARIA LTDA', valor: 50000.00 },
-                { codPessoa: '00768165000108', fr: '100', nd: '3', nome: 'HB MULTISERVICOS LTDA', valor: 61558.17 },
-                { codPessoa: '00844903000159', fr: '100', nd: '3', nome: 'ICR COMERCIO ATACADISTA DE PRODUTOS BIOTERIOS LTDA', valor: 50000.00 },
-                { codPessoa: '01077145000153', fr: '100', nd: '3', nome: 'DATAMETRICA CONTACT CENTER LTDA', valor: 50424.11 },
-                { codPessoa: '01077145000153x', fr: '100', nd: '3', nome: 'DATAMETRICA CONTACT CENTER LTDAx', valor: 171594.99 },
-                { codPessoa: '01093429000133', fr: '100', nd: '3', nome: 'RGI EMPREENDIMENTOS LTDA', valor: 50000.00 },
-                { codPessoa: '01229958000111', fr: '100', nd: '3', nome: 'ATAC FIRE SEGURANCA CONTRA INCENDIO LTDA', valor: 50000.00 },
-                { codPessoa: '01771935000215', fr: '100', nd: '3', nome: 'INGRAM MICRO BRASIL LTDA', valor: 65265.87 },
-                { codPessoa: '01953247000195', fr: '100', nd: '3', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valor: 188763.49 },
-                { codPessoa: '02149434000183', fr: '100', nd: '4', nome: 'RL2 ENGENHARIA LTDA', valor: 50000.00 },
-                { codPessoa: '02149434000183', fr: '146', nd: '4', nome: 'RL2 ENGENHARIA LTDA', valor: 50000.00 },
-                { codPessoa: '02329307000166', fr: '100', nd: '3', nome: 'PETRA MG INDUSTRIA E COMERCIO DE AGREGADOS LTDA', valor: 67493.56 },
-                { codPessoa: '02539959000125', fr: '100', nd: '3', nome: 'ESPACO CIDADANIA E OPORTUNIDADES SOCIAIS - ECOS', valor: 175587.12 },
-                { codPessoa: '03253042000122', fr: '146', nd: '3', nome: 'RESITEC DE TERESOPOLIS CONSTRUCOES LTDA', valor: 50000.00 },
-                { codPessoa: '03285661000107', fr: '100', nd: '4', nome: 'ENGREST ENGENHARIA DE RECUPERACAO ESTRUTURAL LTDA', valor: 53297.78 },
-                { codPessoa: '03285661000107', fr: '146', nd: '3', nome: 'ENGREST ENGENHARIA DE RECUPERACAO ESTRUTURAL LTDA', valor: 50000.00 },
-                { codPessoa: '03319569000102', fr: '100', nd: '4', nome: 'PRODIGY CONSTRUTORA E PARTICIPACOES LTDA', valor: 50000.00 },
-                { codPessoa: '03506307000157', fr: '100', nd: '3', nome: 'TICKET SOLUCOES HDFGT S A', valor: 42602.28 },
-                { codPessoa: '03533879000125', fr: '100', nd: '3', nome: 'CENTRO BRASILEIRO DE ACOES SOCIAIS PARA A CIDADANIA CEBRAC', valor: 116950.29 }
+            const suspensoesData = [
+                { id: 1, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '20476731000115', nome: '4ID MEDICOS ASSOCIADOS EIRELLI', titulo: '', inicio: '2025-07-01', fim: '', situacao: 'Ativa', causa: 'Anexo 1', justificativa: 'Bloqueio judicial determinado no processo X.', autor: 'PGM' },
+                { id: 2, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '33892738000160', nome: 'ABRIGO TERESA DE JESUS', titulo: '2025-00123', inicio: '2025-06-10', fim: '2025-08-10', situacao: 'Encerrada', causa: 'Anexo 2', justificativa: 'Pendente de comprovação de serviço.', autor: 'CGM' },
+                { id: 3, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '10189253000109', nome: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', titulo: '2025-00456', inicio: '2025-05-20', fim: '', situacao: 'Cancelada', causa: 'Anexo 3', justificativa: 'Contrato rescindido por quebra de cláusula.', autor: 'SME' }
             ];
 
             const gridView = document.getElementById('grid-view');
@@ -407,25 +453,37 @@
             const filterInput = document.getElementById('filterInput');
             const noResultsRow = document.getElementById('no-results-row');
             
+            const btnAdd = document.getElementById('btnAdd');
             const btnView = document.getElementById('btnView');
             const btnEdit = document.getElementById('btnEdit');
-            const btnPrint = document.getElementById('btnPrint');
+            const btnDelete = document.getElementById('btnDelete');
+            const btnRevert = document.getElementById('btnRevert');
+            const btnConvert = document.getElementById('btnConvert');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
+            const formTitle = document.getElementById('form-title');
 
             let selectedRow = null;
 
-            const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const formatDate = (dateString) => {
+                if (!dateString) return '';
+                const [year, month, day] = dateString.split('-');
+                return `${day}/${month}/${year}`;
+            };
 
             const populateGrid = (data) => {
                 gridBody.innerHTML = '';
                 data.forEach(item => {
                     const row = document.createElement('tr');
+                    row.dataset.id = item.id;
                     row.innerHTML = `
-                        <td>${item.codPessoa}</td>
-                        <td>${item.fr}</td>
-                        <td>${item.nd}</td>
+                        <td>${item.tipo}</td>
+                        <td>${item.escopo}</td>
+                        <td>${item.cpfCnpj}</td>
                         <td>${item.nome}</td>
-                        <td class="valor">${formatCurrency(item.valor)}</td>
+                        <td>${formatDate(item.inicio)}</td>
+                        <td>${formatDate(item.fim)}</td>
+                        <td>${item.autor}</td>
+                        <td><span class="status-badge status-${item.situacao.toLowerCase()}">${item.situacao}</span></td>
                     `;
                     gridBody.appendChild(row);
                 });
@@ -435,7 +493,9 @@
                 const hasSelection = selectedRow !== null;
                 btnView.disabled = !hasSelection;
                 btnEdit.disabled = !hasSelection;
-                btnPrint.disabled = !hasSelection;
+                btnDelete.disabled = !hasSelection;
+                btnRevert.disabled = !hasSelection;
+                btnConvert.disabled = !hasSelection;
             };
 
             const showView = (viewId) => {
@@ -443,22 +503,35 @@
                 document.getElementById(viewId).classList.add('active');
             };
 
-            const showFormForSelectedRow = () => {
-                if (!selectedRow) return;
-                const cells = selectedRow.cells;
-                document.getElementById('form-codPessoa').textContent = cells[0].textContent;
-                document.getElementById('form-fr').textContent = cells[1].textContent;
-                document.getElementById('form-nd').textContent = cells[2].textContent;
-                document.getElementById('form-nome').textContent = cells[3].textContent;
-                document.getElementById('form-valor').textContent = cells[4].textContent;
+            const showForm = (data) => {
+                if (data) {
+                    formTitle.textContent = "Detalhes da Suspensão";
+                    // Populate form with data for viewing/editing
+                    document.getElementById('tipoImpedimento').value = data.tipo;
+                    document.getElementById('escopo').value = data.escopo;
+                    document.getElementById('cpfCnpj').value = data.cpfCnpj;
+                    document.getElementById('nomeFornecedor').textContent = data.nome;
+                    document.getElementById('numeroTitulo').value = data.titulo;
+                    document.getElementById('causa').value = data.causa;
+                    document.getElementById('inicioVigencia').value = data.inicio;
+                    document.getElementById('fimVigencia').value = data.fim;
+                    document.getElementById('justificativa').value = data.justificativa;
+                    document.getElementById('autor').textContent = data.autor;
+                } else {
+                    formTitle.textContent = "Nova Suspensão";
+                    document.getElementById('suspensao-form').reset();
+                    document.getElementById('nomeFornecedor').textContent = 'Preenchido automaticamente';
+                    document.getElementById('autor').textContent = 'Usuário Logado'; // Example
+                }
                 showView('form-view');
             };
 
             filterInput.addEventListener('keyup', () => {
                 const filterText = filterInput.value.toLowerCase();
-                const filteredData = parcelasData.filter(item => 
-                    item.codPessoa.toLowerCase().includes(filterText) ||
-                    item.nome.toLowerCase().includes(filterText)
+                const filteredData = suspensoesData.filter(item => 
+                    Object.values(item).some(val => 
+                        String(val).toLowerCase().includes(filterText)
+                    )
                 );
                 populateGrid(filteredData);
                 noResultsRow.style.display = filteredData.length === 0 ? '' : 'none';
@@ -481,27 +554,34 @@
             gridBody.addEventListener('dblclick', (event) => {
                 const clickedRow = event.target.closest('tr');
                 if (clickedRow) {
-                    if (!selectedRow || selectedRow !== clickedRow) {
-                       if (selectedRow) selectedRow.classList.remove('selected');
-                        clickedRow.classList.add('selected');
-                        selectedRow = clickedRow;
-                    }
-                    showFormForSelectedRow();
+                    const data = suspensoesData.find(r => r.id == clickedRow.dataset.id);
+                    showForm(data);
                 }
             });
             
-            btnView.addEventListener('click', showFormForSelectedRow);
-            btnBackToGrid.addEventListener('click', () => showView('grid-view'));
-            
             // Botões de ação
+            btnAdd.addEventListener('click', () => showForm(null));
+            btnView.addEventListener('click', () => {
+                if (selectedRow) {
+                    const data = suspensoesData.find(r => r.id == selectedRow.dataset.id);
+                    showForm(data);
+                }
+            });
             btnEdit.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Alterar a parcela de ${selectedRow.cells[3].textContent}.`);
+                if (selectedRow) alert(`Ação: Alterar a suspensão ID ${selectedRow.dataset.id}.`);
             });
-            btnPrint.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Imprimir a parcela de ${selectedRow.cells[3].textContent}.`);
+             btnDelete.addEventListener('click', () => {
+                if (selectedRow) alert(`Ação: Excluir (inativar) a suspensão ID ${selectedRow.dataset.id}.`);
             });
+            btnRevert.addEventListener('click', () => {
+                if (selectedRow) alert(`Ação: Reverter a suspensão ID ${selectedRow.dataset.id}.`);
+            });
+            btnConvert.addEventListener('click', () => {
+                if (selectedRow) alert(`Ação: Converter em cancelamento a suspensão ID ${selectedRow.dataset.id}.`);
+            });
+            btnBackToGrid.addEventListener('click', () => showView('grid-view'));
 
-            populateGrid(parcelasData);
+            populateGrid(suspensoesData);
             updateButtonState();
         });
     </script>
