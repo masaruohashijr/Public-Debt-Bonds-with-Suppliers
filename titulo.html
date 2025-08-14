@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Títulos Financeiros</title>
+    <style>
+        /* Estilos Gerais e Variaveis */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #6b7280;
+            --border-color: #e5e7eb;
+            --background-color: #f9fafb;
+            --row-hover-color: #f3f4f6;
+            --row-selected-color: #e0e7ff;
+            --text-light: #ffffff;
+            --text-dark: #1f2937;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 1.5rem;
+        }
+
+        /* Estrutura das Views */
+        .view {
+            display: none; /* Esconde todas as views por padrão */
+        }
+        .view.active {
+            display: block; /* Mostra a view ativa */
+        }
+
+        /* Container Principal */
+        .main-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* Cabeçalho com Título e Controles */
+        .header-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        /* Container de Filtro e Ações */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Campo de Filtro */
+        .filter-container {
+            position: relative;
+        }
+
+        #filterInput {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 250px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #filterInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .filter-container::before {
+            content: '🔍';
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        /* Botões de Ação */
+        .actions-container {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: #fff;
+            color: var(--secondary-color);
+            border-color: var(--border-color);
+        }
+        .btn-secondary:hover {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .btn:disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            border-color: transparent;
+        }
+
+        /* Grid de Dados */
+        .grid-container {
+            overflow-x: auto;
+        }
+
+        .data-grid {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .data-grid th, .data-grid td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .data-grid th {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: #f9fafb;
+        }
+
+        .data-grid tbody tr {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .data-grid tbody tr:hover {
+            background-color: var(--row-hover-color);
+        }
+
+        .data-grid tbody tr.selected {
+            background-color: var(--row-selected-color);
+            color: var(--primary-hover);
+            font-weight: 500;
+        }
+        
+        .data-grid td.valor {
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        /* Estilos do Formulário */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .form-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #f9fafb;
+            color: var(--text-dark);
+        }
+        
+        .form-field.currency {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .form-actions {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="grid-view" class="view active">
+        <main class="main-container">
+            <div class="header-controls">
+                <h1>Títulos Financeiros</h1>
+                <div class="controls">
+                    <div class="filter-container">
+                        <input type="text" id="filterInput" placeholder="Filtrar por qualquer campo...">
+                    </div>
+                    <div class="actions-container">
+                        <button id="btnAdd" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            Incluir
+                        </button>
+                        <button id="btnView" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            Visualizar
+                        </button>
+                        <button id="btnEdit" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+                            Alterar
+                        </button>
+                        <button id="btnPrint" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25" /></svg>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-container">
+                <table class="data-grid">
+                    <thead>
+                        <tr>
+                            <th>Chave</th>
+                            <th>Titular</th>
+                            <th>Órgão DI</th>
+                            <th>Fonte</th>
+                            <th>Categoria</th>
+                            <th>Grupo</th>
+                            <th class="valor">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gridBody">
+                        <!-- Dados populados via JS -->
+                    </tbody>
+                </table>
+                 <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
+            </div>
+        </main>
+    </div>
+
+    <div id="form-view" class="view">
+        <main class="main-container">
+            <h1>Detalhes do Título</h1>
+            <form action="#" method="post" onsubmit="event.preventDefault();">
+                <div class="form-grid">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="form-chave">Chave</label>
+                        <div id="form-chave" class="form-field"></div>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="form-titular">Titular</label>
+                        <div id="form-titular" class="form-field"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-orgao">Órgão DI</label>
+                        <div id="form-orgao" class="form-field"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-fonte">Fonte</label>
+                        <div id="form-fonte" class="form-field"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-categoria">Categoria</label>
+                        <div id="form-categoria" class="form-field"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-grupo">Grupo</label>
+                        <div id="form-grupo" class="form-field"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-valor">Valor do Título</label>
+                        <div id="form-valor" class="form-field currency"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-retencao">Valor da Retenção</label>
+                        <div id="form-retencao" class="form-field currency"></div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar para o Grid</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DADOS ---
+            const initialData = [
+                { cnpj: '20476731000115', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', orgao: 'RIOSAUDE', fonte: '208', categoria: '3-Corrente', valor: 489861.16 },
+                { cnpj: '33892738000160', titular: 'ABRIGO TERESA DE JESUS', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valor: 195000.00 },
+                { cnpj: '10189253000109', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', orgao: 'F-RIO', fonte: '100', categoria: '3-Corrente', valor: 185685.99 },
+                { cnpj: '04447582000100', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valor: 130000.00 },
+                { cnpj: '14883212000179', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', orgao: 'SMS', fonte: '181', categoria: '3-Corrente', valor: 61710.00 },
+                { cnpj: '00462017000160', titular: 'ABRIGO DOCE MORADA', orgao: 'SMAS', fonte: '100', categoria: '3-Corrente', valor: 57903.68 },
+                { cnpj: '26592256000129', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', orgao: 'SMFP', fonte: '100', categoria: '4-Capital', valor: 14999.60 }
+            ];
+
+            // --- LÓGICA DE GRUPO ---
+            function getGrupo(orgao) {
+                switch (orgao) {
+                    case 'SMS': return '2 - SMS';
+                    case 'SME': return '3 - SME';
+                    case 'SMAS': return '4 - SMAS';
+                    case 'PGM': return '5 - PGM';
+                    case 'RIOSAUDE':
+                    case 'COMLURB':
+                    case 'F-RIO':
+                    case 'IPLANRIO':
+                    case 'MULTIRIO':
+                        return '6 - INDIRETAS';
+                    default:
+                        return '1 - Diretas'; // GM-RIO, SMFP, etc.
+                }
+            }
+
+            // --- ELEMENTOS DO DOM ---
+            const gridView = document.getElementById('grid-view');
+            const formView = document.getElementById('form-view');
+            const filterInput = document.getElementById('filterInput');
+            const gridBody = document.getElementById('gridBody');
+            const noResultsRow = document.getElementById('no-results-row');
+            
+            const btnView = document.getElementById('btnView');
+            const btnEdit = document.getElementById('btnEdit');
+            const btnPrint = document.getElementById('btnPrint');
+            const btnAdd = document.getElementById('btnAdd');
+            const btnBackToGrid = document.getElementById('btnBackToGrid');
+
+            let selectedRow = null;
+
+            // --- FUNÇÕES ---
+            const formatCurrency = (value) => {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            };
+
+            const populateGrid = () => {
+                gridBody.innerHTML = '';
+                initialData.forEach(item => {
+                    const grupoString = getGrupo(item.orgao);
+                    const grupoId = grupoString.split(' ')[0];
+                    const categoriaId = item.categoria.split('-')[0];
+                    
+                    // Cria a nova chave composta
+                    const compositeKey = `${item.cnpj}_${item.fonte}_${categoriaId}_${grupoId}`;
+
+                    const row = document.createElement('tr');
+                    // Armazena os dados originais na linha para fácil acesso
+                    row.dataset.cnpj = item.cnpj; 
+                    row.innerHTML = `
+                        <td>${compositeKey}</td>
+                        <td>${item.titular}</td>
+                        <td>${item.orgao}</td>
+                        <td>${item.fonte}</td>
+                        <td>${item.categoria}</td>
+                        <td>${grupoString}</td>
+                        <td class="valor">${formatCurrency(item.valor)}</td>
+                    `;
+                    gridBody.appendChild(row);
+                });
+            };
+
+            const updateButtonState = () => {
+                const hasSelection = selectedRow !== null;
+                btnView.disabled = !hasSelection;
+                btnEdit.disabled = !hasSelection;
+                btnPrint.disabled = !hasSelection;
+            };
+
+            const showView = (viewId) => {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active');
+            };
+
+            const showFormForSelectedRow = () => {
+                if (!selectedRow) return;
+
+                const cells = selectedRow.cells;
+                const valorRaw = parseFloat(cells[6].textContent.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
+                const retencao = valorRaw * 0.015;
+
+                document.getElementById('form-chave').textContent = cells[0].textContent; // Chave composta
+                document.getElementById('form-titular').textContent = cells[1].textContent;
+                document.getElementById('form-orgao').textContent = cells[2].textContent;
+                document.getElementById('form-fonte').textContent = cells[3].textContent;
+                document.getElementById('form-categoria').textContent = cells[4].textContent;
+                document.getElementById('form-grupo').textContent = cells[5].textContent;
+                document.getElementById('form-valor').textContent = cells[6].textContent;
+                document.getElementById('form-retencao').textContent = formatCurrency(retencao);
+
+                showView('form-view');
+};
+
+            // --- EVENT LISTENERS ---
+            gridBody.addEventListener('click', (event) => {
+                const clickedRow = event.target.closest('tr');
+                if (!clickedRow || clickedRow.id === 'no-results-row') return;
+
+                if (selectedRow) {
+                    selectedRow.classList.remove('selected');
+                }
+                if (selectedRow === clickedRow) {
+                    selectedRow = null;
+                } else {
+                    clickedRow.classList.add('selected');
+                    selectedRow = clickedRow;
+                }
+                updateButtonState();
+            });
+            
+            gridBody.addEventListener('dblclick', (event) => {
+                const clickedRow = event.target.closest('tr');
+                if (clickedRow && clickedRow.id !== 'no-results-row') {
+                    if (!selectedRow || selectedRow !== clickedRow) {
+                        if (selectedRow) selectedRow.classList.remove('selected');
+                        clickedRow.classList.add('selected');
+                        selectedRow = clickedRow;
+                        updateButtonState();
+                    }
+                    showFormForSelectedRow();
+                }
+            });
+
+            filterInput.addEventListener('keyup', () => {
+                const filterText = filterInput.value.toLowerCase();
+                let visibleRows = 0;
+                const rows = gridBody.getElementsByTagName('tr');
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    const rowText = row.textContent.toLowerCase();
+                    if (rowText.includes(filterText)) {
+                        row.style.display = '';
+                        visibleRows++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+                noResultsRow.style.display = visibleRows === 0 ? '' : 'none';
+            });
+            
+            // Botões de ação
+            btnAdd.addEventListener('click', () => alert('Ação: Incluir novo título.'));
+            btnView.addEventListener('click', showFormForSelectedRow);
+            btnEdit.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Alterar o título de chave ${selectedRow.cells[0].textContent}.`);
+            });
+            btnPrint.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Imprimir o título de chave ${selectedRow.cells[0].textContent}.`);
+            });
+            btnBackToGrid.addEventListener('click', () => showView('grid-view'));
+
+            // --- INICIALIZAÇÃO ---
+            populateGrid();
+            updateButtonState();
+        });
+    </script>
+
+</body>
+</html>
