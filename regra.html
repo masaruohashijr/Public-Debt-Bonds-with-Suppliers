@@ -243,11 +243,11 @@
         <a href="titulo.html" class="logo">Dívida Pública</a>
         <nav>
             <ul>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
+                <li><a href="titulo.html">Títulos</a></li>
                 <li><a href="#">Parcelas</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/regra.html">Regras</a></li>
+                <li><a href="regras.html" class="active">Regras</a></li>
                 <li><a href="#">Suspensões</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html" class="active">Fornecedores</a></li>
+                <li><a href="fornecedor.html">Fornecedores</a></li>
             </ul>
         </nav>
     </header>
@@ -265,6 +265,14 @@
                         <button id="btnView" class="btn btn-secondary" disabled>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
                             Visualizar
+                        </button>
+                        <button id="btnEdit" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+                            Alterar
+                        </button>
+                        <button id="btnPrint" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25" /></svg>
+                            Imprimir
                         </button>
                     </div>
                 </div>
@@ -360,6 +368,8 @@
             const gridBody = document.getElementById('gridBody');
             
             const btnView = document.getElementById('btnView');
+            const btnEdit = document.getElementById('btnEdit');
+            const btnPrint = document.getElementById('btnPrint');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
             const ruleForm = document.getElementById('rule-form');
 
@@ -402,7 +412,10 @@
             };
 
             const updateButtonState = () => {
-                btnView.disabled = selectedRow === null;
+                const hasSelection = selectedRow !== null;
+                btnView.disabled = !hasSelection;
+                btnEdit.disabled = !hasSelection;
+                btnPrint.disabled = !hasSelection;
             };
 
             const showView = (viewId) => {
@@ -448,6 +461,12 @@
             });
             
             btnView.addEventListener('click', showFormForRule);
+            btnEdit.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Alterar a regra "${selectedRow.cells[0].textContent}".`);
+            });
+            btnPrint.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Imprimir a regra "${selectedRow.cells[0].textContent}".`);
+            });
             btnBackToGrid.addEventListener('click', () => showView('grid-view'));
             
             ruleForm.addEventListener('submit', function(event) {
