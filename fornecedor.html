@@ -296,7 +296,7 @@
                     <h1>Fornecedores</h1>
                     <div class="controls">
                         <div class="filter-container">
-                            <input type="text" id="filterInput" placeholder="Filtrar por CNPJ ou Razão Social...">
+                            <input type="text" id="filterInput" placeholder="Filtrar por CNPJ/CPF ou Razão Social...">
                         </div>
                          <button id="btnAdd" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
@@ -310,14 +310,18 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
                             Alterar
                         </button>
+                        <button id="btnPrint" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25" /></svg>
+                            Imprimir
+                        </button>
                     </div>
                 </div>
                 <div class="grid-container">
                     <table class="data-grid">
                         <thead>
                             <tr>
-                                <th>CNPJ</th>
-                                <th>Razão Social</th>
+                                <th>CNPJ/CPF</th>
+                                <th>Razão Social / Nome</th>
                             </tr>
                         </thead>
                         <tbody id="gridBody">
@@ -335,11 +339,11 @@
                 <form action="#" method="post" onsubmit="event.preventDefault();">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="form-cnpj">CNPJ</label>
+                            <label for="form-cnpj">CNPJ/CPF</label>
                             <div id="form-cnpj" class="form-field"></div>
                         </div>
                         <div class="form-group">
-                            <label for="form-name">Razão Social</label>
+                            <label for="form-name">Razão Social / Nome</label>
                             <div id="form-name" class="form-field"></div>
                         </div>
                     </div>
@@ -355,29 +359,41 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const supplierData = [
-                { cnpj: '10811866000136', name: '3A MARQUES CONSTRUCOES COMERCIO E SERVICO LTDA ME' },
-                { cnpj: '14883212000179', name: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP' },
-                { cnpj: '20476731000115', name: '4ID MEDICOS ASSOCIADOS EIRELLI' },
-                { cnpj: '04491152000195', name: '4LINUX SOFTWARE E COMERCIO DE PROGRAMAS LTDA' },
-                { cnpj: '26592256000129', name: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI' },
-                { cnpj: '10189253000109', name: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA' },
-                { cnpj: '29913267000151', name: 'A I M DE AGUIAR PRODUCAO DE FILMES ME' },
-                { cnpj: '30251698000189', name: 'A MINHA CASA - SOCIEDADE CIVIL DE AMPARO AO MENOR' },
-                { cnpj: '12664453000100', name: 'A7 DISTRIBUIDORA DE MEDICAMENTOS LTDA EPP' },
-                { cnpj: '04615160000104', name: 'ABMR CONSERVADORA DE ELEVADORES LTDA' },
-                { cnpj: '00462017000160', name: 'ABRIGO DOCE MORADA' },
-                { cnpj: '03978600000117', name: 'ABRIGO EVANGELICO CAMINHO DA FELICIDADE' },
-                { cnpj: '34380659000132', name: 'ABRIGO EVANGELICO DA PEDRA DE GUARATIBA' },
-                { cnpj: '33892738000160', name: 'ABRIGO TERESA DE JESUS' },
-                { cnpj: '03881480000135', name: 'ABRINDO PORTAS SOCIEDADE CIVIL' },
-                { cnpj: '04447582000100', name: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA' },
-                { cnpj: '29187747000182', name: 'ACAO COMUNITARIA SAL DA TERRA' },
-                { cnpj: '33831322000131', name: 'ACAO CRISTA VICENTE MORETTI - ACVM' },
-                { cnpj: '00082111000194', name: 'ACAO SOCIAL DA PAROQUIA NOSSA SENHORA DA LAPA' },
-                { cnpj: '42564773000140', name: 'ACAO SOCIAL PADRE ANCHIETA ASPA' },
-                { cnpj: '64171697000146', name: 'ACCORD FARMACEUTICA LTDA' },
-                { cnpj: '06105362000123', name: 'ACCUMED PROD MEDICO HOSPITALARES LTDA' },
-                { cnpj: '06351401000172', name: 'ACHEI DISTRIBUIDORA LTDA' }
+                { id: '10811866000136', name: '3A MARQUES CONSTRUCOES COMERCIO E SERVICO LTDA ME' },
+                { id: '14883212000179', name: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP' },
+                { id: '20476731000115', name: '4ID MEDICOS ASSOCIADOS EIRELLI' },
+                { id: '04491152000195', name: '4LINUX SOFTWARE E COMERCIO DE PROGRAMAS LTDA' },
+                { id: '26592256000129', name: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI' },
+                { id: '10189253000109', name: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA' },
+                { id: '29913267000151', name: 'A I M DE AGUIAR PRODUCAO DE FILMES ME' },
+                { id: '30251698000189', name: 'A MINHA CASA - SOCIEDADE CIVIL DE AMPARO AO MENOR' },
+                { id: '12664453000100', name: 'A7 DISTRIBUIDORA DE MEDICAMENTOS LTDA EPP' },
+                { id: '04615160000104', name: 'ABMR CONSERVADORA DE ELEVADORES LTDA' },
+                { id: '00462017000160', name: 'ABRIGO DOCE MORADA' },
+                { id: '03978600000117', name: 'ABRIGO EVANGELICO CAMINHO DA FELICIDADE' },
+                { id: '34380659000132', name: 'ABRIGO EVANGELICO DA PEDRA DE GUARATIBA' },
+                { id: '33892738000160', name: 'ABRIGO TERESA DE JESUS' },
+                { id: '03881480000135', name: 'ABRINDO PORTAS SOCIEDADE CIVIL' },
+                { id: '04447582000100', name: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA' },
+                { id: '29187747000182', name: 'ACAO COMUNITARIA SAL DA TERRA' },
+                { id: '33831322000131', name: 'ACAO CRISTA VICENTE MORETTI - ACVM' },
+                { id: '00082111000194', name: 'ACAO SOCIAL DA PAROQUIA NOSSA SENHORA DA LAPA' },
+                { id: '42564773000140', name: 'ACAO SOCIAL PADRE ANCHIETA ASPA' },
+                { id: '64171697000146', name: 'ACCORD FARMACEUTICA LTDA' },
+                { id: '06105362000123', name: 'ACCUMED PROD MEDICO HOSPITALARES LTDA' },
+                { id: '06351401000172', name: 'ACHEI DISTRIBUIDORA LTDA' },
+                { id: '01290665753', name: 'MARIO SOUZA FERREIRA' },
+                { id: '01649192797', name: 'LUIS FERNANDO DA SILVA' },
+                { id: '02097737749', name: 'MIRAHY DO NASCIMENTO VASCONCELLOS' },
+                { id: '02934823733', name: 'MARCIA ANDREIA GASPAR NARCISO' },
+                { id: '04030250360', name: 'RENATA DA SILVA TAVARES' },
+                { id: '05217955759', name: 'ROBERTO POLYDORO JUNIOR' },
+                { id: '05685311753', name: 'JOSE GOUVEIA DOS REIS' },
+                { id: '05993970715', name: 'ALBERTO DE LEMOS MONTEIRO DA SILVA' },
+                { id: '06107281720', name: 'ADRIANO ANTONIO' },
+                { id: '07656237739', name: 'ANGELO MARTINS MAURICIO' },
+                { id: '08337497734', name: 'RAMIRO PEREIRA BELINHO CRUZ' },
+                { id: '09436820704', name: 'JOSE ALBERTO PEREIRA FREITAS' }
             ];
 
             const gridView = document.getElementById('grid-view');
@@ -388,6 +404,7 @@
             
             const btnView = document.getElementById('btnView');
             const btnEdit = document.getElementById('btnEdit');
+            const btnPrint = document.getElementById('btnPrint');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
 
             let selectedRow = null;
@@ -397,7 +414,7 @@
                 data.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${item.cnpj}</td>
+                        <td>${item.id}</td>
                         <td>${item.name}</td>
                     `;
                     gridBody.appendChild(row);
@@ -408,6 +425,7 @@
                 const hasSelection = selectedRow !== null;
                 btnView.disabled = !hasSelection;
                 btnEdit.disabled = !hasSelection;
+                btnPrint.disabled = !hasSelection;
             };
 
             const showView = (viewId) => {
@@ -426,7 +444,7 @@
             filterInput.addEventListener('keyup', () => {
                 const filterText = filterInput.value.toLowerCase();
                 const filteredData = supplierData.filter(item => 
-                    item.cnpj.toLowerCase().includes(filterText) || 
+                    item.id.toLowerCase().includes(filterText) || 
                     item.name.toLowerCase().includes(filterText)
                 );
                 populateGrid(filteredData);
@@ -461,6 +479,12 @@
             
             btnView.addEventListener('click', showFormForSelectedRow);
             btnBackToGrid.addEventListener('click', () => showView('grid-view'));
+            btnPrint.addEventListener('click', () => {
+                if (selectedRow) {
+                    alert(`Imprimindo dados do fornecedor: ${selectedRow.cells[1].textContent}`);
+                    // Em um caso real, aqui entraria a lógica para gerar um PDF ou chamar window.print()
+                }
+            });
 
             populateGrid(supplierData);
         });
