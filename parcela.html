@@ -19,6 +19,8 @@
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --status-pagamentointegral-bg: #dcfce7; --status-pagamentointegral-text: #166534;
             --status-pagamentoamaior-bg: #cffafe; --status-pagamentoamaior-text: #0e7490;
+            --status-pagamentoparcial-bg: #dbeafe; --status-pagamentoparcial-text: #1d4ed8;
+            --status-transferidopcp-bg: #ede9fe; --status-transferidopcp-text: #5b21b6;
         }
 
         body {
@@ -200,6 +202,8 @@
         .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; font-size: 0.8rem; text-align: center; }
         .status-badge.status-pagamentointegral { background-color: var(--status-pagamentointegral-bg); color: var(--status-pagamentointegral-text); }
         .status-badge.status-pagamentoamaior { background-color: var(--status-pagamentoamaior-bg); color: var(--status-pagamentoamaior-text); }
+        .status-badge.status-pagamentoparcial { background-color: var(--status-pagamentoparcial-bg); color: var(--status-pagamentoparcial-text); }
+        .status-badge.status-transferidopcp { background-color: var(--status-transferidopcp-bg); color: var(--status-transferidopcp-text); }
         
         /* Estilos do Formulário */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
@@ -332,7 +336,8 @@
 
             const formatCurrency = (value) => Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             const formatDate = (date) => date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-            const slugifyStatus = (text) => text.toLowerCase().replace(/\s+/g, '').replace('ã', 'a');
+            const slugifyStatus = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
+
 
             // --- DADOS E CONFIGURAÇÕES ---
             const dataPrevista2026 = getSixteenthWorkingDay(2026, 7); // Julho
@@ -347,7 +352,11 @@
                 { id: 7, chaveB: '01771935000215_100_3_1', nome: 'INGRAM MICRO BRASIL LTDA', valor: 70000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026 },
                 { id: 8, chaveB: '01953247000195_100_3_1', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valor: 188763.49, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
                 { id: 9, chaveB: '02329307000166_100_3_1', nome: 'PETRA MG INDUSTRIA E COMERCIO', valor: 67493.56, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
-                { id: 10, chaveB: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valor: 45000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026 }
+                { id: 10, chaveB: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valor: 45000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026 },
+                { id: 11, chaveB: '04048325000171_100_3_1', nome: 'ZAP COMERCIO DE PNEUS E ACESSORIOS', valor: 85000.00, status: 'Pagamento Parcial', dataPrevista: dataPrevista2026 },
+                { id: 12, chaveB: '04165358000169_100_4_1', nome: 'RIO PRETO ASFALTOS LTDA', valor: 120000.00, status: 'Transferido p/ CP', dataPrevista: dataPrevista2026 },
+                { id: 13, chaveB: '04239266000130_100_3_1', nome: 'LOCAMAIS SERVICOS LTDA', valor: 75000.00, status: 'Pagamento Parcial', dataPrevista: dataPrevista2026 },
+                { id: 14, chaveB: '04253334000103_100_3_1', nome: 'RIO SAUDE', valor: 250000.00, status: 'Transferido p/ CP', dataPrevista: dataPrevista2026 }
             ];
 
             // --- ELEMENTOS DO DOM ---
