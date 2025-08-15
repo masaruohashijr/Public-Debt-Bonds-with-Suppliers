@@ -17,6 +17,8 @@
             --text-light: #ffffff;
             --text-dark: #1f2937;
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --status-pagamentointegral-bg: #dcfce7; --status-pagamentointegral-text: #166534;
+            --status-pagamentoamaior-bg: #cffafe; --status-pagamentoamaior-text: #0e7490;
         }
 
         body {
@@ -83,7 +85,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             padding: 2rem;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: auto;
         }
 
@@ -104,27 +106,45 @@
             color: var(--text-dark);
         }
 
-        /* Controles */
+        /* Controles e Filtros */
         .controls {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
+            align-items: flex-end; /* Alinha os botões na base */
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--secondary-color);
         }
 
         .filter-container {
             position: relative;
         }
 
-        #filterInput {
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
+        .input-filter {
+            padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
-            min-width: 250px;
+            min-width: 150px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+        
+        #filterInput {
+             padding-left: 2.5rem;
+             min-width: 250px;
+        }
 
-        #filterInput:focus {
+        .input-filter:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
@@ -140,6 +160,11 @@
             font-size: 1.1rem;
         }
         
+        .actions-container {
+            display: flex;
+            gap: 0.75rem;
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -153,220 +178,134 @@
             transition: all 0.2s ease-in-out;
         }
         
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-        }
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        .btn-secondary {
-            background-color: #fff;
-            color: var(--secondary-color);
-            border-color: var(--border-color);
-        }
-        .btn-secondary:hover {
-            background-color: #f9fafb;
-            border-color: #d1d5db;
-        }
-
-        .btn:disabled {
-            background-color: #e5e7eb;
-            color: #9ca3af;
-            cursor: not-allowed;
-            border-color: transparent;
-        }
+        .btn svg { width: 18px; height: 18px; }
+        .btn-primary { background-color: var(--primary-color); color: var(--text-light); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: #fff; color: var(--secondary-color); border-color: var(--border-color); }
+        .btn-secondary:hover { background-color: #f9fafb; border-color: #d1d5db; }
+        .btn:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; border-color: transparent; }
 
         /* Grid de Dados */
-        .grid-container {
-            overflow-x: auto;
-        }
-
-        .data-grid {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-        }
-
-        .data-grid th, .data-grid td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-            white-space: nowrap;
-        }
-
-        .data-grid th {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--secondary-color);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background-color: #f9fafb;
-        }
+        .grid-container { overflow-x: auto; }
+        .data-grid { width: 100%; border-collapse: collapse; border-spacing: 0; }
+        .data-grid th, .data-grid td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-grid th { font-size: 0.8rem; font-weight: 600; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 0.05em; background-color: #f9fafb; }
+        .data-grid th:first-child, .data-grid td:first-child { width: 1%; padding-right: 0.5rem; text-align: center; }
+        .data-grid tbody tr { cursor: pointer; transition: background-color 0.2s; }
+        .data-grid tbody tr:hover { background-color: var(--row-hover-color); }
+        .data-grid tbody tr.selected { background-color: var(--row-selected-color); color: var(--primary-hover); font-weight: 500; }
+        .data-grid td.valor { text-align: right; font-weight: 500; }
+        .no-results { text-align: center; padding: 2rem; color: var(--secondary-color); font-style: italic; }
         
-        .data-grid tbody tr {
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .data-grid tbody tr:hover {
-            background-color: var(--row-hover-color);
-        }
-
-        .data-grid tbody tr.selected {
-            background-color: var(--row-selected-color);
-            color: var(--primary-hover);
-            font-weight: 500;
-        }
-        
-        .data-grid td.valor {
-            text-align: right;
-            font-weight: 500;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 2rem;
-            color: var(--secondary-color);
-            font-style: italic;
-        }
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; font-size: 0.8rem; text-align: center; }
+        .status-badge.status-pagamentointegral { background-color: var(--status-pagamentointegral-bg); color: var(--status-pagamentointegral-text); }
+        .status-badge.status-pagamentoamaior { background-color: var(--status-pagamentoamaior-bg); color: var(--status-pagamentoamaior-text); }
         
         /* Estilos do Formulário */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--secondary-color);
-            font-size: 0.9rem;
-        }
-
-        .form-field {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            background-color: #f9fafb;
-            color: var(--text-dark);
-        }
-        
-        .form-field.currency {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .form-actions {
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary-color); font-size: 0.9rem; }
+        .form-field { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1rem; background-color: #f9fafb; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; }
+        .form-field.currency { font-weight: 600; color: var(--primary-color); }
+        .form-actions { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
     </style>
 </head>
 <body>
 
     <header class="top-nav">
-        <a href="titulo.html" class="logo">Dívida Pública</a>
+        <a href="#" class="logo">Dívida Pública</a>
         <nav>
             <ul>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/parcela.html">Parcelas</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/regra.html">Regras</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/suspensao.html">Suspensões</a></li>
-                <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html" class="active">Fornecedores</a></li>
+                <li><a href="#">Títulos</a></li>
+                <li><a href="#" class="active">Parcelas</a></li>
+                <li><a href="#">Regras</a></li>
+                <li><a href="#">Suspensões</a></li>
+                <li><a href="#">Fornecedores</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="content-wrapper">
+        <!-- VIEW: GRID DE PARCELAS -->
         <div id="grid-view" class="view active">
             <main class="main-container">
                 <div class="header-controls">
                     <h1>Parcelas</h1>
                     <div class="controls">
-                        <div class="filter-container">
-                            <input type="text" id="filterInput" placeholder="Filtrar parcelas...">
+                        <div class="filter-group">
+                           <label for="dateStart">Data Inicial</label>
+                           <input type="date" id="dateStart" class="input-filter">
                         </div>
-                         <button id="btnAdd" class="btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                            Incluir
-                        </button>
-                        <button id="btnView" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-                            Visualizar
-                        </button>
-                        <button id="btnEdit" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
-                            Alterar
-                        </button>
-                        <button id="btnPrint" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25" /></svg>
-                            Imprimir
-                        </button>
+                        <div class="filter-group">
+                           <label for="dateEnd">Data Final</label>
+                           <input type="date" id="dateEnd" class="input-filter">
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterInput">Filtro Rápido</label>
+                            <div class="filter-container">
+                                <input type="text" id="filterInput" class="input-filter" placeholder="Filtrar por titular...">
+                            </div>
+                        </div>
+                        <div class="actions-container">
+                             <button id="btnTransfer" class="btn btn-primary" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+                                Transferir LP para CP
+                            </button>
+                            <button id="btnView" class="btn btn-secondary" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                                Visualizar
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="grid-container">
                     <table class="data-grid">
                         <thead>
                             <tr>
-                                <th>Cod.Pessoa</th>
-                                <th>FR</th>
-                                <th>ND:Cust/Cap</th>
-                                <th>Nome Pessoa</th>
-                                <th class="valor">Vlr. Parcela</th>
+                                <th><input type="checkbox" id="selectAllCheckbox"></th>
+                                <th scope="col">Chave B</th>
+                                <th scope="col">Titular</th>
+                                <th scope="col">Data Prevista</th>
+                                <th scope="col" class="valor">Valor da Parcela</th>
+                                <th scope="col">Status</th>
                             </tr>
                         </thead>
-                        <tbody id="gridBody">
-                            <!-- Dados populados via JS -->
-                        </tbody>
+                        <tbody id="gridBody"></tbody>
                     </table>
-                     <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
+                    <div id="no-results-row" class="no-results" style="display: none;">Nenhuma parcela encontrada.</div>
                 </div>
             </main>
         </div>
 
+        <!-- VIEW: DETALHES DA PARCELA -->
         <div id="form-view" class="view">
             <main class="main-container">
                 <h1>Detalhes da Parcela</h1>
-                <form>
+                <form onsubmit="event.preventDefault();">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label for="form-codPessoa">Cod.Pessoa</label>
-                            <div id="form-codPessoa" class="form-field"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="form-fr">FR</label>
-                            <div id="form-fr" class="form-field"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="form-nd">ND:Cust/Cap</label>
-                            <div id="form-nd" class="form-field"></div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Chave B do Título</label>
+                            <div id="form-chave" class="form-field"></div>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label for="form-nome">Nome Pessoa</label>
+                             <label>Titular</label>
                             <div id="form-nome" class="form-field"></div>
                         </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label for="form-valor">Vlr. Parcela</label>
+                        <div class="form-group">
+                            <label>Data Prevista</label>
+                            <div id="form-data-prevista" class="form-field"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Valor da Parcela</label>
                             <div id="form-valor" class="form-field currency"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <div id="form-status" class="form-field"></div>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
+                        <button type="button" id="btnBackToGrid" class="btn btn-primary">Voltar</button>
                     </div>
                 </form>
             </main>
@@ -375,133 +314,197 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- FUNÇÕES HELPER ---
+            const getSixteenthWorkingDay = (year, month) => {
+                let date = new Date(year, month - 1, 1);
+                let workingDays = 0;
+                while (workingDays < 16) {
+                    const dayOfWeek = date.getDay();
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Ignora Domingo (0) e Sábado (6)
+                        workingDays++;
+                    }
+                    if (workingDays < 16) {
+                        date.setDate(date.getDate() + 1);
+                    }
+                }
+                return date;
+            };
+
+            const formatCurrency = (value) => Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const formatDate = (date) => date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+            const slugifyStatus = (text) => text.toLowerCase().replace(/\s+/g, '').replace('ã', 'a');
+
+            // --- DADOS E CONFIGURAÇÕES ---
+            const dataPrevista2026 = getSixteenthWorkingDay(2026, 7); // Julho
+
             const parcelasData = [
-                { codPessoa: '00104659000198', fr: '100', nd: '3', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valor: 50000.00 },
-                { codPessoa: '00299904000160', fr: '100', nd: '3', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 161304.68 },
-                { codPessoa: '00299904000160', fr: '141', nd: '3', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 314510.89 },
-                { codPessoa: '00472805000308', fr: '100', nd: '3', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valor: 221050.87 },
-                { codPessoa: '00487626000174', fr: '100', nd: '3', nome: 'IPE ENGENHARIA LTDA', valor: 50000.00 },
-                { codPessoa: '00768165000108', fr: '100', nd: '3', nome: 'HB MULTISERVICOS LTDA', valor: 61558.17 },
-                { codPessoa: '00844903000159', fr: '100', nd: '3', nome: 'ICR COMERCIO ATACADISTA DE PRODUTOS BIOTERIOS LTDA', valor: 50000.00 },
-                { codPessoa: '01077145000153', fr: '100', nd: '3', nome: 'DATAMETRICA CONTACT CENTER LTDA', valor: 50424.11 },
-                { codPessoa: '01077145000153x', fr: '100', nd: '3', nome: 'DATAMETRICA CONTACT CENTER LTDAx', valor: 171594.99 },
-                { codPessoa: '01093429000133', fr: '100', nd: '3', nome: 'RGI EMPREENDIMENTOS LTDA', valor: 50000.00 },
-                { codPessoa: '01229958000111', fr: '100', nd: '3', nome: 'ATAC FIRE SEGURANCA CONTRA INCENDIO LTDA', valor: 50000.00 },
-                { codPessoa: '01771935000215', fr: '100', nd: '3', nome: 'INGRAM MICRO BRASIL LTDA', valor: 65265.87 },
-                { codPessoa: '01953247000195', fr: '100', nd: '3', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valor: 188763.49 },
-                { codPessoa: '02149434000183', fr: '100', nd: '4', nome: 'RL2 ENGENHARIA LTDA', valor: 50000.00 },
-                { codPessoa: '02149434000183', fr: '146', nd: '4', nome: 'RL2 ENGENHARIA LTDA', valor: 50000.00 },
-                { codPessoa: '02329307000166', fr: '100', nd: '3', nome: 'PETRA MG INDUSTRIA E COMERCIO DE AGREGADOS LTDA', valor: 67493.56 },
-                { codPessoa: '02539959000125', fr: '100', nd: '3', nome: 'ESPACO CIDADANIA E OPORTUNIDADES SOCIAIS - ECOS', valor: 175587.12 },
-                { codPessoa: '03253042000122', fr: '146', nd: '3', nome: 'RESITEC DE TERESOPOLIS CONSTRUCOES LTDA', valor: 50000.00 },
-                { codPessoa: '03285661000107', fr: '100', nd: '4', nome: 'ENGREST ENGENHARIA DE RECUPERACAO ESTRUTURAL LTDA', valor: 53297.78 },
-                { codPessoa: '03285661000107', fr: '146', nd: '3', nome: 'ENGREST ENGENHARIA DE RECUPERACAO ESTRUTURAL LTDA', valor: 50000.00 },
-                { codPessoa: '03319569000102', fr: '100', nd: '4', nome: 'PRODIGY CONSTRUTORA E PARTICIPACOES LTDA', valor: 50000.00 },
-                { codPessoa: '03506307000157', fr: '100', nd: '3', nome: 'TICKET SOLUCOES HDFGT S A', valor: 42602.28 },
-                { codPessoa: '03533879000125', fr: '100', nd: '3', nome: 'CENTRO BRASILEIRO DE ACOES SOCIAIS PARA A CIDADANIA CEBRAC', valor: 116950.29 }
+                { id: 1, chaveB: '00104659000198_100_3_1', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valor: 50000.00, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
+                { id: 2, chaveB: '00299904000160_100_3_1', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 161304.68, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026 },
+                { id: 3, chaveB: '00472805000308_100_3_1', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valor: 221050.87, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
+                { id: 4, chaveB: '00487626000174_100_3_1', nome: 'IPE ENGENHARIA LTDA', valor: 55000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026 },
+                { id: 5, chaveB: '00768165000108_100_3_1', nome: 'HB MULTISERVICOS LTDA', valor: 61558.17, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
+                { id: 6, chaveB: '01077145000153_100_3_1', nome: 'DATAMETRICA CONTACT CENTER LTDA', valor: 50424.11, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
+                { id: 7, chaveB: '01771935000215_100_3_1', nome: 'INGRAM MICRO BRASIL LTDA', valor: 70000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026 },
+                { id: 8, chaveB: '01953247000195_100_3_1', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valor: 188763.49, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
+                { id: 9, chaveB: '02329307000166_100_3_1', nome: 'PETRA MG INDUSTRIA E COMERCIO', valor: 67493.56, status: 'Pagamento Integral', dataPrevista: dataPrevista2026 },
+                { id: 10, chaveB: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valor: 45000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026 }
             ];
 
+            // --- ELEMENTOS DO DOM ---
             const gridView = document.getElementById('grid-view');
             const formView = document.getElementById('form-view');
             const gridBody = document.getElementById('gridBody');
             const filterInput = document.getElementById('filterInput');
+            const dateStartInput = document.getElementById('dateStart');
+            const dateEndInput = document.getElementById('dateEnd');
             const noResultsRow = document.getElementById('no-results-row');
-            
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             const btnView = document.getElementById('btnView');
-            const btnEdit = document.getElementById('btnEdit');
-            const btnPrint = document.getElementById('btnPrint');
+            const btnTransfer = document.getElementById('btnTransfer');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
 
-            let selectedRow = null;
+            let selectedRows = new Set();
 
-            const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
+            // --- FUNÇÕES PRINCIPAIS ---
             const populateGrid = (data) => {
                 gridBody.innerHTML = '';
                 data.forEach(item => {
+                    const statusClass = slugifyStatus(item.status);
                     const row = document.createElement('tr');
+                    row.dataset.id = item.id;
                     row.innerHTML = `
-                        <td>${item.codPessoa}</td>
-                        <td>${item.fr}</td>
-                        <td>${item.nd}</td>
+                        <td><input type="checkbox" data-id="${item.id}"></td>
+                        <td>${item.chaveB}</td>
                         <td>${item.nome}</td>
+                        <td>${formatDate(item.dataPrevista)}</td>
                         <td class="valor">${formatCurrency(item.valor)}</td>
+                        <td><span class="status-badge status-${statusClass}">${item.status}</span></td>
                     `;
                     gridBody.appendChild(row);
                 });
             };
 
             const updateButtonState = () => {
-                const hasSelection = selectedRow !== null;
-                btnView.disabled = !hasSelection;
-                btnEdit.disabled = !hasSelection;
-                btnPrint.disabled = !hasSelection;
+                const selectionCount = selectedRows.size;
+                btnView.disabled = selectionCount !== 1;
+                btnTransfer.disabled = selectionCount === 0;
+            };
+            
+            const updateSelectionVisuals = () => {
+                gridBody.querySelectorAll('tr').forEach(row => {
+                    const id = row.dataset.id;
+                    const checkbox = row.querySelector('input[type="checkbox"]');
+                    if (selectedRows.has(id)) {
+                        row.classList.add('selected');
+                        checkbox.checked = true;
+                    } else {
+                        row.classList.remove('selected');
+                        checkbox.checked = false;
+                    }
+                });
+                const allVisibleCheckboxes = [...gridBody.querySelectorAll('tr:not([style*="display: none"]) input[type="checkbox"]')];
+                const allVisibleSelected = allVisibleCheckboxes.every(cb => cb.checked);
+                selectAllCheckbox.checked = allVisibleCheckboxes.length > 0 && allVisibleSelected;
+                updateButtonState();
             };
 
-            const showView = (viewId) => {
+            const switchView = (viewId) => {
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
                 document.getElementById(viewId).classList.add('active');
             };
 
             const showFormForSelectedRow = () => {
-                if (!selectedRow) return;
-                const cells = selectedRow.cells;
-                document.getElementById('form-codPessoa').textContent = cells[0].textContent;
-                document.getElementById('form-fr').textContent = cells[1].textContent;
-                document.getElementById('form-nd').textContent = cells[2].textContent;
-                document.getElementById('form-nome').textContent = cells[3].textContent;
-                document.getElementById('form-valor').textContent = cells[4].textContent;
-                showView('form-view');
-            };
+                if (selectedRows.size !== 1) return;
+                const selectedId = parseInt(selectedRows.values().next().value, 10);
+                const item = parcelasData.find(p => p.id === selectedId);
+                if (!item) return;
 
-            filterInput.addEventListener('keyup', () => {
+                document.getElementById('form-chave').textContent = item.chaveB;
+                document.getElementById('form-nome').textContent = item.nome;
+                document.getElementById('form-data-prevista').textContent = formatDate(item.dataPrevista);
+                document.getElementById('form-valor').textContent = formatCurrency(item.valor);
+                document.getElementById('form-status').textContent = item.status;
+                
+                switchView('form-view');
+            };
+            
+            const applyFilters = () => {
                 const filterText = filterInput.value.toLowerCase();
-                const filteredData = parcelasData.filter(item => 
-                    item.codPessoa.toLowerCase().includes(filterText) ||
-                    item.nome.toLowerCase().includes(filterText)
-                );
+                const startDate = new Date(dateStartInput.value + 'T00:00:00');
+                const endDate = new Date(dateEndInput.value + 'T23:59:59');
+
+                const filteredData = parcelasData.filter(item => {
+                    const textMatch = item.nome.toLowerCase().includes(filterText);
+                    const dateMatch = item.dataPrevista >= startDate && item.dataPrevista <= endDate;
+                    return textMatch && dateMatch;
+                });
+
                 populateGrid(filteredData);
                 noResultsRow.style.display = filteredData.length === 0 ? '' : 'none';
-            });
+                updateSelectionVisuals();
+            };
             
+            // --- EVENT LISTENERS ---
             gridBody.addEventListener('click', (event) => {
-                const clickedRow = event.target.closest('tr');
-                if (!clickedRow) return;
+                const row = event.target.closest('tr');
+                if (!row) return;
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                const id = row.dataset.id;
 
-                if (selectedRow) selectedRow.classList.remove('selected');
-                if (selectedRow === clickedRow) {
-                    selectedRow = null;
-                } else {
-                    clickedRow.classList.add('selected');
-                    selectedRow = clickedRow;
+                if (event.target.type !== 'checkbox') {
+                    checkbox.checked = !checkbox.checked;
                 }
-                updateButtonState();
+
+                if (checkbox.checked) {
+                    selectedRows.add(id);
+                } else {
+                    selectedRows.delete(id);
+                }
+                updateSelectionVisuals();
             });
             
             gridBody.addEventListener('dblclick', (event) => {
-                const clickedRow = event.target.closest('tr');
-                if (clickedRow) {
-                    if (!selectedRow || selectedRow !== clickedRow) {
-                       if (selectedRow) selectedRow.classList.remove('selected');
-                        clickedRow.classList.add('selected');
-                        selectedRow = clickedRow;
-                    }
+                const row = event.target.closest('tr');
+                if (row) {
+                    const id = row.dataset.id;
+                    selectedRows.clear();
+                    selectedRows.add(id);
+                    updateSelectionVisuals();
                     showFormForSelectedRow();
                 }
             });
+
+            selectAllCheckbox.addEventListener('change', () => {
+                const visibleRows = gridBody.querySelectorAll('tr:not([style*="display: none"])');
+                visibleRows.forEach(row => {
+                    const id = row.dataset.id;
+                    if (selectAllCheckbox.checked) {
+                        selectedRows.add(id);
+                    } else {
+                        selectedRows.delete(id);
+                    }
+                });
+                updateSelectionVisuals();
+            });
+            
+            [filterInput, dateStartInput, dateEndInput].forEach(input => {
+                input.addEventListener('input', applyFilters);
+            });
             
             btnView.addEventListener('click', showFormForSelectedRow);
-            btnBackToGrid.addEventListener('click', () => showView('grid-view'));
+            btnTransfer.addEventListener('click', () => {
+                alert(`Ação: Transferir ${selectedRows.size} parcela(s) de Longo Prazo para Curto Prazo.`);
+            });
+            btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
             
-            // Botões de ação
-            btnEdit.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Alterar a parcela de ${selectedRow.cells[3].textContent}.`);
-            });
-            btnPrint.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Imprimir a parcela de ${selectedRow.cells[3].textContent}.`);
-            });
-
-            populateGrid(parcelasData);
+            // --- INICIALIZAÇÃO ---
+            const setDefaultDates = () => {
+                dateStartInput.value = '2026-01-01';
+                dateEndInput.value = '2026-12-31';
+            };
+            
+            setDefaultDates();
+            applyFilters();
             updateButtonState();
         });
     </script>
