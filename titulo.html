@@ -50,32 +50,12 @@
       color: var(--primary-color);
     }
 
-    .top-nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .top-nav ul li a {
-      text-decoration: none;
-      color: var(--secondary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-    
-    .top-nav ul li a:hover,
-    .top-nav ul li a.active {
-      color: var(--primary-color);
-    }
+    .top-nav ul { margin: 0; padding: 0; list-style: none; display: flex; gap: 1.5rem; }
+    .top-nav ul li a { text-decoration: none; color: var(--secondary-color); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
+    .top-nav ul li a:hover, .top-nav ul li a.active { color: var(--primary-color); }
 
     /* Estrutura das Views */
-    .content-wrapper {
-      padding: 1.5rem;
-    }
-    
+    .content-wrapper { padding: 1.5rem; }
     .view { display: none; }
     .view.active { display: block; }
 
@@ -90,139 +70,39 @@
     }
 
     /* Cabeçalho com Título e Controles */
-    .header-controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-size: 1.875rem;
-      font-weight: 700;
-      margin: 0;
-      color: var(--text-dark);
-    }
+    .header-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+    h1 { font-size: 1.875rem; font-weight: 700; margin: 0; color: var(--text-dark); }
 
     /* Container de Filtro e Ações */
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    /* Campo de Filtro */
+    .controls { display: flex; flex-wrap: wrap; gap: 1rem; }
     .filter-container { position: relative; }
-
-    #filterInput {
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 1rem;
-      min-width: 250px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    #filterInput:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-    }
-
-    .filter-container::before {
-      content: '🔍';
-      position: absolute;
-      left: 0.8rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--secondary-color);
-      font-size: 1.1rem;
-    }
+    #filterInput { padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; min-width: 250px; transition: border-color 0.2s, box-shadow 0.2s; }
+    #filterInput:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
+    .filter-container::before { content: '🔍'; position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--secondary-color); font-size: 1.1rem; }
 
     /* Botões de Ação */
     .actions-container { display: flex; gap: 0.75rem; }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.25rem;
-      border: 1px solid transparent;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-    }
-
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border: 1px solid transparent; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease-in-out; }
     .btn svg { width: 18px; height: 18px; }
-
     .btn-primary { background-color: var(--primary-color); color: var(--text-light); }
     .btn-primary:hover { background-color: var(--primary-hover); }
-
     .btn-secondary { background-color: #fff; color: var(--secondary-color); border-color: var(--border-color); }
     .btn-secondary:hover { background-color: #f9fafb; border-color: #d1d5db; }
-
-    .btn:disabled {
-      background-color: #e5e7eb;
-      color: #9ca3af;
-      cursor: not-allowed;
-      border-color: transparent;
-    }
+    .btn:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; border-color: transparent; }
 
     /* Grid de Dados */
     .grid-container { overflow-x: auto; }
-
-    .data-grid {
-      width: 100%;
-      border-collapse: collapse;
-      border-spacing: 0;
-    }
-
-    .data-grid th, .data-grid td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    .data-grid th {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--secondary-color);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      background-color: #f9fafb;
-    }
-
-    .data-grid tbody tr {
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
+    .data-grid { width: 100%; border-collapse: collapse; border-spacing: 0; }
+    .data-grid th, .data-grid td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    .data-grid th { font-size: 0.8rem; font-weight: 600; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 0.05em; background-color: #f9fafb; }
+    .data-grid tbody tr { cursor: pointer; transition: background-color 0.2s; }
     .data-grid tbody tr:hover { background-color: var(--row-hover-color); }
-    .data-grid tbody tr.selected {
-      background-color: var(--row-selected-color);
-      color: var(--primary-hover);
-      font-weight: 500;
-    }
-    
+    .data-grid tbody tr.selected { background-color: var(--row-selected-color); color: var(--primary-hover); font-weight: 500; }
     .data-grid td.valor { text-align: right; font-weight: 500; }
     .no-results { text-align: center; padding: 2rem; color: var(--secondary-color); font-style: italic; }
 
     /* Estilos de Status (Pílulas) */
-    .status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px; /* Formato de pílula */
-      font-weight: 600;
-      font-size: 0.8rem;
-      text-align: center;
-      white-space: nowrap;
-    }
-
+    .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; font-size: 0.8rem; text-align: center; white-space: nowrap; }
     .status-badge.status-rascunho { background-color: var(--status-rascunho-bg); color: var(--status-rascunho-text); }
     .status-badge.status-naopago { background-color: var(--status-naopago-bg); color: var(--status-naopago-text); }
     .status-badge.status-pgtoparcial { background-color: var(--status-pgtoparcial-bg); color: var(--status-pgtoparcial-text); }
@@ -230,45 +110,13 @@
     .status-badge.status-cancelado { background-color: var(--status-cancelado-bg); color: var(--status-cancelado-text); }
 
     /* Estilos do Formulário */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
     .form-group { display: flex; flex-direction: column; }
-
-    .form-group label {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--secondary-color);
-      font-size: 0.9rem;
-    }
-
-    .form-field {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 1rem;
-      background-color: #f9fafb;
-      color: var(--text-dark);
-      min-height: 44px; /* Garante altura mínima consistente */
-      display: flex;
-      align-items: center;
-    }
-    
+    .form-group label { font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary-color); font-size: 0.9rem; }
+    .form-field { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1rem; background-color: #f9fafb; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; }
+    .form-field input, .form-field select { width: 100%; border: none; background: transparent; font: inherit; color: inherit; outline: none; }
     .form-field.currency { font-weight: 600; color: var(--primary-color); }
-
-    .form-actions {
-      margin-top: 2.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-    }
+    .form-actions { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
   </style>
 </head>
 <body>
@@ -320,12 +168,14 @@
           <table class="data-grid">
             <thead>
               <tr>
-                <th scope="col">Chave</th>
+                <th scope="col">ID</th>
+                <th scope="col">Número</th>
                 <th scope="col">Titular</th>
-                <th scope="col">Sigla Órgão</th>
+                <th scope="col">UG</th>
                 <th scope="col">Grupo</th>
                 <th scope="col" class="valor">Valor Nominal</th>
                 <th scope="col" class="valor">Valor Pago</th>
+                <th scope="col" class="valor">Saldo Devedor</th>
                 <th scope="col">Último Pagamento</th>
                 <th scope="col">Status</th>
               </tr>
@@ -340,77 +190,62 @@
     <div id="form-view" class="view">
       <main class="main-container">
         <h1>Detalhes do Título</h1>
-        <form action="#" method="post" onsubmit="event.preventDefault();">
+        <form id="bondForm" onsubmit="event.preventDefault();">
           <div class="form-grid">
+            <div class="form-group">
+              <label>ID</label>
+              <div id="form-id" class="form-field"></div>
+            </div>
+
             <div class="form-group" style="grid-column: 1 / -1;">
-              <label for="form-chave">Chave</label>
-              <div id="form-chave" class="form-field"></div>
+              <label>Número (Chave)</label>
+              <div id="form-numero" class="form-field"></div>
             </div>
 
             <div class="form-group" style="grid-column: 1 / -1;">
-              <label for="form-titular">Titular</label>
-              <div id="form-titular" class="form-field"></div>
+              <label>Titular</label>
+              <div class="form-field"><input id="form-titular" type="text" /></div>
             </div>
 
             <div class="form-group">
-              <label for="form-sigla-orgao">Sigla do Órgão</label>
-              <div id="form-sigla-orgao" class="form-field"></div>
+              <label>UG</label>
+              <div class="form-field"><input id="form-ug" type="text" placeholder="Ex: SME, SMS, RIOSAUDE" /></div>
             </div>
 
             <div class="form-group">
-              <label for="form-codigo-orgao">Código do Órgão</label>
-              <div id="form-codigo-orgao" class="form-field"></div>
+              <label>Grupo</label>
+              <div class="form-field"><input id="form-grupo" type="text" /></div>
             </div>
 
             <div class="form-group">
-              <label for="form-fonte">Fonte</label>
-              <div id="form-fonte" class="form-field"></div>
+              <label>Valor Nominal</label>
+              <div class="form-field"><input id="form-valor-nominal" type="number" step="0.01" min="0" /></div>
             </div>
 
             <div class="form-group">
-              <label for="form-categoria">Categoria</label>
-              <div id="form-categoria" class="form-field"></div>
+              <label>Valor Pago</label>
+              <div class="form-field"><input id="form-valor-pago" type="number" step="0.01" min="0" /></div>
             </div>
 
             <div class="form-group">
-              <label for="form-grupo">Grupo</label>
-              <div id="form-grupo" class="form-field"></div>
+              <label>Saldo Devedor</label>
+              <div id="form-saldo-devedor" class="form-field currency"></div>
             </div>
 
             <div class="form-group">
-              <label for="form-valor-nominal">Valor Nominal do Título</label>
-              <div id="form-valor-nominal" class="form-field currency"></div>
+              <label>Último Pagamento</label>
+              <div class="form-field"><input id="form-ultimo-pagamento" type="date" /></div>
             </div>
 
             <div class="form-group">
-              <label for="form-valor-pago">Valor Pago</label>
-              <div id="form-valor-pago" class="form-field currency"></div>
-            </div>
-
-            <div class="form-group">
-              <label for="form-ultimo-pagamento">Último Pagamento</label>
-              <div id="form-ultimo-pagamento" class="form-field"></div>
-            </div>
-
-            <div class="form-group">
-              <label for="form-retencao">Valor da Retenção</label>
-              <div id="form-retencao" class="form-field currency"></div>
-            </div>
-
-            <div class="form-group">
-              <label for="form-status">Status do Título</label>
-              <div id="form-status" class="form-field"></div>
-            </div>
-
-            <div class="form-group">
-              <label for="form-causa">Causa</label>
-              <input type="text" id="form-causa" class="form-field" />
+              <label>Status</label>
+              <div class="form-field"><input id="form-status" type="text" /></div>
             </div>
           </div>
 
           <div class="form-actions">
             <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar para o Grid</button>
-            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            <button type="submit" id="btnSave" class="btn btn-primary">Salvar Alterações</button>
           </div>
         </form>
       </main>
@@ -419,24 +254,18 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- DADOS E CONFIGURAÇÕES ---
-      const orgaoCodeMap = {
-        'SME': '1600','SMAS': '1700','SMS': '1800','RIOSAUDE': '1851','F-RIO': '3051',
-        'IPLANRIO': '1451','GM-RIO': '3931','SMFP': '0000','COMLURB': '2200',
-        'PGM': '1552','CVL': '1101','MULTIRIO': '1651'
-      };
-
-      const data = [
-        { cnpj: '20476731000115', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', orgao: 'RIOSAUDE', fonte: '208', categoria: '3-Corrente', valorNominal: 489861.16, valorPago: 450000.00, ultimoPagamento: '2025-08-14', status: 'Não Pago', causa: '' },
-        { cnpj: '33892738000160', titular: 'ABRIGO TERESA DE JESUS', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valorNominal: 195000.00, valorPago: 195000.00, ultimoPagamento: '2025-09-05', status: 'Pgto Parcial', causa: '' },
-        { cnpj: '10189253000109', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', orgao: 'F-RIO', fonte: '100', categoria: '3-Corrente', valorNominal: 185685.99, valorPago: 150000.00, ultimoPagamento: '2025-11-21', status: 'Pgto Parcial', causa: '' },
-        { cnpj: '04447582000100', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', orgao: 'SME', fonte: '100', categoria: '3-Corrente', valorNominal: 130000.00, valorPago: 100000.00, ultimoPagamento: '2025-10-10', status: 'Não Pago', causa: '' },
-        { cnpj: '14883212000179', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', orgao: 'SMS', fonte: '181', categoria: '3-Corrente', valorNominal: 61710.00, valorPago: 61710.00, ultimoPagamento: '2025-12-01', status: 'Pagamento Integral', causa: '' },
-        { cnpj: '00462017000160', titular: 'ABRIGO DOCE MORADA', orgao: 'SMAS', fonte: '100', categoria: '3-Corrente', valorNominal: 57903.68, valorPago: 50000.00, ultimoPagamento: '2025-07-30', status: 'Rascunho', causa: '' },
-        { cnpj: '26592256000129', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', orgao: 'SMFP', fonte: '100', categoria: '4-Capital', valorNominal: 14999.60, valorPago: 14999.60, ultimoPagamento: '2025-10-28', status: 'Pgto Parcial', causa: '' }
+      // --- DADOS (mantidos) ---
+      let data = [
+        { id: 1, numero: '20476731000115_1851_208_3_6', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', ug: 'RIOSAUDE', grupo: '6 - INDIRETAS', valorNominal: 489861.16, valorPago: 450000.00, ultimoPagamento: '2025-08-14', status: 'Não Pago' },
+        { id: 2, numero: '33892738000160_1600_100_3_3', titular: 'ABRIGO TERESA DE JESUS', ug: 'SME', grupo: '3 - SME', valorNominal: 195000.00, valorPago: 195000.00, ultimoPagamento: '2025-09-05', status: 'Pgto Parcial' },
+        { id: 3, numero: '10189253000109_3051_100_3_6', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', ug: 'F-RIO', grupo: '6 - INDIRETAS', valorNominal: 185685.99, valorPago: 150000.00, ultimoPagamento: '2025-11-21', status: 'Pgto Parcial' },
+        { id: 4, numero: '04447582000100_1600_100_3_3', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', ug: 'SME', grupo: '3 - SME', valorNominal: 130000.00, valorPago: 100000.00, ultimoPagamento: '2025-10-10', status: 'Não Pago' },
+        { id: 5, numero: '14883212000179_1800_181_3_2', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', ug: 'SMS', grupo: '2 - SMS', valorNominal: 61710.00, valorPago: 61710.00, ultimoPagamento: '2025-12-01', status: 'Pagamento Integral' },
+        { id: 6, numero: '00462017000160_1700_100_3_4', titular: 'ABRIGO DOCE MORADA', ug: 'SMAS', grupo: '4 - SMAS', valorNominal: 57903.68, valorPago: 50000.00, ultimoPagamento: '2025-07-30', status: 'Rascunho' },
+        { id: 7, numero: '26592256000129_0000_100_4_1', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', ug: 'SMFP', grupo: '1 - Diretas', valorNominal: 14999.60, valorPago: 14999.60, ultimoPagamento: '2025-10-28', status: 'Pgto Parcial' }
       ];
 
-      // --- ELEMENTOS DO DOM ---
+      // --- ELEMENTOS ---
       const gridView = document.getElementById('grid-view');
       const formView = document.getElementById('form-view');
       const filterInput = document.getElementById('filterInput');
@@ -447,81 +276,73 @@
       const btnPrint = document.getElementById('btnPrint');
       const btnAdd = document.getElementById('btnAdd');
       const btnBackToGrid = document.getElementById('btnBackToGrid');
-      
+      const btnSave = document.getElementById('btnSave');
+
+      const fId = document.getElementById('form-id');
+      const fNumero = document.getElementById('form-numero');
+      const fTitular = document.getElementById('form-titular');
+      const fUG = document.getElementById('form-ug');
+      const fGrupo = document.getElementById('form-grupo');
+      const fVN = document.getElementById('form-valor-nominal');
+      const fVP = document.getElementById('form-valor-pago');
+      const fSaldo = document.getElementById('form-saldo-devedor');
+      const fUlt = document.getElementById('form-ultimo-pagamento');
+      const fStatus = document.getElementById('form-status');
+
       let selectedRow = null;
+      let mode = 'view'; // 'view' | 'edit' | 'new'
+      let editingIndex = -1;
 
-      // --- FUNÇÕES HELPER ---
-      const getGrupo = (orgao) => {
-        switch (orgao) {
-          case 'SMS': return '2 - SMS';
-          case 'SME': return '3 - SME';
-          case 'SMAS': return '4 - SMAS';
-          case 'PGM': return '5 - PGM';
-          case 'RIOSAUDE':
-          case 'COMLURB':
-          case 'F-RIO':
-          case 'IPLANRIO':
-          case 'MULTIRIO':
-            return '6 - INDIRETAS';
-          default:
-            return '1 - Diretas';
-        }
-      };
-      
-      const gerarChave = (item) => {
-          const grupoString = getGrupo(item.orgao);
-          const grupoId = grupoString.split(' ')[0];
-          const categoriaId = item.categoria.split('-')[0];
-          const orgaoCode = orgaoCodeMap[item.orgao] || 'N/A';
-          return `${item.cnpj}_${orgaoCode}_${item.fonte}_${categoriaId}_${grupoId}`;
+      // --- HELPERS ---
+      const formatCurrency = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const toBR = (iso) => !iso ? '' : iso.split('-').reverse().join('/');
+      const slugifyStatus = (text) => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g,'').replace(/[^a-z0-9-]/g,'');
+
+      const setButtonsState = () => {
+        const hasSel = !!selectedRow;
+        btnView.disabled = !hasSel;
+        btnEdit.disabled = !hasSel;
+        btnPrint.disabled = !hasSel;
       };
 
-      const formatCurrency = (v) =>
-        Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-      const formatDate = (iso) => {
-        if (!iso) return '';
-        const [y,m,d] = iso.split('-');
-        return `${d}/${m}/${y}`;
+      const recomputeSaldo = () => {
+        const vn = parseFloat(fVN.value)||0; const vp = parseFloat(fVP.value)||0;
+        fSaldo.textContent = formatCurrency(vn - vp);
       };
 
-      // Converte uma string de status em um nome de classe CSS válido
-      const slugifyStatus = (text) => text
-          .toLowerCase()
-          .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove acentos
-          .replace(/\s+/g, '') // Remove espaços
-          .replace(/[^a-z0-9-]/g, ''); // Remove caracteres não alfanuméricos
+      const setFormReadOnly = (ro) => {
+        [fTitular, fUG, fGrupo, fVN, fVP, fUlt, fStatus].forEach(el => el.disabled = ro);
+        btnSave.disabled = ro;
+      };
 
-      // --- FUNÇÕES PRINCIPAIS ---
+      // --- GRID ---
       function populateGrid() {
         gridBody.innerHTML = '';
-        data.forEach(item => {
-          const chave = gerarChave(item);
-          const statusClass = slugifyStatus(item.status);
-
+        const q = (filterInput.value||'').toLowerCase();
+        let count = 0;
+        data.forEach((item, idx) => {
+          const saldo = item.valorNominal - item.valorPago;
+          const rowText = `${item.id} ${item.numero} ${item.titular} ${item.ug} ${item.grupo} ${item.valorNominal} ${item.valorPago} ${item.ultimoPagamento} ${item.status}`.toLowerCase();
+          const show = rowText.includes(q);
+          if (!show) return;
+          count++;
           const tr = document.createElement('tr');
-          // Armazena os dados originais no dataset do elemento TR
-          Object.assign(tr.dataset, item); 
-
+          Object.assign(tr.dataset, item, { index: String(idx) });
           tr.innerHTML = `
-            <td>${chave}</td>
+            <td>${item.id}</td>
+            <td>${item.numero}</td>
             <td>${item.titular}</td>
-            <td>${item.orgao}</td>
-            <td>${getGrupo(item.orgao)}</td>
+            <td>${item.ug}</td>
+            <td>${item.grupo}</td>
             <td class="valor">${formatCurrency(item.valorNominal)}</td>
             <td class="valor">${formatCurrency(item.valorPago)}</td>
-            <td>${formatDate(item.ultimoPagamento)}</td>
-            <td><span class="status-badge status-${statusClass}">${item.status}</span></td>
+            <td class="valor">${formatCurrency(saldo)}</td>
+            <td>${toBR(item.ultimoPagamento)}</td>
+            <td><span class="status-badge status-${slugifyStatus(item.status)}">${item.status}</span></td>
           `;
           gridBody.appendChild(tr);
         });
-      }
-
-      function updateButtonsState() {
-        const isRowSelected = !!selectedRow;
-        btnView.disabled = !isRowSelected;
-        btnEdit.disabled = !isRowSelected;
-        btnPrint.disabled = !isRowSelected;
+        noResultsRow.style.display = count === 0 ? '' : 'none';
       }
 
       function switchView(viewId) {
@@ -529,87 +350,86 @@
         document.getElementById(viewId).classList.add('active');
       }
 
-      function openFormView() {
-        if (!selectedRow) return;
-        const d = selectedRow.dataset;
-        const valorNominal = parseFloat(d.valorNominal);
-        const retencao = valorNominal * 0.015;
-        const orgaoCode = orgaoCodeMap[d.orgao] || 'N/A';
-        const grupoString = getGrupo(d.orgao);
-
-        document.getElementById('form-chave').textContent = gerarChave(d);
-        document.getElementById('form-titular').textContent = d.titular;
-        document.getElementById('form-sigla-orgao').textContent = d.orgao;
-        document.getElementById('form-codigo-orgao').textContent = orgaoCode;
-        document.getElementById('form-fonte').textContent = d.fonte;
-        document.getElementById('form-categoria').textContent = d.categoria;
-        document.getElementById('form-grupo').textContent = grupoString;
-        document.getElementById('form-valor-nominal').textContent = formatCurrency(valorNominal);
-        document.getElementById('form-valor-pago').textContent = formatCurrency(parseFloat(d.valorPago));
-        document.getElementById('form-ultimo-pagamento').textContent = formatDate(d.ultimoPagamento);
-        document.getElementById('form-retencao').textContent = formatCurrency(retencao);
-        document.getElementById('form-status').textContent = d.status;
-        document.getElementById('form-causa').value = d.causa || '';
-
+      function openForm(idx, newMode) {
+        mode = newMode;
+        editingIndex = idx;
+        if (newMode === 'new') {
+          const nextId = data.length ? Math.max(...data.map(d=>d.id)) + 1 : 1;
+          fId.textContent = nextId;
+          fNumero.textContent = '(gerado ao salvar)';
+          fTitular.value = '';
+          fUG.value = '';
+          fGrupo.value = '';
+          fVN.value = '';
+          fVP.value = '';
+          fSaldo.textContent = formatCurrency(0);
+          fUlt.value = '';
+          fStatus.value = 'Rascunho';
+          setFormReadOnly(false);
+        } else {
+          const d = data[idx];
+          fId.textContent = d.id;
+          fNumero.textContent = d.numero;
+          fTitular.value = d.titular;
+          fUG.value = d.ug;
+          fGrupo.value = d.grupo;
+          fVN.value = d.valorNominal;
+          fVP.value = d.valorPago;
+          fUlt.value = d.ultimoPagamento;
+          fStatus.value = d.status;
+          recomputeSaldo();
+          setFormReadOnly(newMode === 'view');
+        }
         switchView('form-view');
       }
 
-      // --- EVENT LISTENERS ---
+      // --- EVENTOS ---
       gridBody.addEventListener('click', (e) => {
         const row = e.target.closest('tr');
         if (!row) return;
-
         if (selectedRow) selectedRow.classList.remove('selected');
-        
-        if (selectedRow === row) {
-          selectedRow = null; // Desseleciona se clicar na mesma linha
-        } else {
-          row.classList.add('selected');
-          selectedRow = row;
-        }
-        updateButtonsState();
+        if (selectedRow === row) { selectedRow = null; } else { row.classList.add('selected'); selectedRow = row; }
+        setButtonsState();
       });
 
       gridBody.addEventListener('dblclick', (e) => {
-        const row = e.target.closest('tr');
-        if (!row) return;
-        
-        if (!selectedRow || selectedRow !== row) {
-          if (selectedRow) selectedRow.classList.remove('selected');
-          row.classList.add('selected');
-          selectedRow = row;
-          updateButtonsState();
-        }
-        openFormView();
+        const row = e.target.closest('tr'); if (!row) return;
+        if (!selectedRow || selectedRow !== row) { if (selectedRow) selectedRow.classList.remove('selected'); row.classList.add('selected'); selectedRow = row; setButtonsState(); }
+        openForm(Number(row.dataset.index), 'view');
       });
 
-      filterInput.addEventListener('keyup', () => {
-        const query = filterInput.value.toLowerCase();
-        let visibleCount = 0;
-        
-        gridBody.querySelectorAll('tr').forEach(tr => {
-          const textContent = tr.textContent.toLowerCase();
-          const shouldShow = textContent.includes(query);
-          tr.style.display = shouldShow ? '' : 'none';
-          if (shouldShow) visibleCount++;
-        });
+      filterInput.addEventListener('input', populateGrid);
 
-        noResultsRow.style.display = visibleCount === 0 ? '' : 'none';
-      });
-
-      btnAdd.addEventListener('click', () => alert('Ação: Incluir novo título.'));
-      btnView.addEventListener('click', openFormView);
-      btnEdit.addEventListener('click', () => {
-        if (selectedRow) alert(`Ação: Alterar o título de chave ${selectedRow.cells[0].textContent}.`);
-      });
-      btnPrint.addEventListener('click', () => {
-        if (selectedRow) alert(`Ação: Imprimir o título de chave ${selectedRow.cells[0].textContent}.`);
-      });
+      btnAdd.addEventListener('click', () => openForm(-1, 'new'));
+      btnView.addEventListener('click', () => { if (selectedRow) openForm(Number(selectedRow.dataset.index), 'view'); });
+      btnEdit.addEventListener('click', () => { if (selectedRow) openForm(Number(selectedRow.dataset.index), 'edit'); });
+      btnPrint.addEventListener('click', () => { if (selectedRow) alert(`Imprimir registro ID ${selectedRow.dataset.id} / Número ${selectedRow.dataset.numero}`); });
       btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
+      [fVN, fVP].forEach(el => el.addEventListener('input', recomputeSaldo));
+
+      btnSave.addEventListener('click', () => {
+        if (mode === 'view') return;
+        const build = () => ({
+          id: mode === 'new' ? (data.length ? Math.max(...data.map(d=>d.id))+1 : 1) : Number(fId.textContent),
+          numero: mode === 'new' ? String(Date.now()) : String(fNumero.textContent), // mantém estrutura atual
+          titular: fTitular.value.trim(),
+          ug: fUG.value.trim(),
+          grupo: fGrupo.value.trim(),
+          valorNominal: parseFloat(fVN.value)||0,
+          valorPago: parseFloat(fVP.value)||0,
+          ultimoPagamento: fUlt.value, // ISO
+          status: fStatus.value.trim()
+        });
+        const novo = build();
+        if (!novo.titular || !novo.ug || !novo.grupo) { alert('Preencha Titular, UG e Grupo.'); return; }
+        if (mode === 'new') data.push(novo); else data[editingIndex] = novo;
+        populateGrid();
+        switchView('grid-view');
+      });
 
       // --- INICIALIZAÇÃO ---
       populateGrid();
-      updateButtonsState();
+      setButtonsState();
     });
   </script>
 </body>
