@@ -240,8 +240,8 @@
             text-transform: uppercase;
         }
         .status-ativa { background-color: #fef3c7; color: #92400e; }
-        .status-cancelada { background-color: #fecaca; color: #991b1b; }
-        .status-encerrada { background-color: #d1d5db; color: #4b5563; }
+        .status-titulocancelado, .status-fornecedorcancelado { background-color: #fecaca; color: #991b1b; }
+        .status-suspensaoencerrada { background-color: #d1d5db; color: #4b5563; }
         
         .no-results {
             text-align: center;
@@ -467,8 +467,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             let suspensoesData = [
                 { id: 1, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '20476731000115', nome: '4ID MEDICOS ASSOCIADOS EIRELLI', titulo: '', inicio: '2025-07-01', fim: '', situacao: 'Ativa', justificativa: 'Bloqueio judicial determinado no processo X.', autor: 'PGM' },
-                { id: 2, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '33892738000160', nome: 'ABRIGO TERESA DE JESUS', titulo: '2025-00123', inicio: '2025-06-10', fim: '2025-08-10', situacao: 'Encerrada', justificativa: 'Pendente de comprovação de serviço.', autor: 'CGM' },
-                { id: 3, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '10189253000109', nome: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', titulo: '2025-00456', inicio: '2025-05-20', fim: '', situacao: 'Cancelada', justificativa: 'Contrato rescindido por quebra de cláusula.', autor: 'SME' }
+                { id: 2, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '33892738000160', nome: 'ABRIGO TERESA DE JESUS', titulo: '2025-00123', inicio: '2025-06-10', fim: '2025-08-10', situacao: 'Suspensão Encerrada', justificativa: 'Pendente de comprovação de serviço.', autor: 'CGM' },
+                { id: 3, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '10189253000109', nome: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', titulo: '2025-00456', inicio: '2025-05-20', fim: '', situacao: 'Título Cancelado', justificativa: 'Contrato rescindido por quebra de cláusula.', autor: 'SME' },
+                { id: 4, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '04491152000195', nome: '4LINUX SOFTWARE E COMERCIO DE PROGRAMAS LTDA', titulo: '', inicio: '2025-08-01', fim: '', situacao: 'Ativa', justificativa: 'Análise de documentação fiscal.', autor: 'SMFP' },
+                { id: 5, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '26592256000129', nome: '8 AM COMERCIO E SERVICOS DE MOVEIS', titulo: '2025-00789', inicio: '2025-08-15', fim: '', situacao: 'Ativa', justificativa: 'Aguardando laudo técnico.', autor: 'SMO' },
+                { id: 6, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '29913267000151', nome: 'A I M DE AGUIAR PRODUCAO DE FILMES ME', titulo: '', inicio: '2025-04-01', fim: '2025-07-30', situacao: 'Suspensão Encerrada', justificativa: 'Regularização concluída.', autor: 'PGM' },
+                { id: 7, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '12664453000100', nome: 'A7 DISTRIBUIDORA DE MEDICAMENTOS LTDA EPP', titulo: '2025-00991', inicio: '2025-08-19', fim: '', situacao: 'Título Cancelado', justificativa: 'Item descontinuado pelo fornecedor.', autor: 'SMS' },
+                { id: 8, tipo: 'Cancelamento', escopo: 'Fornecedor', cpfCnpj: '04615160000104', nome: 'ABMR CONSERVADORA DE ELEVADORES LTDA', titulo: '', inicio: '2025-03-15', fim: '', situacao: 'Fornecedor Cancelado', justificativa: 'Encerramento de atividades da empresa.', autor: 'SMFP' },
+                { id: 9, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '00462017000160', nome: 'ABRIGO DOCE MORADA', titulo: '2025-01002', inicio: '2025-08-20', fim: '', situacao: 'Ativa', justificativa: 'Averiguação de conformidade.', autor: 'SMAS' },
+                { id: 10, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '01290665753', nome: 'MARIO SOUZA FERREIRA', titulo: '', inicio: '2025-01-10', fim: '2025-06-30', situacao: 'Suspensão Encerrada', justificativa: 'Período de suspensão contratual finalizado.', autor: 'SME' }
             ];
 
             const gridView = document.getElementById('grid-view');
@@ -509,6 +516,8 @@
                 const [year, month, day] = dateString.split('-');
                 return `${day}/${month}/${year}`;
             };
+            
+            const slugifyStatus = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
 
             const populateGrid = (data) => {
                 gridBody.innerHTML = '';
@@ -523,7 +532,7 @@
                         <td>${formatDate(item.inicio)}</td>
                         <td>${formatDate(item.fim)}</td>
                         <td>${item.autor}</td>
-                        <td><span class="status-badge status-${item.situacao.toLowerCase()}">${item.situacao}</span></td>
+                        <td><span class="status-badge status-${slugifyStatus(item.situacao)}">${item.situacao}</span></td>
                     `;
                     gridBody.appendChild(row);
                 });
@@ -653,7 +662,7 @@
                     const selectedId = parseInt(selectedRow.dataset.id);
                     const item = suspensoesData.find(s => s.id === selectedId);
                     if (item && item.situacao === 'Ativa') {
-                        item.situacao = 'Encerrada';
+                        item.situacao = 'Suspensão Encerrada';
                         item.fim = new Date().toISOString().split('T')[0]; // Data de hoje
                         populateGrid(suspensoesData);
                         showToast(`Suspensão ID ${item.id} revertida para Encerrada.`);
@@ -666,8 +675,8 @@
                     const selectedId = parseInt(selectedRow.dataset.id);
                     const item = suspensoesData.find(s => s.id === selectedId);
                     if (item && item.situacao === 'Ativa') {
-                        item.situacao = 'Cancelada';
                         item.tipo = 'Cancelamento';
+                        item.situacao = item.escopo === 'Título' ? 'Título Cancelado' : 'Fornecedor Cancelado';
                         populateGrid(suspensoesData);
                         showToast(`Suspensão ID ${item.id} convertida para Cancelamento.`);
                     }
@@ -685,4 +694,4 @@
     </script>
 
 </body>
-</ht
+</html>
