@@ -258,8 +258,13 @@
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 1rem;
-            background-color: #f9fafb;
+            background-color: #fff;
             color: var(--text-dark);
+        }
+        
+        .form-field:read-only {
+            background-color: #f9fafb;
+            cursor: not-allowed;
         }
         
         .form-actions {
@@ -275,7 +280,7 @@
 <body>
 
     <header class="top-nav">
-        <a href="/public-debt-bonds-with-suppliers.github.io/titulo.html" class="logo">Dívida Pública</a>
+        <a href="#" class="logo">Dívida Pública</a>
         <nav>
             <ul>
                 <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
@@ -296,12 +301,12 @@
                         <div class="filter-container">
                             <input type="text" id="filterInput" placeholder="Filtrar por CNPJ/CPF ou Razão Social...">
                         </div>
-                         <button id="btnAdd" class="btn btn-primary">
+                        <button id="btnAdd" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                             Incluir
                         </button>
                         <button id="btnView" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585-.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
                             Visualizar
                         </button>
                         <button id="btnEdit" class="btn btn-secondary" disabled>
@@ -326,28 +331,28 @@
                             <!-- Dados populados via JS -->
                         </tbody>
                     </table>
-                     <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
+                    <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
                 </div>
             </main>
         </div>
 
         <div id="form-view" class="view">
             <main class="main-container">
-                <h1>Detalhes do Fornecedor</h1>
-                <form action="#" method="post" onsubmit="event.preventDefault();">
+                <h1 id="form-title">Detalhes do Fornecedor</h1>
+                <form id="supplierForm" onsubmit="event.preventDefault();">
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="form-cnpj">CNPJ/CPF</label>
-                            <div id="form-cnpj" class="form-field"></div>
+                            <input type="text" id="form-cnpj" class="form-field">
                         </div>
                         <div class="form-group">
                             <label for="form-name">Razão Social / Nome</label>
-                            <div id="form-name" class="form-field"></div>
+                            <input type="text" id="form-name" class="form-field">
                         </div>
                     </div>
                     <div class="form-actions">
                         <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <button type="submit" id="btnSave" class="btn btn-primary">Salvar</button>
                     </div>
                 </form>
             </main>
@@ -356,7 +361,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const supplierData = [
+            let supplierData = [
                 { id: '10811866000136', name: '3A MARQUES CONSTRUCOES COMERCIO E SERVICO LTDA ME' },
                 { id: '14883212000179', name: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP' },
                 { id: '20476731000115', name: '4ID MEDICOS ASSOCIADOS EIRELLI' },
@@ -400,17 +405,27 @@
             const filterInput = document.getElementById('filterInput');
             const noResultsRow = document.getElementById('no-results-row');
             
+            const btnAdd = document.getElementById('btnAdd');
             const btnView = document.getElementById('btnView');
             const btnEdit = document.getElementById('btnEdit');
             const btnPrint = document.getElementById('btnPrint');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
+            const btnSave = document.getElementById('btnSave');
+            
+            const formTitle = document.getElementById('form-title');
+            const formCnpj = document.getElementById('form-cnpj');
+            const formName = document.getElementById('form-name');
+            const supplierForm = document.getElementById('supplierForm');
 
             let selectedRow = null;
+            let currentMode = 'view'; // 'view', 'edit', 'new'
+            let editingId = null;
 
             const populateGrid = (data) => {
                 gridBody.innerHTML = '';
                 data.forEach(item => {
                     const row = document.createElement('tr');
+                    row.dataset.id = item.id;
                     row.innerHTML = `
                         <td>${item.id}</td>
                         <td>${item.name}</td>
@@ -431,15 +446,34 @@
                 document.getElementById(viewId).classList.add('active');
             };
 
-            const showFormForSelectedRow = () => {
-                if (!selectedRow) return;
-                const cells = selectedRow.cells;
-                document.getElementById('form-cnpj').textContent = cells[0].textContent;
-                document.getElementById('form-name').textContent = cells[1].textContent;
+            const openForm = (mode, supplierId = null) => {
+                currentMode = mode;
+                editingId = supplierId;
+                supplierForm.reset();
+
+                if (mode === 'view' || mode === 'edit') {
+                    const supplier = supplierData.find(s => s.id === supplierId);
+                    if (!supplier) return;
+                    
+                    formTitle.textContent = mode === 'view' ? 'Detalhes do Fornecedor' : 'Alterar Fornecedor';
+                    formCnpj.value = supplier.id;
+                    formName.value = supplier.name;
+
+                    formCnpj.readOnly = true;
+                    formName.readOnly = mode === 'view';
+                    btnSave.style.display = mode === 'edit' ? 'inline-flex' : 'none';
+
+                } else if (mode === 'new') {
+                    formTitle.textContent = 'Incluir Novo Fornecedor';
+                    formCnpj.readOnly = false;
+                    formName.readOnly = false;
+                    btnSave.style.display = 'inline-flex';
+                }
+                
                 showView('form-view');
             };
 
-            filterInput.addEventListener('keyup', () => {
+            const filterData = () => {
                 const filterText = filterInput.value.toLowerCase();
                 const filteredData = supplierData.filter(item => 
                     item.id.toLowerCase().includes(filterText) || 
@@ -447,7 +481,9 @@
                 );
                 populateGrid(filteredData);
                 noResultsRow.style.display = filteredData.length === 0 ? '' : 'none';
-            });
+            };
+
+            filterInput.addEventListener('input', filterData);
             
             gridBody.addEventListener('click', (event) => {
                 const clickedRow = event.target.closest('tr');
@@ -466,28 +502,51 @@
             gridBody.addEventListener('dblclick', (event) => {
                 const clickedRow = event.target.closest('tr');
                 if (clickedRow) {
-                    if (!selectedRow || selectedRow !== clickedRow) {
-                       if (selectedRow) selectedRow.classList.remove('selected');
-                        clickedRow.classList.add('selected');
-                        selectedRow = clickedRow;
-                    }
-                    showFormForSelectedRow();
+                    openForm('view', clickedRow.dataset.id);
                 }
             });
             
-            // Botões de ação
-            btnAdd.addEventListener('click', () => alert('Ação: Incluir novo fornecedor.'));
-            btnView.addEventListener('click', showFormForSelectedRow);
+            btnAdd.addEventListener('click', () => openForm('new'));
+            btnView.addEventListener('click', () => {
+                if (selectedRow) openForm('view', selectedRow.dataset.id);
+            });
             btnEdit.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Alterar o fornecedor de chave ${selectedRow.cells[0].textContent}.`);
+                if (selectedRow) openForm('edit', selectedRow.dataset.id);
             });
             btnBackToGrid.addEventListener('click', () => showView('grid-view'));
+            
+            supplierForm.addEventListener('submit', () => {
+                const id = formCnpj.value.trim();
+                const name = formName.value.trim();
+
+                if (!id || !name) {
+                    alert('Por favor, preencha todos os campos.');
+                    return;
+                }
+
+                if (currentMode === 'new') {
+                    if (supplierData.some(s => s.id === id)) {
+                        alert('Este CNPJ/CPF já está cadastrado.');
+                        return;
+                    }
+                    supplierData.push({ id, name });
+                } else if (currentMode === 'edit') {
+                    const supplier = supplierData.find(s => s.id === editingId);
+                    if (supplier) {
+                        supplier.name = name;
+                    }
+                }
+                
+                filterData();
+                showView('grid-view');
+            });
+
             btnPrint.addEventListener('click', () => {
                 if (selectedRow) {
                     alert(`Imprimindo dados do fornecedor: ${selectedRow.cells[1].textContent}`);
-                    // Em um caso real, aqui entraria a lógica para gerar um PDF ou chamar window.print()
                 }
             });
+            
             populateGrid(supplierData);
         });
     </script>
