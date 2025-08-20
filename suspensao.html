@@ -19,6 +19,8 @@
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --danger-color: #ef4444;
             --danger-hover: #dc2626;
+            --success-bg: #28a745;
+            --error-bg: #dc3545;
         }
 
         body {
@@ -279,8 +281,14 @@
             font-family: var(--font-family);
         }
         
-        .form-field {
+        .form-field-display {
             background-color: #f9fafb;
+        }
+        
+        .form-field:disabled, select:disabled, textarea:disabled, input:disabled {
+            background-color: #f9fafb;
+            cursor: not-allowed;
+            color: #6b7280;
         }
         
         textarea {
@@ -303,12 +311,33 @@
             justify-content: flex-end;
             gap: 1rem;
         }
+
+        /* Estilos do Toast (Notificação) */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast.success { background-color: var(--success-bg); }
+        .toast.error { background-color: var(--error-bg); }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
 
     <header class="top-nav">
-        <a href="titulo.html" class="logo">Dívida Pública</a>
+        <a href="#" class="logo">Dívida Pública</a>
         <nav>
             <ul>
                 <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
@@ -329,12 +358,13 @@
                         <div class="filter-container">
                             <input type="text" id="filterInput" placeholder="Filtrar suspensões...">
                         </div>
-                         <button id="btnAdd" class="btn btn-primary">Incluir</button>
+                        <button id="btnAdd" class="btn btn-primary">Incluir</button>
                         <button id="btnView" class="btn btn-secondary" disabled>Visualizar</button>
                         <button id="btnEdit" class="btn btn-secondary" disabled>Alterar</button>
                         <button id="btnDelete" class="btn btn-secondary" disabled>Excluir</button>
                         <button id="btnRevert" class="btn btn-secondary" disabled>Reverter</button>
                         <button id="btnConvert" class="btn btn-danger" disabled>Converter</button>
+                        <button id="btnPrint" class="btn btn-secondary" disabled>Imprimir</button>
                     </div>
                 </div>
                 <div class="grid-container">
@@ -353,7 +383,7 @@
                         </thead>
                         <tbody id="gridBody"></tbody>
                     </table>
-                     <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
+                    <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
                 </div>
             </main>
         </div>
@@ -383,19 +413,11 @@
                         </div>
                         <div class="form-group">
                             <label for="nomeFornecedor">Nome do Fornecedor</label>
-                            <div id="nomeFornecedor" class="form-field">Preenchido automaticamente</div>
+                            <div id="nomeFornecedor" class="form-field form-field-display">Preenchido automaticamente</div>
                         </div>
                         <div class="form-group">
                             <label for="numeroTitulo">Número do Título</label>
                             <input type="text" id="numeroTitulo" placeholder="Obrigatório se escopo for Título">
-                        </div>
-                         <div class="form-group">
-                            <label for="causa">Causa</label>
-                            <select id="causa">
-                                <option>Anexo 1</option>
-                                <option>Anexo 2</option>
-                                <option>Anexo 3</option>
-                            </select>
                         </div>
                         <div class="form-group">
                             <label for="inicioVigencia">Data de Início da Vigência</label>
@@ -404,6 +426,10 @@
                         <div class="form-group">
                             <label for="fimVigencia">Data de Fim da Vigência</label>
                             <input type="date" id="fimVigencia">
+                        </div>
+                        <div class="form-group">
+                            <label for="autor">Autor</label>
+                            <div id="autor" class="form-field form-field-display"></div>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label for="justificativa">Justificativa</label>
@@ -425,26 +451,24 @@
                                 <label for="impactaTransferencia">Impacta Transferência para Curto Prazo?</label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="autor">Autor</label>
-                            <div id="autor" class="form-field"></div>
-                        </div>
                     </div>
                     <div class="form-actions">
-                        <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
-                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar para o Grid</button>
+                        <button type="submit" id="btnSave" class="btn btn-primary">Salvar Alterações</button>
                     </div>
                 </form>
             </main>
         </div>
     </div>
 
+    <div id="toast-notification" class="toast"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const suspensoesData = [
-                { id: 1, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '20476731000115', nome: '4ID MEDICOS ASSOCIADOS EIRELLI', titulo: '', inicio: '2025-07-01', fim: '', situacao: 'Ativa', causa: 'Anexo 1', justificativa: 'Bloqueio judicial determinado no processo X.', autor: 'PGM' },
-                { id: 2, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '33892738000160', nome: 'ABRIGO TERESA DE JESUS', titulo: '2025-00123', inicio: '2025-06-10', fim: '2025-08-10', situacao: 'Encerrada', causa: 'Anexo 2', justificativa: 'Pendente de comprovação de serviço.', autor: 'CGM' },
-                { id: 3, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '10189253000109', nome: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', titulo: '2025-00456', inicio: '2025-05-20', fim: '', situacao: 'Cancelada', causa: 'Anexo 3', justificativa: 'Contrato rescindido por quebra de cláusula.', autor: 'SME' }
+            let suspensoesData = [
+                { id: 1, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '20476731000115', nome: '4ID MEDICOS ASSOCIADOS EIRELLI', titulo: '', inicio: '2025-07-01', fim: '', situacao: 'Ativa', justificativa: 'Bloqueio judicial determinado no processo X.', autor: 'PGM' },
+                { id: 2, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '33892738000160', nome: 'ABRIGO TERESA DE JESUS', titulo: '2025-00123', inicio: '2025-06-10', fim: '2025-08-10', situacao: 'Encerrada', justificativa: 'Pendente de comprovação de serviço.', autor: 'CGM' },
+                { id: 3, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '10189253000109', nome: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', titulo: '2025-00456', inicio: '2025-05-20', fim: '', situacao: 'Cancelada', justificativa: 'Contrato rescindido por quebra de cláusula.', autor: 'SME' }
             ];
 
             const gridView = document.getElementById('grid-view');
@@ -459,10 +483,26 @@
             const btnDelete = document.getElementById('btnDelete');
             const btnRevert = document.getElementById('btnRevert');
             const btnConvert = document.getElementById('btnConvert');
+            const btnPrint = document.getElementById('btnPrint');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
+            const btnSave = document.getElementById('btnSave');
             const formTitle = document.getElementById('form-title');
+            const suspensaoForm = document.getElementById('suspensao-form');
+            const toast = document.getElementById('toast-notification');
 
             let selectedRow = null;
+            let currentMode = 'view';
+            let editingId = null;
+
+            const showToast = (message, type = 'success') => {
+                toast.textContent = message;
+                toast.className = 'toast';
+                toast.classList.add(type);
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            };
 
             const formatDate = (dateString) => {
                 if (!dateString) return '';
@@ -494,34 +534,63 @@
                 btnView.disabled = !hasSelection;
                 btnEdit.disabled = !hasSelection;
                 btnDelete.disabled = !hasSelection;
-                btnRevert.disabled = !hasSelection;
-                btnConvert.disabled = !hasSelection;
+                btnPrint.disabled = !hasSelection;
+
+                let isAtiva = false;
+                if (hasSelection) {
+                    const selectedId = parseInt(selectedRow.dataset.id);
+                    const item = suspensoesData.find(s => s.id === selectedId);
+                    if (item && item.situacao === 'Ativa') {
+                        isAtiva = true;
+                    }
+                }
+                btnRevert.disabled = !isAtiva;
+                btnConvert.disabled = !isAtiva;
             };
 
             const showView = (viewId) => {
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
                 document.getElementById(viewId).classList.add('active');
             };
+            
+            const setFormFieldsReadOnly = (isReadOnly) => {
+                 const formElements = suspensaoForm.elements;
+                 for(let i=0; i < formElements.length; i++) {
+                     if(formElements[i].id !== 'btnBackToGrid' && formElements[i].id !== 'btnSave') {
+                         formElements[i].disabled = isReadOnly;
+                     }
+                 }
+            };
 
-            const showForm = (data) => {
-                if (data) {
-                    formTitle.textContent = "Detalhes da Suspensão";
-                    // Populate form with data for viewing/editing
+            const openForm = (mode, dataId = null) => {
+                currentMode = mode;
+                editingId = dataId;
+                suspensaoForm.reset();
+
+                if (mode === 'view' || mode === 'edit') {
+                    const data = suspensoesData.find(r => r.id === dataId);
+                    if (!data) return;
+
+                    formTitle.textContent = mode === 'view' ? 'Detalhes da Suspensão' : 'Alterar Suspensão';
                     document.getElementById('tipoImpedimento').value = data.tipo;
                     document.getElementById('escopo').value = data.escopo;
                     document.getElementById('cpfCnpj').value = data.cpfCnpj;
                     document.getElementById('nomeFornecedor').textContent = data.nome;
                     document.getElementById('numeroTitulo').value = data.titulo;
-                    document.getElementById('causa').value = data.causa;
                     document.getElementById('inicioVigencia').value = data.inicio;
                     document.getElementById('fimVigencia').value = data.fim;
                     document.getElementById('justificativa').value = data.justificativa;
                     document.getElementById('autor').textContent = data.autor;
-                } else {
+                    
+                    setFormFieldsReadOnly(mode === 'view');
+                    btnSave.style.display = mode === 'edit' ? 'inline-flex' : 'none';
+
+                } else if (mode === 'new') {
                     formTitle.textContent = "Nova Suspensão";
-                    document.getElementById('suspensao-form').reset();
                     document.getElementById('nomeFornecedor').textContent = 'Preenchido automaticamente';
                     document.getElementById('autor').textContent = 'Usuário Logado'; // Example
+                    setFormFieldsReadOnly(false);
+                    btnSave.style.display = 'inline-flex';
                 }
                 showView('form-view');
             };
@@ -554,37 +623,66 @@
             gridBody.addEventListener('dblclick', (event) => {
                 const clickedRow = event.target.closest('tr');
                 if (clickedRow) {
-                    const data = suspensoesData.find(r => r.id == clickedRow.dataset.id);
-                    showForm(data);
+                    openForm('view', parseInt(clickedRow.dataset.id));
                 }
             });
             
-            // Botões de ação
-            btnAdd.addEventListener('click', () => showForm(null));
+            // --- Ações dos Botões ---
+            btnAdd.addEventListener('click', () => openForm('new'));
             btnView.addEventListener('click', () => {
-                if (selectedRow) {
-                    const data = suspensoesData.find(r => r.id == selectedRow.dataset.id);
-                    showForm(data);
-                }
+                if (selectedRow) openForm('view', parseInt(selectedRow.dataset.id));
             });
             btnEdit.addEventListener('click', () => {
-                if (selectedRow) alert(`Ação: Alterar a suspensão ID ${selectedRow.dataset.id}.`);
-            });
-             btnDelete.addEventListener('click', () => {
-                if (selectedRow) alert(`Ação: Excluir (inativar) a suspensão ID ${selectedRow.dataset.id}.`);
-            });
-            btnRevert.addEventListener('click', () => {
-                if (selectedRow) alert(`Ação: Reverter a suspensão ID ${selectedRow.dataset.id}.`);
-            });
-            btnConvert.addEventListener('click', () => {
-                if (selectedRow) alert(`Ação: Converter em cancelamento a suspensão ID ${selectedRow.dataset.id}.`);
+                if (selectedRow) openForm('edit', parseInt(selectedRow.dataset.id));
             });
             btnBackToGrid.addEventListener('click', () => showView('grid-view'));
+            
+            suspensaoForm.addEventListener('submit', () => {
+                // Lógica para salvar (novo ou edição)
+                showToast('Alterações salvas com sucesso!');
+                showView('grid-view');
+                populateGrid(suspensoesData);
+            });
 
+            btnDelete.addEventListener('click', () => {
+                if (selectedRow) showToast(`Ação: Excluir (inativar) a suspensão ID ${selectedRow.dataset.id}.`, 'success');
+            });
+
+            btnRevert.addEventListener('click', () => {
+                if (selectedRow) {
+                    const selectedId = parseInt(selectedRow.dataset.id);
+                    const item = suspensoesData.find(s => s.id === selectedId);
+                    if (item && item.situacao === 'Ativa') {
+                        item.situacao = 'Encerrada';
+                        item.fim = new Date().toISOString().split('T')[0]; // Data de hoje
+                        populateGrid(suspensoesData);
+                        showToast(`Suspensão ID ${item.id} revertida para Encerrada.`);
+                    }
+                }
+            });
+
+            btnConvert.addEventListener('click', () => {
+                 if (selectedRow) {
+                    const selectedId = parseInt(selectedRow.dataset.id);
+                    const item = suspensoesData.find(s => s.id === selectedId);
+                    if (item && item.situacao === 'Ativa') {
+                        item.situacao = 'Cancelada';
+                        item.tipo = 'Cancelamento';
+                        populateGrid(suspensoesData);
+                        showToast(`Suspensão ID ${item.id} convertida para Cancelamento.`);
+                    }
+                }
+            });
+
+            btnPrint.addEventListener('click', () => {
+                if (selectedRow) showToast(`Imprimindo suspensão ID ${selectedRow.dataset.id}...`);
+            });
+            
+            // --- INICIALIZAÇÃO ---
             populateGrid(suspensoesData);
             updateButtonState();
         });
     </script>
 
 </body>
-</html>
+</ht
