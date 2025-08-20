@@ -364,9 +364,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- DADOS E DOMÍNIOS ---
             let ruleData = [
-                { id: 1, descricao: 'Regra para Órgãos da Administração Direta', periodicidade: 'Anual', grupo: '1', categoria: '3', fonte: '100', orgao: 'SMFP', incidencia: `grupo == '1'`, quitacao: `valorPago >= valorNominal` },
+                { id: 1, descricao: 'Regra para Órgãos da Administração Direta', periodicidade: 'Mensal', grupo: '1', categoria: '3', fonte: '100', orgao: 'SMFP', incidencia: `grupo == '1'`, quitacao: `valorPago >= valorNominal` },
                 { id: 2, descricao: 'Regra para Órgãos da Administração Indireta', periodicidade: 'Semestral', grupo: '6', categoria: '4', fonte: '208', orgao: 'RIOSAUDE', incidencia: `grupo == '6'`, quitacao: `valorPago >= valorNominal` },
-                { id: 3, descricao: 'Regra Atual', periodicidade: 'Mensal', grupo: 'Todos', categoria: 'Todos', fonte: 'Todos', orgao: 'Todos', incidencia: `true`, quitacao: `valorPago >= valorNominal` }
+                { id: 3, descricao: 'Regra Atual', periodicidade: 'Anual', grupo: 'Todos', categoria: 'Todos', fonte: 'Todos', orgao: 'Todos', incidencia: `true`, quitacao: `valorPago >= valorNominal` }
             ];
             
             const dominios = {
