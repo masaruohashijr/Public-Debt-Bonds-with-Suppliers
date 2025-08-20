@@ -22,6 +22,8 @@
         --status-pgtoparcial-bg: #dbeafe; --status-pgtoparcial-text: #1d4ed8;
         --status-pagamentointegral-bg: #dcfce7; --status-pagamentointegral-text: #166534;
         --status-cancelado-bg: #fee2e2; --status-cancelado-text: #991b1b;
+        --success-bg: #28a745;
+        --error-bg: #dc3545;
     }
 
     body {
@@ -112,10 +114,32 @@
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
     .form-group { display: flex; flex-direction: column; }
     .form-group label { font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary-color); font-size: 0.9rem; }
-    .form-field { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1rem; background-color: #f9fafb; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; }
-    .form-field input, .form-field select { width: 100%; border: none; background: transparent; font: inherit; color: inherit; outline: none; }
+    .form-field { width: 100%; padding: 0; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1rem; background-color: #f9fafb; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; }
+    .form-field input, .form-field select { width: 100%; border: none; background: transparent; font: inherit; color: inherit; outline: none; padding: 0.75rem 1rem; }
+    .form-field.readonly { background-color: #f3f4f6; color: #6b7280; }
     .form-field.currency { font-weight: 600; color: var(--primary-color); }
     .form-actions { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
+
+    /* Estilos do Toast (Notificação) */
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 2000;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.3s, transform 0.3s;
+    }
+    .toast.success { background-color: var(--success-bg); }
+    .toast.error { background-color: var(--error-bg); }
+    .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
 </style>
 </head>
 <body>
@@ -123,11 +147,11 @@
     <div class="logo">Dívida Pública</div>
     <nav>
         <ul>
-        <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
-        <li><a href="/public-debt-bonds-with-suppliers.github.io/parcela.html">Parcelas</a></li>
-        <li><a href="/public-debt-bonds-with-suppliers.github.io/regra.html">Regras</a></li>
-        <li><a href="/public-debt-bonds-with-suppliers.github.io/suspensao.html">Suspensões</a></li>
-        <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html" class="active">Fornecedores</a></li>
+            <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
+            <li><a href="/public-debt-bonds-with-suppliers.github.io/parcela.html">Parcelas</a></li>
+            <li><a href="/public-debt-bonds-with-suppliers.github.io/regra.html">Regras</a></li>
+            <li><a href="/public-debt-bonds-with-suppliers.github.io/suspensao.html">Suspensões</a></li>
+            <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html" class="active">Fornecedores</a></li>
         </ul>
     </nav>
 </header>
@@ -172,12 +196,12 @@
     </div>
     <div id="form-view" class="view">
         <main class="main-container">
-            <h1>Título</h1>
+            <h1 id="form-title">Título</h1>
             <form id="bondForm" onsubmit="event.preventDefault();">
                 <div class="form-grid">
                     <div class="form-group">
                         <label>ID</label>
-                        <div id="form-id" class="form-field"></div>
+                        <div id="form-id" class="form-field readonly"></div>
                     </div>
                     <div class="form-group" style="grid-column: 2 / -1;">
                         <label>Número</label>
@@ -185,7 +209,7 @@
                     </div>
                     <div class="form-group">
                         <label>Código Titular</label>
-                        <div id="form-codigo-titular" class="form-field"></div>
+                        <div id="form-codigo-titular" class="form-field readonly"></div>
                     </div>
                     <div class="form-group" style="grid-column: 2 / -1;">
                         <label>Titular</label>
@@ -197,7 +221,7 @@
                     </div>
                      <div class="form-group">
                         <label>Nome da UG</label>
-                        <div id="form-ug-nome" class="form-field"></div>
+                        <div id="form-ug-nome" class="form-field readonly"></div>
                     </div>
                     <div class="form-group">
                         <label>Grupo</label>
@@ -213,7 +237,7 @@
                     </div>
                     <div class="form-group">
                         <label>Saldo Devedor</label>
-                        <div id="form-saldo-devedor" class="form-field currency"></div>
+                        <div id="form-saldo-devedor" class="form-field currency readonly"></div>
                     </div>
                     <div class="form-group">
                         <label>Última Transferência</label>
@@ -232,6 +256,9 @@
         </main>
     </div>
 </div>
+
+<div id="toast-notification" class="toast"></div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // --- MAPA DE UNIDADES GESTORAS ---
@@ -267,6 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAdd = document.getElementById('btnAdd');
     const btnBackToGrid = document.getElementById('btnBackToGrid');
     const btnSave = document.getElementById('btnSave');
+    const formTitle = document.getElementById('form-title');
+    const toast = document.getElementById('toast-notification');
 
     const fId = document.getElementById('form-id');
     const fNumero = document.getElementById('form-numero');
@@ -286,6 +315,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let editingIndex = -1;
 
     // --- HELPERS ---
+    const showToast = (message, type = 'success') => {
+        toast.textContent = message;
+        toast.className = 'toast'; // Reset classes
+        toast.classList.add(type); // Add 'success' or 'error'
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    };
+
     const formatCurrency = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     const slugifyStatus = (text) => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g,'').replace(/[^a-z0-9-]/g,'');
 
@@ -302,9 +341,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fSaldo.textContent = formatCurrency(vn - vp);
     };
 
-    const setFormReadOnly = (ro) => {
-        [fNumero, fTitular, fUgCodigo, fGrupo, fVN, fVP, fUlt, fStatus].forEach(el => el.disabled = ro);
-        btnSave.disabled = ro;
+    const setFormReadOnly = (isReadOnly) => {
+        const fields = [fNumero, fTitular, fUgCodigo, fGrupo, fVN, fVP, fUlt, fStatus];
+        fields.forEach(el => {
+            el.parentElement.classList.toggle('readonly', isReadOnly);
+            el.disabled = isReadOnly;
+        });
+        btnSave.style.display = isReadOnly ? 'none' : 'inline-flex';
     };
 
     // --- GRID ---
@@ -345,6 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mode = newMode;
         editingIndex = idx;
         if (newMode === 'new') {
+            formTitle.textContent = 'Incluir Título';
             const nextId = data.length ? Math.max(...data.map(d => d.id)) + 1 : 1;
             fId.textContent = nextId;
             fNumero.value = '';
@@ -361,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setFormReadOnly(false);
         } else {
             const d = data[idx];
+            formTitle.textContent = newMode === 'view' ? 'Visualizar Título' : 'Alterar Título';
             fId.textContent = d.id;
             fNumero.value = d.numero;
             fCodigoTitular.textContent = d.codigoTitular;
@@ -390,12 +435,6 @@ document.addEventListener('DOMContentLoaded', () => {
     gridBody.addEventListener('dblclick', (e) => {
         const row = e.target.closest('tr');
         if (!row) return;
-        if (!selectedRow || selectedRow !== row) {
-            if (selectedRow) selectedRow.classList.remove('selected');
-            row.classList.add('selected');
-            selectedRow = row;
-            setButtonsState();
-        }
         openForm(Number(row.dataset.index), 'view');
     });
 
@@ -404,15 +443,13 @@ document.addEventListener('DOMContentLoaded', () => {
     btnAdd.addEventListener('click', () => openForm(-1, 'new'));
     btnView.addEventListener('click', () => { if (selectedRow) openForm(Number(selectedRow.dataset.index), 'view'); });
     btnEdit.addEventListener('click', () => { if (selectedRow) openForm(Number(selectedRow.dataset.index), 'edit'); });
-    btnPrint.addEventListener('click', () => { if (selectedRow) alert(`Imprimir registro ID ${selectedRow.dataset.id} / Número ${selectedRow.dataset.numero}`); });
+    btnPrint.addEventListener('click', () => { if (selectedRow) showToast(`Imprimindo registro ID ${selectedRow.dataset.id}...`); });
     btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
     [fVN, fVP].forEach(el => el.addEventListener('input', recomputeSaldo));
     
     fNumero.addEventListener('input', () => {
-        if (mode === 'new') {
-            const numeroCompleto = fNumero.value.trim();
-            fCodigoTitular.textContent = numeroCompleto.split('_')[0] || '';
-        }
+        const numeroCompleto = fNumero.value.trim();
+        fCodigoTitular.textContent = numeroCompleto.split('_')[0] || '';
     });
 
     fUgCodigo.addEventListener('input', () => {
@@ -443,15 +480,20 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         const novo = build();
         if (!novo.numero || !novo.titular || !novo.ugCodigo || !novo.grupo) {
-            alert('Preencha Número, Titular, Código UG e Grupo.');
+            showToast('Preencha Número, Titular, Código UG e Grupo.', 'error');
             return;
         }
          if (!ugMap[novo.ugCodigo]) {
-            alert('Código UG inválido. Por favor, insira um código válido.');
+            showToast('Código UG inválido. Por favor, insira um código válido.', 'error');
             return;
         }
-        if (mode === 'new') data.push(novo);
-        else data[editingIndex] = novo;
+        if (mode === 'new') {
+            data.push(novo);
+            showToast('Título incluído com sucesso!');
+        } else {
+            data[editingIndex] = novo;
+            showToast('Título alterado com sucesso!');
+        }
         populateGrid();
         switchView('grid-view');
     });
@@ -462,4 +504,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-</html>
+</ht
