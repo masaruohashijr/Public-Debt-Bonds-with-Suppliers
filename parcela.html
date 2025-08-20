@@ -89,29 +89,34 @@
             margin: auto;
         }
 
-        /* Cabeçalho */
-        .header-controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
+        /* Cabeçalho e Filtros de Página */
+        .page-header {
             margin-bottom: 1.5rem;
         }
 
         h1 {
             font-size: 1.875rem;
             font-weight: 700;
-            margin: 0;
+            margin: 0 0 1rem 0;
             color: var(--text-dark);
         }
 
-        /* Controles e Filtros */
-        .controls {
+        .page-filters {
             display: flex;
             flex-wrap: wrap;
+            gap: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Controles e Ações */
+        .controls-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
             gap: 1rem;
-            align-items: flex-end; /* Alinha os botões na base */
+            margin-bottom: 1.5rem;
         }
 
         .filter-group {
@@ -214,6 +219,22 @@
         .form-field-display { background-color: #f9fafb; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; }
         .form-field-display.currency { font-weight: 600; color: var(--primary-color); }
         .form-actions { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
+
+        /* Estilos do Modal (Popup) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 500px; transform: scale(0.95); transition: transform 0.3s; }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-content h2 { margin-top: 0; margin-bottom: 1.5rem; font-size: 1.25rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+        .radio-group { display: flex; flex-direction: column; gap: 1rem; }
+        .radio-option { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+        .radio-option input { accent-color: var(--primary-color); }
+
+        /* Estilos do Toast (Notificação) */
+        .toast { position: fixed; bottom: 20px; right: 20px; background-color: #28a745; color: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; opacity: 0; transform: translateY(20px); transition: opacity 0.3s, transform 0.3s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
     </style>
 </head>
 <body>
@@ -235,9 +256,9 @@
         <!-- VIEW: GRID DE PARCELAS -->
         <div id="grid-view" class="view active">
             <main class="main-container">
-                <div class="header-controls">
+                <div class="page-header">
                     <h1>Parcelas</h1>
-                    <div class="controls">
+                    <div class="page-filters">
                         <div class="filter-group">
                            <label for="dateStart">Data Inicial</label>
                            <input type="date" id="dateStart" class="input-filter">
@@ -246,22 +267,29 @@
                            <label for="dateEnd">Data Final</label>
                            <input type="date" id="dateEnd" class="input-filter">
                         </div>
-                        <div class="filter-group">
-                            <label for="filterInput">Filtro Rápido</label>
-                            <div class="filter-container">
-                                <input type="text" id="filterInput" class="input-filter" placeholder="Filtrar por titular...">
-                            </div>
+                    </div>
+                </div>
+                
+                <div class="controls-header">
+                    <div class="filter-group">
+                        <label for="filterInput">Filtro Rápido</label>
+                        <div class="filter-container">
+                            <input type="text" id="filterInput" class="input-filter" placeholder="Filtrar por titular...">
                         </div>
-                        <div class="actions-container">
-                             <button id="btnTransfer" class="btn btn-primary" disabled>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
-                                Transferir LP para CP
-                            </button>
-                            <button id="btnView" class="btn btn-secondary" disabled>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585-.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-                                Visualizar
-                            </button>
-                        </div>
+                    </div>
+                    <div class="actions-container">
+                         <button id="btnProjectNew" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" /></svg>
+                            Projetar
+                         </button>
+                         <button id="btnTransfer" class="btn btn-primary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+                            Transferir LP para CP
+                        </button>
+                        <button id="btnView" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585-.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            Visualizar
+                        </button>
                     </div>
                 </div>
                 <div class="grid-container">
@@ -332,6 +360,34 @@
             </main>
         </div>
     </div>
+    
+    <!-- MODAL DE PROJEÇÃO -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Qual regra projetar?</h2>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="regra" value="atual" checked>
+                    Regra Atual
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="regra" value="direta">
+                    Regra para Órgãos da Administração Direta
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="regra" value="indireta">
+                    Regra para Órgãos da Administração Indireta
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button id="btnCancelProject" class="btn btn-secondary">Cancelar</button>
+                <button id="btnConfirmProject" class="btn btn-primary">Projetar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST DE NOTIFICAÇÃO -->
+    <div id="toast-notification" class="toast"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -401,6 +457,11 @@
             const formNota = document.getElementById('form-nota');
             const formDataTransferenciaGroup = document.getElementById('form-data-transferencia-group');
             const formDataTransferencia = document.getElementById('form-data-transferencia');
+            const projectModal = document.getElementById('project-modal');
+            const btnProjectNew = document.getElementById('btnProjectNew');
+            const btnCancelProject = document.getElementById('btnCancelProject');
+            const btnConfirmProject = document.getElementById('btnConfirmProject');
+            const toast = document.getElementById('toast-notification');
 
 
             let selectedRows = new Set();
@@ -526,6 +587,14 @@
                 return transferredCount;
             };
 
+            const showToast = (message) => {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            };
+
             // --- EVENT LISTENERS ---
             gridBody.addEventListener('click', (event) => {
                 const row = event.target.closest('tr');
@@ -578,7 +647,7 @@
             btnTransfer.addEventListener('click', () => {
                 const transferredCount = transferirParcelas(selectedRows);
                 if (transferredCount > 0) {
-                    alert(`${transferredCount} parcela(s) transferida(s) com sucesso.`);
+                    showToast(`${transferredCount} parcela(s) transferida(s) com sucesso.`);
                     selectedRows.clear();
                     applyFilters();
                 } else {
@@ -589,7 +658,7 @@
             btnTransferForm.addEventListener('click', () => {
                 const transferredCount = transferirParcelas(selectedRows);
                  if (transferredCount > 0) {
-                    alert(`Parcela transferida com sucesso.`);
+                    showToast(`Parcela transferida com sucesso.`);
                     selectedRows.clear();
                     switchView('grid-view');
                     applyFilters();
@@ -597,6 +666,27 @@
             });
 
             btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
+
+            // Modal Logic
+            btnProjectNew.addEventListener('click', () => {
+                projectModal.classList.add('visible');
+            });
+
+            const closeModal = () => {
+                projectModal.classList.remove('visible');
+            };
+
+            btnCancelProject.addEventListener('click', closeModal);
+            projectModal.addEventListener('click', (e) => {
+                if (e.target === projectModal) {
+                    closeModal();
+                }
+            });
+
+            btnConfirmProject.addEventListener('click', () => {
+                closeModal();
+                showToast('1000 parcelas foram projetadas com sucesso.');
+            });
             
             // --- INICIALIZAÇÃO ---
             const setDefaultDates = () => {
