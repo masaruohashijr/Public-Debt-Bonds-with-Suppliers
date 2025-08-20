@@ -358,18 +358,25 @@
             const dataPrevista2026 = getSixteenthWorkingDay(2026, 7); // Julho
             let notaPatrimonialCounter = 1;
 
-            let parcelasData = [
-                { id: 1, numero: '00104659000198_100_3_1', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valorNominal: 200000, valorPago: 150000, valorParcela: 50000.00, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null, dataTransferencia: null },
-                { id: 2, numero: '00299904000160_100_3_1', nome: 'DIMENSIONAL ENGENHARIA LTDA', valorNominal: 300000, valorPago: 138695.32, valorParcela: 161304.68, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null, dataTransferencia: null },
-                { id: 3, numero: '00472805000308_100_3_1', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valorNominal: 500000, valorPago: 278949.13, valorParcela: 221050.87, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null, dataTransferencia: null },
-                { id: 4, numero: '00487626000174_100_3_1', nome: 'IPE ENGENHARIA LTDA', valorNominal: 100000, valorPago: 45000, valorParcela: 55000.00, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null, dataTransferencia: null },
-                { id: 5, numero: '00768165000108_100_3_1', nome: 'HB MULTISERVICOS LTDA', valorNominal: 61558.17, valorPago: 0, valorParcela: 61558.17, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null, dataTransferencia: null },
-                { id: 6, numero: '01077145000153_100_3_1', nome: 'DATAMETRICA CONTACT CENTER LTDA', valorNominal: 100000, valorPago: 49575.89, valorParcela: 50424.11, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null, dataTransferencia: null },
-                { id: 7, numero: '01771935000215_100_3_1', nome: 'INGRAM MICRO BRASIL LTDA', valorNominal: 70000.00, valorPago: 0, valorParcela: 70000.00, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null, dataTransferencia: null },
-                { id: 8, numero: '01953247000195_100_3_1', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valorNominal: 250000, valorPago: 61236.51, valorParcela: 188763.49, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00001', dataTransferencia: new Date('2025-07-20T10:00:00Z') },
-                { id: 9, numero: '02329307000166_100_3_1', nome: 'PETRA MG INDUSTRIA E COMERCIO', valorNominal: 100000, valorPago: 32506.44, valorParcela: 67493.56, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00002', dataTransferencia: new Date('2025-07-21T11:30:00Z') },
-                { id: 10, numero: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valorNominal: 45000, valorPago: 0, valorParcela: 45000.00, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00003', dataTransferencia: new Date('2025-07-22T14:00:00Z') }
+            let parcelasDataRaw = [
+                { id: 1, numero: '00104659000198_100_3_1', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valorParcela: 50000.00, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 2, numero: '00299904000160_100_3_1', nome: 'DIMENSIONAL ENGENHARIA LTDA', valorParcela: 161304.68, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 3, numero: '00472805000308_100_3_1', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valorParcela: 221050.87, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 4, numero: '00487626000174_100_3_1', nome: 'IPE ENGENHARIA LTDA', valorParcela: 55000.00, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 5, numero: '00768165000108_100_3_1', nome: 'HB MULTISERVICOS LTDA', valorParcela: 61558.17, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 6, numero: '01077145000153_100_3_1', nome: 'DATAMETRICA CONTACT CENTER LTDA', valorParcela: 50424.11, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 7, numero: '01771935000215_100_3_1', nome: 'INGRAM MICRO BRASIL LTDA', valorParcela: 70000.00, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 8, numero: '01953247000195_100_3_1', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valorParcela: 188763.49, status: 'Transferido para CP', notaPatrimonial: '2026NP00001', dataTransferencia: new Date('2025-07-20T10:00:00Z') },
+                { id: 9, numero: '02329307000166_100_3_1', nome: 'PETRA MG INDUSTRIA E COMERCIO', valorParcela: 67493.56, status: 'Transferido para CP', notaPatrimonial: '2026NP00002', dataTransferencia: new Date('2025-07-21T11:30:00Z') },
+                { id: 10, numero: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valorParcela: 45000.00, status: 'Transferido para CP', notaPatrimonial: '2026NP00003', dataTransferencia: new Date('2025-07-22T14:00:00Z') }
             ];
+
+            // Processa os dados para adicionar o saldo devedor inicial
+            let parcelasData = parcelasDataRaw.map(p => {
+                const saldoDevedorTitulo = p.status === 'Transferido para CP' ? p.valorParcela * 5 : p.valorParcela * 6;
+                return { ...p, saldoDevedorTitulo, dataPrevista: dataPrevista2026 };
+            });
+
             const notasExistentes = parcelasData.map(p => p.notaPatrimonial).filter(Boolean);
             if (notasExistentes.length > 0) {
                  const maxNota = Math.max(...notasExistentes.map(n => parseInt(n.replace('2026NP', ''), 10)));
@@ -401,14 +408,13 @@
                 gridBody.innerHTML = '';
                 data.forEach(item => {
                     const statusClass = slugifyStatus(item.status);
-                    const saldoDevedor = item.valorNominal - item.valorPago;
                     const row = document.createElement('tr');
                     row.dataset.id = item.id;
                     row.innerHTML = `
                         <td><input type="checkbox" data-id="${item.id}"></td>
                         <td>${item.numero}</td>
                         <td>${item.nome}</td>
-                        <td class="valor">${formatCurrency(saldoDevedor)}</td>
+                        <td class="valor">${formatCurrency(item.saldoDevedorTitulo)}</td>
                         <td class="valor">${formatCurrency(item.valorParcela)}</td>
                         <td>${formatDate(item.dataPrevista)}</td>
                         <td>${formatDate(item.dataTransferencia)}</td>
@@ -455,7 +461,7 @@
 
                 document.getElementById('form-numero').textContent = item.numero;
                 document.getElementById('form-nome').textContent = item.nome;
-                document.getElementById('form-saldo-devedor').textContent = formatCurrency(item.valorNominal - item.valorPago);
+                document.getElementById('form-saldo-devedor').textContent = formatCurrency(item.saldoDevedorTitulo);
                 document.getElementById('form-valor').textContent = formatCurrency(item.valorParcela);
                 document.getElementById('form-data-prevista').textContent = formatDate(item.dataPrevista);
                 document.getElementById('form-status').textContent = item.status;
@@ -551,6 +557,7 @@
                     if (item && item.status === 'Não Transferido para CP') {
                         item.status = 'Transferido para CP';
                         item.dataTransferencia = new Date();
+                        item.saldoDevedorTitulo -= item.valorParcela; // Abate o saldo
                         const paddedCounter = String(notaPatrimonialCounter).padStart(5, '0');
                         item.notaPatrimonial = `2026NP${paddedCounter}`;
                         notaPatrimonialCounter++;
