@@ -372,12 +372,9 @@
                         <thead>
                             <tr>
                                 <th>Tipo</th>
-                                <th>Escopo</th>
-                                <th>CPF/CNPJ</th>
                                 <th>Fornecedor</th>
                                 <th>Início Vigência</th>
                                 <th>Fim Vigência</th>
-                                <th>Autor</th>
                                 <th>Situação</th>
                             </tr>
                         </thead>
@@ -526,12 +523,9 @@
                     row.dataset.id = item.id;
                     row.innerHTML = `
                         <td>${item.tipo}</td>
-                        <td>${item.escopo}</td>
-                        <td>${item.cpfCnpj}</td>
                         <td>${item.nome}</td>
                         <td>${formatDate(item.inicio)}</td>
                         <td>${formatDate(item.fim)}</td>
-                        <td>${item.autor}</td>
                         <td><span class="status-badge status-${slugifyStatus(item.situacao)}">${item.situacao}</span></td>
                     `;
                     gridBody.appendChild(row);
@@ -694,4 +688,4 @@
     </script>
 
 </body>
-</html>
+</ht
