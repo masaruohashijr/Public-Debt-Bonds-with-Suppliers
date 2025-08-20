@@ -325,7 +325,8 @@
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="button" id="btnBackToGrid" class="btn btn-primary">Voltar</button>
+                        <button type="button" id="btnTransferForm" class="btn btn-primary" style="display: none;">Transferir LP para CP</button>
+                        <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
                     </div>
                 </form>
             </main>
@@ -395,6 +396,7 @@
             const btnView = document.getElementById('btnView');
             const btnTransfer = document.getElementById('btnTransfer');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
+            const btnTransferForm = document.getElementById('btnTransferForm');
             const formNotaGroup = document.getElementById('form-nota-group');
             const formNota = document.getElementById('form-nota');
             const formDataTransferenciaGroup = document.getElementById('form-data-transferencia-group');
@@ -479,6 +481,12 @@
                 } else {
                     formNotaGroup.style.display = 'none';
                 }
+
+                if (item.status === 'Não Transferido para CP') {
+                    btnTransferForm.style.display = 'inline-flex';
+                } else {
+                    btnTransferForm.style.display = 'none';
+                }
                 
                 switchView('form-view');
             };
@@ -499,6 +507,25 @@
                 updateSelectionVisuals();
             };
             
+            const transferirParcelas = (ids) => {
+                let transferredCount = 0;
+                ids.forEach(id => {
+                    const numericId = parseInt(id, 10);
+                    const item = parcelasData.find(p => p.id === numericId);
+
+                    if (item && item.status === 'Não Transferido para CP') {
+                        item.status = 'Transferido para CP';
+                        item.dataTransferencia = new Date();
+                        item.saldoDevedorTitulo -= item.valorParcela; // Abate o saldo
+                        const paddedCounter = String(notaPatrimonialCounter).padStart(5, '0');
+                        item.notaPatrimonial = `2026NP${paddedCounter}`;
+                        notaPatrimonialCounter++;
+                        transferredCount++;
+                    }
+                });
+                return transferredCount;
+            };
+
             // --- EVENT LISTENERS ---
             gridBody.addEventListener('click', (event) => {
                 const row = event.target.closest('tr');
@@ -549,28 +576,23 @@
             btnView.addEventListener('click', showFormForSelectedRow);
             
             btnTransfer.addEventListener('click', () => {
-                let transferredCount = 0;
-                selectedRows.forEach(id => {
-                    const numericId = parseInt(id, 10);
-                    const item = parcelasData.find(p => p.id === numericId);
-
-                    if (item && item.status === 'Não Transferido para CP') {
-                        item.status = 'Transferido para CP';
-                        item.dataTransferencia = new Date();
-                        item.saldoDevedorTitulo -= item.valorParcela; // Abate o saldo
-                        const paddedCounter = String(notaPatrimonialCounter).padStart(5, '0');
-                        item.notaPatrimonial = `2026NP${paddedCounter}`;
-                        notaPatrimonialCounter++;
-                        transferredCount++;
-                    }
-                });
-
+                const transferredCount = transferirParcelas(selectedRows);
                 if (transferredCount > 0) {
                     alert(`${transferredCount} parcela(s) transferida(s) com sucesso.`);
                     selectedRows.clear();
                     applyFilters();
                 } else {
                     alert('Nenhuma parcela elegível (com status "Não Transferido para CP") foi selecionada para transferência.');
+                }
+            });
+
+            btnTransferForm.addEventListener('click', () => {
+                const transferredCount = transferirParcelas(selectedRows);
+                 if (transferredCount > 0) {
+                    alert(`Parcela transferida com sucesso.`);
+                    selectedRows.clear();
+                    switchView('grid-view');
+                    applyFilters();
                 }
             });
 
