@@ -142,9 +142,9 @@
                     </div>
                     <div class="actions-container">
                         <button id="btnAdd" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>Incluir</button>
-                        <button id="btnView" class="btn btn-secondary" disabled><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>Visualizar</button>
+                        <button id="btnView" class="btn btn-secondary" disabled><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585-.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>Visualizar</button>
                         <button id="btnEdit" class="btn btn-secondary" disabled><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/></svg>Alterar</button>
-                        <button id="btnPrint" class="btn btn-secondary" disabled><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25"/></svg>Imprimir</button>
+                        <button id="btnPrint" class="btn btn-secondary" disabled><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062-.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.32 0c0-1.24-.982-2.25-2.207-2.25H9.547c-1.225 0-2.207 1.01-2.207 2.25m11.32 0 0 2.25a2.25 2.25 0 0 1-2.25 2.25H7.5a2.25 2.25 0 0 1-2.25-2.25v-2.25"/></svg>Imprimir</button>
                     </div>
                 </div>
             </div>
@@ -154,6 +154,7 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Número</th>
+                            <th scope="col">Código Titular</th>
                             <th scope="col">Titular</th>
                             <th scope="col">Cód. UG</th>
                             <th scope="col">Nome UG</th>
@@ -171,7 +172,7 @@
     </div>
     <div id="form-view" class="view">
         <main class="main-container">
-            <h1>Título</h1>
+            <h1>Detalhes do Título</h1>
             <form id="bondForm" onsubmit="event.preventDefault();">
                 <div class="form-grid">
                     <div class="form-group">
@@ -180,9 +181,13 @@
                     </div>
                     <div class="form-group" style="grid-column: 2 / -1;">
                         <label>Número (Chave)</label>
-                        <div id="form-numero" class="form-field"></div>
+                        <div class="form-field"><input id="form-numero" type="text" /></div>
                     </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
+                    <div class="form-group">
+                        <label>Código Titular</label>
+                        <div id="form-codigo-titular" class="form-field"></div>
+                    </div>
+                    <div class="form-group" style="grid-column: 2 / -1;">
                         <label>Titular</label>
                         <div class="form-field"><input id="form-titular" type="text" /></div>
                     </div>
@@ -241,13 +246,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- DADOS ---
     let data = [
-        { id: 1, numero: '20476731000115_1851_208_3_6', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', ugCodigo: '095101', ugNome: 'RIOSAUDE', grupo: '6 - INDIRETAS', valorNominal: 489861.16, valorPago: 450000.00, ultimoPagamento: '2025-08-14', status: 'Não Pago' },
-        { id: 2, numero: '33892738000160_1600_100_3_3', titular: 'ABRIGO TERESA DE JESUS', ugCodigo: '080101', ugNome: 'Secretaria Municipal de Educação', grupo: '3 - SME', valorNominal: 195000.00, valorPago: 195000.00, ultimoPagamento: '2025-09-05', status: 'Pgto Parcial' },
-        { id: 3, numero: '10189253000109_3051_100_3_6', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', ugCodigo: '175101', ugNome: 'Fundação Planetário', grupo: '6 - INDIRETAS', valorNominal: 185685.99, valorPago: 150000.00, ultimoPagamento: '2025-11-21', status: 'Pgto Parcial' },
-        { id: 4, numero: '04447582000100_1600_100_3_3', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', ugCodigo: '080101', ugNome: 'Secretaria Municipal de Educação', grupo: '3 - SME', valorNominal: 130000.00, valorPago: 100000.00, ultimoPagamento: '2025-10-10', status: 'Não Pago' },
-        { id: 5, numero: '14883212000179_1800_181_3_2', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', ugCodigo: '090101', ugNome: 'Secretaria Municipal de Saúde', grupo: '2 - SMS', valorNominal: 61710.00, valorPago: 61710.00, ultimoPagamento: '2025-12-01', status: 'Pagamento Integral' },
-        { id: 6, numero: '00462017000160_1700_100_3_4', titular: 'ABRIGO DOCE MORADA', ugCodigo: '100101', ugNome: 'Secretaria Municipal de Assistência Social', grupo: '4 - SMAS', valorNominal: 57903.68, valorPago: 50000.00, ultimoPagamento: '2025-07-30', status: 'Rascunho' },
-        { id: 7, numero: '26592256000129_0000_100_4_1', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', ugCodigo: '040101', ugNome: 'Secretaria Municipal de Fazenda e Planejamento', grupo: '1 - Diretas', valorNominal: 14999.60, valorPago: 14999.60, ultimoPagamento: '2025-10-28', status: 'Pgto Parcial' }
+        { id: 1, numero: '20476731000115_1851_208_3_6', codigoTitular: '20476731000115', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', ugCodigo: '095101', ugNome: 'RIOSAUDE', grupo: '6 - INDIRETAS', valorNominal: 489861.16, valorPago: 450000.00, ultimoPagamento: '2025-08-14', status: 'Não Pago' },
+        { id: 2, numero: '33892738000160_1600_100_3_3', codigoTitular: '33892738000160', titular: 'ABRIGO TERESA DE JESUS', ugCodigo: '080101', ugNome: 'Secretaria Municipal de Educação', grupo: '3 - SME', valorNominal: 195000.00, valorPago: 195000.00, ultimoPagamento: '2025-09-05', status: 'Pgto Parcial' },
+        { id: 3, numero: '10189253000109_3051_100_3_6', codigoTitular: '10189253000109', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', ugCodigo: '175101', ugNome: 'Fundação Planetário', grupo: '6 - INDIRETAS', valorNominal: 185685.99, valorPago: 150000.00, ultimoPagamento: '2025-11-21', status: 'Pgto Parcial' },
+        { id: 4, numero: '04447582000100_1600_100_3_3', codigoTitular: '04447582000100', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', ugCodigo: '080101', ugNome: 'Secretaria Municipal de Educação', grupo: '3 - SME', valorNominal: 130000.00, valorPago: 100000.00, ultimoPagamento: '2025-10-10', status: 'Não Pago' },
+        { id: 5, numero: '14883212000179_1800_181_3_2', codigoTitular: '14883212000179', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', ugCodigo: '090101', ugNome: 'Secretaria Municipal de Saúde', grupo: '2 - SMS', valorNominal: 61710.00, valorPago: 61710.00, ultimoPagamento: '2025-12-01', status: 'Pagamento Integral' },
+        { id: 6, numero: '00462017000160_1700_100_3_4', codigoTitular: '00462017000160', titular: 'ABRIGO DOCE MORADA', ugCodigo: '100101', ugNome: 'Secretaria Municipal de Assistência Social', grupo: '4 - SMAS', valorNominal: 57903.68, valorPago: 50000.00, ultimoPagamento: '2025-07-30', status: 'Rascunho' },
+        { id: 7, numero: '26592256000129_0000_100_4_1', codigoTitular: '26592256000129', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', ugCodigo: '040101', ugNome: 'Secretaria Municipal de Fazenda e Planejamento', grupo: '1 - Diretas', valorNominal: 14999.60, valorPago: 14999.60, ultimoPagamento: '2025-10-28', status: 'Pgto Parcial' }
     ];
 
     // --- ELEMENTOS ---
@@ -265,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fId = document.getElementById('form-id');
     const fNumero = document.getElementById('form-numero');
+    const fCodigoTitular = document.getElementById('form-codigo-titular');
     const fTitular = document.getElementById('form-titular');
     const fUgCodigo = document.getElementById('form-ug-codigo');
     const fUgNome = document.getElementById('form-ug-nome');
@@ -297,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const setFormReadOnly = (ro) => {
-        [fTitular, fUgCodigo, fGrupo, fVN, fVP, fUlt, fStatus].forEach(el => el.disabled = ro);
+        [fNumero, fTitular, fUgCodigo, fGrupo, fVN, fVP, fUlt, fStatus].forEach(el => el.disabled = ro);
         btnSave.disabled = ro;
     };
 
@@ -308,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let count = 0;
         data.forEach((item, idx) => {
             const saldo = item.valorNominal - item.valorPago;
-            const rowText = `${item.id} ${item.numero} ${item.titular} ${item.ugCodigo} ${item.ugNome} ${item.grupo} ${item.valorNominal} ${item.valorPago} ${item.ultimoPagamento} ${item.status}`.toLowerCase();
+            const rowText = `${item.id} ${item.numero} ${item.codigoTitular} ${item.titular} ${item.ugCodigo} ${item.ugNome} ${item.grupo} ${item.valorNominal} ${item.valorPago} ${item.ultimoPagamento} ${item.status}`.toLowerCase();
             const show = rowText.includes(q);
             if (!show) return;
             count++;
@@ -317,6 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tr.innerHTML = `
                 <td>${item.id}</td>
                 <td>${item.numero}</td>
+                <td>${item.codigoTitular}</td>
                 <td>${item.titular}</td>
                 <td>${item.ugCodigo}</td>
                 <td>${item.ugNome}</td>
@@ -340,7 +347,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (newMode === 'new') {
             const nextId = data.length ? Math.max(...data.map(d => d.id)) + 1 : 1;
             fId.textContent = nextId;
-            fNumero.textContent = '(gerado ao salvar)';
+            fNumero.value = '';
+            fCodigoTitular.textContent = '';
             fTitular.value = '';
             fUgCodigo.value = '';
             fUgNome.textContent = '';
@@ -354,7 +362,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const d = data[idx];
             fId.textContent = d.id;
-            fNumero.textContent = d.numero;
+            fNumero.value = d.numero;
+            fCodigoTitular.textContent = d.codigoTitular;
             fTitular.value = d.titular;
             fUgCodigo.value = d.ugCodigo;
             fUgNome.textContent = d.ugNome;
@@ -398,6 +407,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnPrint.addEventListener('click', () => { if (selectedRow) alert(`Imprimir registro ID ${selectedRow.dataset.id} / Número ${selectedRow.dataset.numero}`); });
     btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
     [fVN, fVP].forEach(el => el.addEventListener('input', recomputeSaldo));
+    
+    fNumero.addEventListener('input', () => {
+        if (mode === 'new') {
+            const numeroCompleto = fNumero.value.trim();
+            fCodigoTitular.textContent = numeroCompleto.split('_')[0] || '';
+        }
+    });
+
     fUgCodigo.addEventListener('input', () => {
         const code = fUgCodigo.value;
         fUgNome.textContent = ugMap[code] || 'Código inválido';
@@ -407,9 +424,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mode === 'view') return;
         const build = () => {
             const ugCode = fUgCodigo.value.trim();
+            const numeroCompleto = fNumero.value.trim();
+            const codigoTitular = numeroCompleto.split('_')[0] || '';
+
             return {
                 id: mode === 'new' ? (data.length ? Math.max(...data.map(d => d.id)) + 1 : 1) : Number(fId.textContent),
-                numero: mode === 'new' ? String(Date.now()) : String(fNumero.textContent),
+                numero: numeroCompleto,
+                codigoTitular: codigoTitular,
                 titular: fTitular.value.trim(),
                 ugCodigo: ugCode,
                 ugNome: ugMap[ugCode] || 'Nome não encontrado',
@@ -421,8 +442,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         };
         const novo = build();
-        if (!novo.titular || !novo.ugCodigo || !novo.grupo) {
-            alert('Preencha Titular, Código UG e Grupo.');
+        if (!novo.numero || !novo.titular || !novo.ugCodigo || !novo.grupo) {
+            alert('Preencha Número, Titular, Código UG e Grupo.');
             return;
         }
          if (!ugMap[novo.ugCodigo]) {
