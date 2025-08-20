@@ -114,10 +114,12 @@
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
     .form-group { display: flex; flex-direction: column; }
     .form-group label { font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary-color); font-size: 0.9rem; }
-    .form-field { width: 100%; padding: 0; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1rem; background-color: #f9fafb; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; }
+    .form-field { width: 100%; padding: 0; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-size: 1rem; background-color: #fff; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; }
     .form-field input, .form-field select { width: 100%; border: none; background: transparent; font: inherit; color: inherit; outline: none; padding: 0.75rem 1rem; }
     .form-field.readonly { background-color: #f3f4f6; color: #6b7280; }
     .form-field.currency { font-weight: 600; color: var(--primary-color); }
+    .form-field.currency .currency-symbol { padding-left: 1rem; color: var(--secondary-color); font-weight: 400; }
+    .form-field.currency input { text-align: right; padding-left: 0.5rem; }
     .form-actions { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
 
     /* Estilos do Toast (Notificação) */
@@ -146,13 +148,13 @@
 <header class="top-nav">
     <div class="logo">Dívida Pública</div>
     <nav>
-        <ul>
-            <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
-            <li><a href="/public-debt-bonds-with-suppliers.github.io/parcela.html">Parcelas</a></li>
-            <li><a href="/public-debt-bonds-with-suppliers.github.io/regra.html">Regras</a></li>
-            <li><a href="/public-debt-bonds-with-suppliers.github.io/suspensao.html">Suspensões</a></li>
-            <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html" class="active">Fornecedores</a></li>
-        </ul>
+      <ul>
+          <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
+          <li><a href="/public-debt-bonds-with-suppliers.github.io/parcela.html">Parcelas</a></li>
+          <li><a href="/public-debt-bonds-with-suppliers.github.io/regra.html">Regras</a></li>
+          <li><a href="/public-debt-bonds-with-suppliers.github.io/suspensao.html">Suspensões</a></li>
+          <li><a href="/public-debt-bonds-with-suppliers.github.io/fornecedor.html" class="active">Fornecedores</a></li>
+      </ul>
     </nav>
 </header>
 <div class="content-wrapper">
@@ -229,11 +231,17 @@
                     </div>
                     <div class="form-group">
                         <label>Valor Nominal</label>
-                        <div class="form-field"><input id="form-valor-nominal" type="number" step="0.01" min="0" /></div>
+                        <div class="form-field currency">
+                            <span class="currency-symbol">R$</span>
+                            <input id="form-valor-nominal" type="text" inputmode="decimal" />
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Valor Pago</label>
-                        <div class="form-field"><input id="form-valor-pago" type="number" step="0.01" min="0" /></div>
+                         <div class="form-field currency">
+                            <span class="currency-symbol">R$</span>
+                            <input id="form-valor-pago" type="text" inputmode="decimal" />
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Saldo Devedor</label>
@@ -274,12 +282,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DADOS ---
     let data = [
         { id: 1, numero: '20476731000115_1851_208_3_6', codigoTitular: '20476731000115', titular: '4ID MEDICOS ASSOCIADOS EIRELLI', ugCodigo: '095101', ugNome: 'RIOSAUDE', grupo: '6 - INDIRETAS', valorNominal: 489861.16, valorPago: 450000.00, ultimoPagamento: '2025-08-14', status: 'Não Pago' },
-        { id: 2, numero: '33892738000160_1600_100_3_3', codigoTitular: '33892738000160', titular: 'ABRIGO TERESA DE JESUS', ugCodigo: '080101', ugNome: 'Secretaria Municipal de Educação', grupo: '3 - SME', valorNominal: 195000.00, valorPago: 195000.00, ultimoPagamento: '2025-09-05', status: 'Pgto Parcial' },
+        { id: 2, numero: '33892738000160_1600_100_3_3', codigoTitular: '33892738000160', titular: 'ABRIGO TERESA DE JESUS', ugCodigo: '080101', ugNome: 'Secretaria Municipal de Educação', grupo: '3 - SME', valorNominal: 195000.00, valorPago: 195000.00, ultimoPagamento: '2025-09-05', status: 'Pagamento Integral' },
         { id: 3, numero: '10189253000109_3051_100_3_6', codigoTitular: '10189253000109', titular: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', ugCodigo: '175101', ugNome: 'Fundação Planetário', grupo: '6 - INDIRETAS', valorNominal: 185685.99, valorPago: 150000.00, ultimoPagamento: '2025-11-21', status: 'Pgto Parcial' },
         { id: 4, numero: '04447582000100_1600_100_3_3', codigoTitular: '04447582000100', titular: 'ACAO COMUNITARIA PRO FAVELA DOUTOR MARCELLO CANDIA', ugCodigo: '080101', ugNome: 'Secretaria Municipal de Educação', grupo: '3 - SME', valorNominal: 130000.00, valorPago: 100000.00, ultimoPagamento: '2025-10-10', status: 'Não Pago' },
         { id: 5, numero: '14883212000179_1800_181_3_2', codigoTitular: '14883212000179', titular: '4 MEDICA PRODUTOS HOSPITALARES LTDA EPP', ugCodigo: '090101', ugNome: 'Secretaria Municipal de Saúde', grupo: '2 - SMS', valorNominal: 61710.00, valorPago: 61710.00, ultimoPagamento: '2025-12-01', status: 'Pagamento Integral' },
         { id: 6, numero: '00462017000160_1700_100_3_4', codigoTitular: '00462017000160', titular: 'ABRIGO DOCE MORADA', ugCodigo: '100101', ugNome: 'Secretaria Municipal de Assistência Social', grupo: '4 - SMAS', valorNominal: 57903.68, valorPago: 50000.00, ultimoPagamento: '2025-07-30', status: 'Rascunho' },
-        { id: 7, numero: '26592256000129_0000_100_4_1', codigoTitular: '26592256000129', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', ugCodigo: '040101', ugNome: 'Secretaria Municipal de Fazenda e Planejamento', grupo: '1 - Diretas', valorNominal: 14999.60, valorPago: 14999.60, ultimoPagamento: '2025-10-28', status: 'Pgto Parcial' }
+        { id: 7, numero: '26592256000129_0000_100_4_1', codigoTitular: '26592256000129', titular: '8 AM COMERCIO E SERVICOS DE MOVEIS DE ESCRITORIO EIRELI', ugCodigo: '040101', ugNome: 'Secretaria Municipal de Fazenda e Planejamento', grupo: '1 - Diretas', valorNominal: 14999.60, valorPago: 14999.60, ultimoPagamento: '2025-10-28', status: 'Pagamento Integral' }
     ];
 
     // --- ELEMENTOS ---
@@ -326,6 +334,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const formatCurrency = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const formatNumberForInput = (v) => (v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const parseCurrency = (v) => parseFloat(String(v).replace(/\./g, '').replace(',', '.')) || 0;
+
     const slugifyStatus = (text) => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g,'').replace(/[^a-z0-9-]/g,'');
 
     const setButtonsState = () => {
@@ -336,8 +347,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const recomputeSaldo = () => {
-        const vn = parseFloat(fVN.value) || 0;
-        const vp = parseFloat(fVP.value) || 0;
+        const vn = parseCurrency(fVN.value);
+        const vp = parseCurrency(fVP.value);
         fSaldo.textContent = formatCurrency(vn - vp);
     };
 
@@ -357,7 +368,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let count = 0;
         data.forEach((item, idx) => {
             const saldo = item.valorNominal - item.valorPago;
-            const rowText = `${item.id} ${item.numero} ${item.codigoTitular} ${item.titular} ${item.ugCodigo} ${item.ugNome} ${item.grupo} ${item.valorNominal} ${item.valorPago} ${item.ultimoPagamento} ${item.status}`.toLowerCase();
+            const finalStatus = (saldo <= 0.001 && item.status !== 'Rascunho' && item.status !== 'Cancelado') ? 'Pagamento Integral' : item.status;
+
+            const rowText = `${item.id} ${item.numero} ${item.codigoTitular} ${item.titular} ${item.ugCodigo} ${item.ugNome} ${item.grupo} ${item.valorNominal} ${item.valorPago} ${item.ultimoPagamento} ${finalStatus}`.toLowerCase();
             const show = rowText.includes(q);
             if (!show) return;
             count++;
@@ -373,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${item.grupo}</td>
                 <td class="valor">${formatCurrency(item.valorNominal)}</td>
                 <td class="valor">${formatCurrency(saldo)}</td>
-                <td><span class="status-badge status-${slugifyStatus(item.status)}">${item.status}</span></td>`;
+                <td><span class="status-badge status-${slugifyStatus(finalStatus)}">${finalStatus}</span></td>`;
             gridBody.appendChild(tr);
         });
         noResultsRow.style.display = count === 0 ? '' : 'none';
@@ -397,8 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
             fUgCodigo.value = '';
             fUgNome.textContent = '';
             fGrupo.value = '';
-            fVN.value = '';
-            fVP.value = '';
+            fVN.value = formatNumberForInput(0);
+            fVP.value = formatNumberForInput(0);
             fSaldo.textContent = formatCurrency(0);
             fUlt.value = '';
             fStatus.value = 'Rascunho';
@@ -413,8 +426,8 @@ document.addEventListener('DOMContentLoaded', () => {
             fUgCodigo.value = d.ugCodigo;
             fUgNome.textContent = d.ugNome;
             fGrupo.value = d.grupo;
-            fVN.value = d.valorNominal;
-            fVP.value = d.valorPago;
+            fVN.value = formatNumberForInput(d.valorNominal);
+            fVP.value = formatNumberForInput(d.valorPago);
             fUlt.value = d.ultimoPagamento;
             fStatus.value = d.status;
             recomputeSaldo();
@@ -445,7 +458,19 @@ document.addEventListener('DOMContentLoaded', () => {
     btnEdit.addEventListener('click', () => { if (selectedRow) openForm(Number(selectedRow.dataset.index), 'edit'); });
     btnPrint.addEventListener('click', () => { if (selectedRow) showToast(`Imprimindo registro ID ${selectedRow.dataset.id}...`); });
     btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
-    [fVN, fVP].forEach(el => el.addEventListener('input', recomputeSaldo));
+    
+    [fVN, fVP].forEach(el => {
+        el.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value) {
+                value = (parseInt(value, 10) / 100).toFixed(2);
+                e.target.value = formatNumberForInput(parseFloat(value));
+            } else {
+                e.target.value = '';
+            }
+            recomputeSaldo();
+        });
+    });
     
     fNumero.addEventListener('input', () => {
         const numeroCompleto = fNumero.value.trim();
@@ -463,6 +488,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const ugCode = fUgCodigo.value.trim();
             const numeroCompleto = fNumero.value.trim();
             const codigoTitular = numeroCompleto.split('_')[0] || '';
+            const valorNominal = parseCurrency(fVN.value);
+            const valorPago = parseCurrency(fVP.value);
+            let status = fStatus.value.trim();
+
+            if (valorPago >= valorNominal && status !== 'Rascunho' && status !== 'Cancelado') {
+                status = 'Pagamento Integral';
+            }
 
             return {
                 id: mode === 'new' ? (data.length ? Math.max(...data.map(d => d.id)) + 1 : 1) : Number(fId.textContent),
@@ -472,10 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 ugCodigo: ugCode,
                 ugNome: ugMap[ugCode] || 'Nome não encontrado',
                 grupo: fGrupo.value.trim(),
-                valorNominal: parseFloat(fVN.value) || 0,
-                valorPago: parseFloat(fVP.value) || 0,
+                valorNominal: valorNominal,
+                valorPago: valorPago,
                 ultimoPagamento: fUlt.value,
-                status: fStatus.value.trim()
+                status: status
             };
         };
         const novo = build();
@@ -504,4 +536,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-</ht
+</html>
