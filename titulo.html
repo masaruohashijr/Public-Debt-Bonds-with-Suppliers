@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnPrint.addEventListener('click', () => { if (selectedRow) showToast(`Imprimindo registro ID ${selectedRow.dataset.id}...`); });
     btnDelete.addEventListener('click', () => {
         if (selectedRow) {
-            showToast('Não é possível excluir, pois há Parcelas pagas para esse título.', 'error');
+            showToast('Não é possível excluir, pois já há parcela paga para esse título.', 'error');
         }
     });
     btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
