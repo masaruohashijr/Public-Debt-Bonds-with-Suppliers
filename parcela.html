@@ -17,10 +17,8 @@
             --text-light: #ffffff;
             --text-dark: #1f2937;
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --status-pagamentointegral-bg: #dcfce7; --status-pagamentointegral-text: #166534;
-            --status-pagamentoamaior-bg: #cffafe; --status-pagamentoamaior-text: #0e7490;
-            --status-pagamentoparcial-bg: #dbeafe; --status-pagamentoparcial-text: #1d4ed8;
-            --status-transferidopcp-bg: #ede9fe; --status-transferidopcp-text: #5b21b6;
+            --status-transferidoparacp-bg: #ede9fe; --status-transferidoparacp-text: #5b21b6;
+            --status-naotransferidoparacp-bg: #f3f4f6; --status-naotransferidoparacp-text: #4b5563;
         }
 
         body {
@@ -206,10 +204,8 @@
         .no-results { text-align: center; padding: 2rem; color: var(--secondary-color); font-style: italic; }
         
         .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; font-size: 0.8rem; text-align: center; }
-        .status-badge.status-pagamentointegral { background-color: var(--status-pagamentointegral-bg); color: var(--status-pagamentointegral-text); }
-        .status-badge.status-pagamentoamaior { background-color: var(--status-pagamentoamaior-bg); color: var(--status-pagamentoamaior-text); }
-        .status-badge.status-pagamentoparcial { background-color: var(--status-pagamentoparcial-bg); color: var(--status-pagamentoparcial-text); }
-        .status-badge.status-transferidopcp { background-color: var(--status-transferidopcp-bg); color: var(--status-transferidopcp-text); }
+        .status-badge.status-transferidoparacp { background-color: var(--status-transferidoparacp-bg); color: var(--status-transferidoparacp-text); }
+        .status-badge.status-naotransferidoparacp { background-color: var(--status-naotransferidoparacp-bg); color: var(--status-naotransferidoparacp-text); }
         
         /* Estilos do Formulário */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
@@ -262,7 +258,7 @@
                                 Transferir LP para CP
                             </button>
                             <button id="btnView" class="btn btn-secondary" disabled>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585-.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
                                 Visualizar
                             </button>
                         </div>
@@ -273,7 +269,7 @@
                         <thead>
                             <tr>
                                 <th><input type="checkbox" id="selectAllCheckbox"></th>
-                                <th scope="col">Chave B</th>
+                                <th scope="col">Número</th>
                                 <th scope="col">Titular</th>
                                 <th scope="col">Data Prevista</th>
                                 <th scope="col" class="valor">Valor da Parcela</th>
@@ -290,12 +286,12 @@
         <!-- VIEW: DETALHES DA PARCELA -->
         <div id="form-view" class="view">
             <main class="main-container">
-                <h1>Detalhes da Parcela</h1>
+                <h1>Parcela</h1>
                 <form onsubmit="event.preventDefault();">
                     <div class="form-grid">
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Chave B do Título</label>
-                            <div id="form-chave" class="form-field-display"></div>
+                            <label>Número</label>
+                            <div id="form-numero" class="form-field-display"></div>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                              <label>Titular</label>
@@ -313,15 +309,9 @@
                             <label>Status</label>
                             <div id="form-status" class="form-field-display"></div>
                         </div>
-                        <div class="form-group">
-                            <label for="form-causa">Causa</label>
-                            <select id="form-causa" class="form-field">
-                                <option value="">Selecione...</option>
-                                <option value="Anexo 1">Anexo 1</option>
-                                <option value="Anexo 2">Anexo 2</option>
-                                <option value="Anexo 3">Anexo 3</option>
-                                <option value="Cash">Cash</option>
-                            </select>
+                        <div class="form-group" id="form-nota-group" style="display: none;">
+                            <label>Nota Patrimonial Gerada</label>
+                            <div id="form-nota" class="form-field-display"></div>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -354,26 +344,33 @@
             const formatDate = (date) => date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
             const slugifyStatus = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
 
-
             // --- DADOS E CONFIGURAÇÕES ---
             const dataPrevista2026 = getSixteenthWorkingDay(2026, 7); // Julho
+            let notaPatrimonialCounter = 1;
 
-            const parcelasData = [
-                { id: 1, chaveB: '00104659000198_100_3_1', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valor: 50000.00, status: 'Pagamento Integral', dataPrevista: dataPrevista2026, causa: 'Anexo 1' },
-                { id: 2, chaveB: '00299904000160_100_3_1', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 161304.68, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026, causa: 'Anexo 2' },
-                { id: 3, chaveB: '00472805000308_100_3_1', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valor: 221050.87, status: 'Pagamento Integral', dataPrevista: dataPrevista2026, causa: 'Anexo 1' },
-                { id: 4, chaveB: '00487626000174_100_3_1', nome: 'IPE ENGENHARIA LTDA', valor: 55000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026, causa: 'Anexo 2' },
-                { id: 5, chaveB: '00768165000108_100_3_1', nome: 'HB MULTISERVICOS LTDA', valor: 61558.17, status: 'Pagamento Integral', dataPrevista: dataPrevista2026, causa: 'Anexo 1' },
-                { id: 6, chaveB: '01077145000153_100_3_1', nome: 'DATAMETRICA CONTACT CENTER LTDA', valor: 50424.11, status: 'Pagamento Integral', dataPrevista: dataPrevista2026, causa: 'Anexo 3' },
-                { id: 7, chaveB: '01771935000215_100_3_1', nome: 'INGRAM MICRO BRASIL LTDA', valor: 70000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026, causa: 'Anexo 2' },
-                { id: 8, chaveB: '01953247000195_100_3_1', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valor: 188763.49, status: 'Pagamento Integral', dataPrevista: dataPrevista2026, causa: 'Anexo 1' },
-                { id: 9, chaveB: '02329307000166_100_3_1', nome: 'PETRA MG INDUSTRIA E COMERCIO', valor: 67493.56, status: 'Pagamento Integral', dataPrevista: dataPrevista2026, causa: 'Anexo 3' },
-                { id: 10, chaveB: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valor: 45000.00, status: 'Pagamento a Maior', dataPrevista: dataPrevista2026, causa: 'Anexo 2' },
-                { id: 11, chaveB: '04048325000171_100_3_1', nome: 'ZAP COMERCIO DE PNEUS E ACESSORIOS', valor: 85000.00, status: 'Pagamento Parcial', dataPrevista: dataPrevista2026, causa: 'Anexo 1' },
-                { id: 12, chaveB: '04165358000169_100_4_1', nome: 'RIO PRETO ASFALTOS LTDA', valor: 120000.00, status: 'Transferido p/ CP', dataPrevista: dataPrevista2026, causa: '' },
-                { id: 13, chaveB: '04239266000130_100_3_1', nome: 'LOCAMAIS SERVICOS LTDA', valor: 75000.00, status: 'Pagamento Parcial', dataPrevista: dataPrevista2026, causa: 'Anexo 3' },
-                { id: 14, chaveB: '04253334000103_100_3_1', nome: 'RIO SAUDE', valor: 250000.00, status: 'Transferido p/ CP', dataPrevista: dataPrevista2026, causa: '' }
+            let parcelasData = [
+                { id: 1, numero: '00104659000198_100_3_1', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valor: 50000.00, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null },
+                { id: 2, numero: '00299904000160_100_3_1', nome: 'DIMENSIONAL ENGENHARIA LTDA', valor: 161304.68, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null },
+                { id: 3, numero: '00472805000308_100_3_1', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valor: 221050.87, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null },
+                { id: 4, numero: '00487626000174_100_3_1', nome: 'IPE ENGENHARIA LTDA', valor: 55000.00, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null },
+                { id: 5, numero: '00768165000108_100_3_1', nome: 'HB MULTISERVICOS LTDA', valor: 61558.17, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null },
+                { id: 6, numero: '01077145000153_100_3_1', nome: 'DATAMETRICA CONTACT CENTER LTDA', valor: 50424.11, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null },
+                { id: 7, numero: '01771935000215_100_3_1', nome: 'INGRAM MICRO BRASIL LTDA', valor: 70000.00, status: 'Não Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: null },
+                { id: 8, numero: '01953247000195_100_3_1', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valor: 188763.49, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00001' },
+                { id: 9, numero: '02329307000166_100_3_1', nome: 'PETRA MG INDUSTRIA E COMERCIO', valor: 67493.56, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00002' },
+                { id: 10, numero: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valor: 45000.00, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00003' },
+                { id: 11, numero: '04048325000171_100_3_1', nome: 'ZAP COMERCIO DE PNEUS E ACESSORIOS', valor: 85000.00, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00004' },
+                { id: 12, numero: '04165358000169_100_4_1', nome: 'RIO PRETO ASFALTOS LTDA', valor: 120000.00, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00005' },
+                { id: 13, numero: '04239266000130_100_3_1', nome: 'LOCAMAIS SERVICOS LTDA', valor: 75000.00, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00006' },
+                { id: 14, numero: '04253334000103_100_3_1', nome: 'RIO SAUDE', valor: 250000.00, status: 'Transferido para CP', dataPrevista: dataPrevista2026, notaPatrimonial: '2026NP00007' }
             ];
+            // Inicializa o contador baseado nos dados existentes
+            const notasExistentes = parcelasData.map(p => p.notaPatrimonial).filter(Boolean);
+            if (notasExistentes.length > 0) {
+                 const maxNota = Math.max(...notasExistentes.map(n => parseInt(n.replace('2026NP', ''), 10)));
+                 notaPatrimonialCounter = maxNota + 1;
+            }
+
 
             // --- ELEMENTOS DO DOM ---
             const gridView = document.getElementById('grid-view');
@@ -387,6 +384,9 @@
             const btnView = document.getElementById('btnView');
             const btnTransfer = document.getElementById('btnTransfer');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
+            const formNotaGroup = document.getElementById('form-nota-group');
+            const formNota = document.getElementById('form-nota');
+
 
             let selectedRows = new Set();
 
@@ -399,7 +399,7 @@
                     row.dataset.id = item.id;
                     row.innerHTML = `
                         <td><input type="checkbox" data-id="${item.id}"></td>
-                        <td>${item.chaveB}</td>
+                        <td>${item.numero}</td>
                         <td>${item.nome}</td>
                         <td>${formatDate(item.dataPrevista)}</td>
                         <td class="valor">${formatCurrency(item.valor)}</td>
@@ -444,12 +444,18 @@
                 const item = parcelasData.find(p => p.id === selectedId);
                 if (!item) return;
 
-                document.getElementById('form-chave').textContent = item.chaveB;
+                document.getElementById('form-numero').textContent = item.numero;
                 document.getElementById('form-nome').textContent = item.nome;
                 document.getElementById('form-data-prevista').textContent = formatDate(item.dataPrevista);
                 document.getElementById('form-valor').textContent = formatCurrency(item.valor);
                 document.getElementById('form-status').textContent = item.status;
-                document.getElementById('form-causa').value = item.causa || '';
+                
+                if(item.notaPatrimonial) {
+                    formNota.textContent = item.notaPatrimonial;
+                    formNotaGroup.style.display = 'flex';
+                } else {
+                    formNotaGroup.style.display = 'none';
+                }
                 
                 switchView('form-view');
             };
@@ -518,9 +524,31 @@
             });
             
             btnView.addEventListener('click', showFormForSelectedRow);
+            
             btnTransfer.addEventListener('click', () => {
-                alert(`Ação: Transferir ${selectedRows.size} parcela(s) de Longo Prazo para Curto Prazo.`);
+                let transferredCount = 0;
+                selectedRows.forEach(id => {
+                    const numericId = parseInt(id, 10);
+                    const item = parcelasData.find(p => p.id === numericId);
+
+                    if (item && item.status === 'Não Transferido para CP') {
+                        item.status = 'Transferido para CP';
+                        const paddedCounter = String(notaPatrimonialCounter).padStart(5, '0');
+                        item.notaPatrimonial = `2026NP${paddedCounter}`;
+                        notaPatrimonialCounter++;
+                        transferredCount++;
+                    }
+                });
+
+                if (transferredCount > 0) {
+                    alert(`${transferredCount} parcela(s) transferida(s) com sucesso.`);
+                    selectedRows.clear();
+                    applyFilters();
+                } else {
+                    alert('Nenhuma parcela elegível (com status "Não Transferido para CP") foi selecionada para transferência.');
+                }
             });
+
             btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
             
             // --- INICIALIZAÇÃO ---
