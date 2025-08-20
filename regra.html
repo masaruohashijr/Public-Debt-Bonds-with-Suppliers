@@ -290,7 +290,7 @@
                     <table class="data-grid">
                         <thead>
                             <tr>
-                                <th>Descrição</th>
+                                <th>Nome</th>
                                 <th>Periodicidade</th>
                                 <th>Grupo</th>
                                 <th>Categoria</th>
@@ -308,12 +308,16 @@
 
         <div id="form-view" class="view">
             <main class="main-container">
-                <h1 id="form-title">Detalhes da Regra</h1>
+                <h1 id="form-title">Regra</h1>
                 <form id="rule-form">
                     <div class="form-grid">
                          <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" name="nome" class="form-field">
+                        </div>
+                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label for="descricao">Descrição</label>
-                            <input type="text" id="descricao" name="descricao" class="form-field">
+                            <textarea id="descricao" name="descricao" class="form-field"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="periodicidade">Periodicidade</label>
@@ -364,9 +368,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- DADOS E DOMÍNIOS ---
             let ruleData = [
-                { id: 1, descricao: 'Regra para Órgãos da Administração Direta', periodicidade: 'Anual', grupo: '1', categoria: '3', fonte: '100', orgao: 'SMFP', incidencia: `grupo == '1'`, quitacao: `valorPago >= valorNominal` },
-                { id: 2, descricao: 'Regra para Órgãos da Administração Indireta', periodicidade: 'Semestral', grupo: '6', categoria: '4', fonte: '208', orgao: 'RIOSAUDE', incidencia: `grupo == '6'`, quitacao: `valorPago >= valorNominal` },
-                { id: 3, descricao: 'Regra Atual', periodicidade: 'Mensal', grupo: 'Todos', categoria: 'Todos', fonte: 'Todos', orgao: 'Todos', incidencia: `true`, quitacao: `valorPago >= valorNominal` }
+                { id: 1, nome: 'Regra Direta', descricao: 'Regra para Órgãos da Administração Direta', periodicidade: 'Anual', grupo: '1', categoria: '3', fonte: '100', orgao: 'SMFP', incidencia: `grupo == '1'`, quitacao: `valorPago >= valorNominal` },
+                { id: 2, nome: 'Regra Indireta', descricao: 'Regra para Órgãos da Administração Indireta', periodicidade: 'Semestral', grupo: '6', categoria: '4', fonte: '208', orgao: 'RIOSAUDE', incidencia: `grupo == '6'`, quitacao: `valorPago >= valorNominal` },
+                { id: 3, nome: 'Regra Padrão', descricao: 'Regra Atual para todos os casos não especificados', periodicidade: 'Mensal', grupo: 'Todos', categoria: 'Todos', fonte: 'Todos', orgao: 'Todos', incidencia: `true`, quitacao: `valorPago >= valorNominal` }
             ];
             
             const dominios = {
@@ -419,7 +423,7 @@
                     const row = document.createElement('tr');
                     row.dataset.id = item.id;
                     row.innerHTML = `
-                        <td>${item.descricao}</td>
+                        <td>${item.nome}</td>
                         <td>${item.periodicidade}</td>
                         <td>${item.grupo}</td>
                         <td>${item.categoria}</td>
@@ -445,7 +449,6 @@
             const setFormFieldsReadOnly = (isReadOnly) => {
                 const formElements = ruleForm.elements;
                 for (let i = 0; i < formElements.length; i++) {
-                    // Correção: Não desabilitar o botão de voltar
                     if (formElements[i].id !== 'btnBackToGrid') {
                        formElements[i].disabled = isReadOnly;
                     }
@@ -462,6 +465,7 @@
                     if (!data) return;
 
                     formTitle.textContent = mode === 'view' ? 'Detalhes da Regra' : 'Alterar Regra';
+                    document.getElementById('nome').value = data.nome;
                     document.getElementById('descricao').value = data.descricao;
                     document.getElementById('periodicidade').value = data.periodicidade;
                     document.getElementById('grupo').value = data.grupo;
@@ -520,8 +524,8 @@
                 const formData = new FormData(ruleForm);
                 const rule = Object.fromEntries(formData.entries());
 
-                if (!rule.descricao) {
-                    alert('O campo "Descrição" é obrigatório.');
+                if (!rule.nome) {
+                    alert('O campo "Nome" é obrigatório.');
                     return;
                 }
 
