@@ -17,6 +17,8 @@
             --text-light: #ffffff;
             --text-dark: #1f2937;
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --success-bg: #28a745;
+            --error-bg: #dc3545;
         }
 
         body {
@@ -275,6 +277,27 @@
             justify-content: flex-end;
             gap: 1rem;
         }
+
+        /* Estilos do Toast (Notificação) */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast.success { background-color: var(--success-bg); }
+        .toast.error { background-color: var(--error-bg); }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -359,6 +382,8 @@
         </div>
     </div>
 
+    <div id="toast-notification" class="toast"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let supplierData = [
@@ -416,10 +441,21 @@
             const formCnpj = document.getElementById('form-cnpj');
             const formName = document.getElementById('form-name');
             const supplierForm = document.getElementById('supplierForm');
+            const toast = document.getElementById('toast-notification');
 
             let selectedRow = null;
             let currentMode = 'view'; // 'view', 'edit', 'new'
             let editingId = null;
+
+            const showToast = (message, type = 'success') => {
+                toast.textContent = message;
+                toast.className = 'toast'; // Reset classes
+                toast.classList.add(type); // Add 'success' or 'error'
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            };
 
             const populateGrid = (data) => {
                 gridBody.innerHTML = '';
@@ -520,21 +556,23 @@
                 const name = formName.value.trim();
 
                 if (!id || !name) {
-                    alert('Por favor, preencha todos os campos.');
+                    showToast('Por favor, preencha todos os campos.', 'error');
                     return;
                 }
 
                 if (currentMode === 'new') {
                     if (supplierData.some(s => s.id === id)) {
-                        alert('Este CNPJ/CPF já está cadastrado.');
+                        showToast('Este CNPJ/CPF já está cadastrado.', 'error');
                         return;
                     }
                     supplierData.push({ id, name });
+                    showToast('Fornecedor incluído com sucesso!');
                 } else if (currentMode === 'edit') {
                     const supplier = supplierData.find(s => s.id === editingId);
                     if (supplier) {
                         supplier.name = name;
                     }
+                    showToast('Fornecedor alterado com sucesso!');
                 }
                 
                 filterData();
@@ -543,7 +581,7 @@
 
             btnPrint.addEventListener('click', () => {
                 if (selectedRow) {
-                    alert(`Imprimindo dados do fornecedor: ${selectedRow.cells[1].textContent}`);
+                    showToast(`Imprimindo dados do fornecedor: ${selectedRow.cells[1].textContent}`);
                 }
             });
             
