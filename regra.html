@@ -124,6 +124,11 @@
             transition: all 0.2s ease-in-out;
         }
         
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        
         .btn-primary {
             background-color: var(--primary-color);
             color: var(--text-light);
@@ -222,6 +227,11 @@
             font-family: var(--font-family);
         }
         
+        .form-field:disabled, select:disabled, textarea:disabled {
+            background-color: #f9fafb;
+            cursor: not-allowed;
+        }
+
         textarea {
             resize: vertical;
             min-height: 80px;
@@ -240,7 +250,7 @@
 <body>
 
     <header class="top-nav">
-        <a href="titulo.html" class="logo">Dívida Pública</a>
+        <a href="#" class="logo">Dívida Pública</a>
         <nav>
             <ul>
                 <li><a href="/public-debt-bonds-with-suppliers.github.io/titulo.html">Títulos</a></li>
@@ -263,7 +273,7 @@
                             Incluir
                         </button>
                         <button id="btnView" class="btn btn-secondary" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585-.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
                             Visualizar
                         </button>
                         <button id="btnEdit" class="btn btn-secondary" disabled>
@@ -298,9 +308,13 @@
 
         <div id="form-view" class="view">
             <main class="main-container">
-                <h1>Detalhes da Regra</h1>
+                <h1 id="form-title">Detalhes da Regra</h1>
                 <form id="rule-form">
                     <div class="form-grid">
+                         <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="descricao">Descrição</label>
+                            <input type="text" id="descricao" name="descricao" class="form-field">
+                        </div>
                         <div class="form-group">
                             <label for="periodicidade">Periodicidade</label>
                             <select id="periodicidade" name="periodicidade">
@@ -339,7 +353,7 @@
                     </div>
                     <div class="form-actions">
                         <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar</button>
-                        <button type="submit" class="btn btn-primary">Projetar Parcelas</button>
+                        <button type="submit" id="btnSave" class="btn btn-primary">Salvar</button>
                     </div>
                 </form>
             </main>
@@ -349,10 +363,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- DADOS E DOMÍNIOS ---
-            const ruleData = [
-                { id: 1, descricao: 'Regra para Órgãos da Administração Direta', periodicidade: 'Anual', grupo: '1', categoria: '3', fonte: '100', orgao: 'SMFP' },
-                { id: 2, descricao: 'Regra para Órgãos da Administração Indireta', periodicidade: 'Semestral', grupo: '6', categoria: '4', fonte: '208', orgao: 'RIOSAUDE' },
-                { id: 3, descricao: 'Regra Atual', periodicidade: 'Mensal', grupo: 'Todos', categoria: 'Todos', fonte: 'Todos', orgao: 'Todos' }
+            let ruleData = [
+                { id: 1, descricao: 'Regra para Órgãos da Administração Direta', periodicidade: 'Anual', grupo: '1', categoria: '3', fonte: '100', orgao: 'SMFP', incidencia: `grupo == '1'`, quitacao: `valorPago >= valorNominal` },
+                { id: 2, descricao: 'Regra para Órgãos da Administração Indireta', periodicidade: 'Semestral', grupo: '6', categoria: '4', fonte: '208', orgao: 'RIOSAUDE', incidencia: `grupo == '6'`, quitacao: `valorPago >= valorNominal` },
+                { id: 3, descricao: 'Regra Atual', periodicidade: 'Mensal', grupo: 'Todos', categoria: 'Todos', fonte: 'Todos', orgao: 'Todos', incidencia: `true`, quitacao: `valorPago >= valorNominal` }
             ];
             
             const dominios = {
@@ -367,18 +381,23 @@
             const formView = document.getElementById('form-view');
             const gridBody = document.getElementById('gridBody');
             
+            const btnAdd = document.getElementById('btnAdd');
             const btnView = document.getElementById('btnView');
             const btnEdit = document.getElementById('btnEdit');
             const btnPrint = document.getElementById('btnPrint');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
+            const btnSave = document.getElementById('btnSave');
             const ruleForm = document.getElementById('rule-form');
+            const formTitle = document.getElementById('form-title');
 
             let selectedRow = null;
+            let currentMode = 'view';
+            let editingId = null;
 
             // --- FUNÇÕES ---
             const populateSelect = (selectId, options) => {
                 const select = document.getElementById(selectId);
-                select.innerHTML = '<option value="Todos">Todos</option>'; // Adiciona a opção "Todos"
+                select.innerHTML = '<option value="Todos">Todos</option>';
                 options.forEach(option => {
                     const opt = document.createElement('option');
                     opt.value = option;
@@ -423,18 +442,40 @@
                 document.getElementById(viewId).classList.add('active');
             };
 
-            const showFormForRule = () => {
-                if (!selectedRow) return;
-                const ruleId = parseInt(selectedRow.dataset.id);
-                const data = ruleData.find(r => r.id === ruleId);
+            const setFormFieldsReadOnly = (isReadOnly) => {
+                const formElements = ruleForm.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    formElements[i].disabled = isReadOnly;
+                }
+            };
 
-                document.getElementById('periodicidade').value = data.periodicidade;
-                document.getElementById('grupo').value = data.grupo;
-                document.getElementById('categoria').value = data.categoria;
-                document.getElementById('fonte').value = data.fonte;
-                document.getElementById('orgao').value = data.orgao;
-                document.getElementById('incidencia').value = ""; // Limpa o campo
-                document.getElementById('quitacao').value = ""; // Limpa o campo
+            const openForm = (mode, ruleId = null) => {
+                currentMode = mode;
+                editingId = ruleId;
+                ruleForm.reset();
+
+                if (mode === 'view' || mode === 'edit') {
+                    const data = ruleData.find(r => r.id === ruleId);
+                    if (!data) return;
+
+                    formTitle.textContent = mode === 'view' ? 'Detalhes da Regra' : 'Alterar Regra';
+                    document.getElementById('descricao').value = data.descricao;
+                    document.getElementById('periodicidade').value = data.periodicidade;
+                    document.getElementById('grupo').value = data.grupo;
+                    document.getElementById('categoria').value = data.categoria;
+                    document.getElementById('fonte').value = data.fonte;
+                    document.getElementById('orgao').value = data.orgao;
+                    document.getElementById('incidencia').value = data.incidencia;
+                    document.getElementById('quitacao').value = data.quitacao;
+                    
+                    setFormFieldsReadOnly(mode === 'view');
+                    btnSave.style.display = mode === 'edit' ? 'inline-flex' : 'none';
+
+                } else if (mode === 'new') {
+                    formTitle.textContent = 'Incluir Nova Regra';
+                    setFormFieldsReadOnly(false);
+                    btnSave.style.display = 'inline-flex';
+                }
                 
                 showView('form-view');
             };
@@ -455,23 +496,48 @@
             });
 
             gridBody.addEventListener('dblclick', (event) => {
-                if (event.target.closest('tr')) {
-                    showFormForRule();
+                const clickedRow = event.target.closest('tr');
+                if (clickedRow) {
+                    openForm('view', parseInt(clickedRow.dataset.id));
                 }
             });
             
-            btnView.addEventListener('click', showFormForRule);
+            btnAdd.addEventListener('click', () => openForm('new'));
+            btnView.addEventListener('click', () => {
+                if(selectedRow) openForm('view', parseInt(selectedRow.dataset.id));
+            });
             btnEdit.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Alterar a regra "${selectedRow.cells[0].textContent}".`);
+                if(selectedRow) openForm('edit', parseInt(selectedRow.dataset.id));
             });
-            btnPrint.addEventListener('click', () => {
-                if(selectedRow) alert(`Ação: Imprimir a regra "${selectedRow.cells[0].textContent}".`);
-            });
+            
             btnBackToGrid.addEventListener('click', () => showView('grid-view'));
             
             ruleForm.addEventListener('submit', function(event) {
                 event.preventDefault();
-                alert('1000 parcelas projetadas com sucesso!');
+                const formData = new FormData(ruleForm);
+                const rule = Object.fromEntries(formData.entries());
+
+                if (!rule.descricao) {
+                    alert('O campo "Descrição" é obrigatório.');
+                    return;
+                }
+
+                if (currentMode === 'new') {
+                    rule.id = ruleData.length > 0 ? Math.max(...ruleData.map(r => r.id)) + 1 : 1;
+                    ruleData.push(rule);
+                } else if (currentMode === 'edit') {
+                    const index = ruleData.findIndex(r => r.id === editingId);
+                    if (index !== -1) {
+                        ruleData[index] = { ...ruleData[index], ...rule };
+                    }
+                }
+                
+                populateGrid();
+                showView('grid-view');
+            });
+            
+            btnPrint.addEventListener('click', () => {
+                if(selectedRow) alert(`Ação: Imprimir a regra "${selectedRow.cells[0].textContent}".`);
             });
 
             // --- INICIALIZAÇÃO ---
