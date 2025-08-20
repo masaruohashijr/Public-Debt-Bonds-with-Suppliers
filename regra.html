@@ -464,7 +464,7 @@
                     const data = ruleData.find(r => r.id === ruleId);
                     if (!data) return;
 
-                    formTitle.textContent = mode === 'view' ? 'Detalhes da Regra' : 'Alterar Regra';
+                    formTitle.textContent = mode === 'view' ? 'Regra' : 'Alterar Regra';
                     document.getElementById('nome').value = data.nome;
                     document.getElementById('descricao').value = data.descricao;
                     document.getElementById('periodicidade').value = data.periodicidade;
