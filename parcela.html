@@ -300,10 +300,10 @@
                                 <th scope="col">Número</th>
                                 <th scope="col">Titular</th>
                                 <th scope="col">Status</th>
-                                <th scope="col" class="valor">Saldo Devedor do Título</th>
                                 <th scope="col" class="valor">Valor da Parcela</th>
                                 <th scope="col">Data Prevista</th>
                                 <th scope="col">Data Transferência</th>
+                                <th scope="col" class="valor">Saldo Devedor do Título</th>
                             </tr>
                         </thead>
                         <tbody id="gridBody"></tbody>
@@ -478,10 +478,10 @@
                         <td>${item.numero}</td>
                         <td>${item.nome}</td>
                         <td><span class="status-badge status-${statusClass}">${item.status}</span></td>
-                        <td class="valor">${formatCurrency(item.saldoDevedorTitulo)}</td>
                         <td class="valor">${formatCurrency(item.valorParcela)}</td>
                         <td>${formatDate(item.dataPrevista)}</td>
                         <td>${formatDate(item.dataTransferencia)}</td>
+                        <td class="valor">${formatCurrency(item.saldoDevedorTitulo)}</td>
                     `;
                     gridBody.appendChild(row);
                 });
