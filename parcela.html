@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Suspensões</title>
+    <title>Gestão de Parcelas</title>
     <style>
         /* Estilos Gerais e Variaveis */
         :root {
@@ -17,10 +17,8 @@
             --text-light: #ffffff;
             --text-dark: #1f2937;
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --danger-color: #ef4444;
-            --danger-hover: #dc2626;
-            --success-bg: #28a745;
-            --error-bg: #dc3545;
+            --status-transferidoparacp-bg: #ede9fe; --status-transferidoparacp-text: #5b21b6;
+            --status-naotransferidoparacp-bg: #f3f4f6; --status-naotransferidoparacp-text: #4b5563;
         }
 
         body {
@@ -74,7 +72,7 @@
         .content-wrapper {
             padding: 1.5rem;
         }
-        
+
         .view {
             display: none;
         }
@@ -87,48 +85,77 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             padding: 2rem;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: auto;
         }
 
-        /* Cabeçalho */
-        .header-controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
+        /* Cabeçalho e Filtros de Página */
+        .page-header {
             margin-bottom: 1.5rem;
         }
 
         h1 {
             font-size: 1.875rem;
             font-weight: 700;
-            margin: 0;
+            margin: 0 0 1rem 0;
             color: var(--text-dark);
         }
 
-        /* Controles */
-        .controls {
+        .page-filters {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Controles e Ações */
+        .controls-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--secondary-color);
         }
 
         .filter-container {
             position: relative;
         }
 
-        #filterInput {
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
+        .input-filter, .form-field {
+            padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
-            min-width: 250px;
+            background-color: #fff;
             transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        
+        .input-filter {
+             min-width: 150px;
         }
 
-        #filterInput:focus {
+        #filterInput {
+             padding-left: 2.5rem;
+             min-width: 400px;
+        }
+
+        .input-filter:focus, .form-field:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
@@ -144,6 +171,11 @@
             font-size: 1.1rem;
         }
         
+        .actions-container {
+            display: flex;
+            gap: 0.75rem;
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -157,181 +189,52 @@
             transition: all 0.2s ease-in-out;
         }
         
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-        }
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        .btn-secondary {
-            background-color: #fff;
-            color: var(--secondary-color);
-            border-color: var(--border-color);
-        }
-        .btn-secondary:hover {
-            background-color: #f9fafb;
-            border-color: #d1d5db;
-        }
-        
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: var(--text-light);
-        }
-        .btn-danger:hover {
-            background-color: var(--danger-hover);
-        }
-
-        .btn:disabled {
-            background-color: #e5e7eb;
-            color: #9ca3af;
-            cursor: not-allowed;
-            border-color: transparent;
-        }
+        .btn svg { width: 18px; height: 18px; }
+        .btn-primary { background-color: var(--primary-color); color: var(--text-light); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: #fff; color: var(--secondary-color); border-color: var(--border-color); }
+        .btn-secondary:hover { background-color: #f9fafb; border-color: #d1d5db; }
+        .btn:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; border-color: transparent; }
 
         /* Grid de Dados */
-        .grid-container {
-            overflow-x: auto;
-        }
-
-        .data-grid {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-        }
-
-        .data-grid th, .data-grid td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-            white-space: nowrap;
-        }
-
-        .data-grid th {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--secondary-color);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background-color: #f9fafb;
-        }
+        .grid-container { overflow-x: auto; }
+        .data-grid { width: 100%; border-collapse: collapse; border-spacing: 0; }
+        .data-grid th, .data-grid td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-grid th { font-size: 0.8rem; font-weight: 600; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 0.05em; background-color: #f9fafb; }
+        .data-grid th:first-child, .data-grid td:first-child { width: 1%; padding-right: 0.5rem; text-align: center; }
+        .data-grid tbody tr { cursor: pointer; transition: background-color 0.2s; }
+        .data-grid tbody tr:hover { background-color: var(--row-hover-color); }
+        .data-grid tbody tr.selected { background-color: var(--row-selected-color); color: var(--primary-hover); font-weight: 500; }
+        .data-grid td.valor { text-align: right; font-weight: 500; }
+        .no-results { text-align: center; padding: 2rem; color: var(--secondary-color); font-style: italic; }
         
-        .data-grid tbody tr {
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .data-grid tbody tr:hover {
-            background-color: var(--row-hover-color);
-        }
-
-        .data-grid tbody tr.selected {
-            background-color: var(--row-selected-color);
-            color: var(--primary-hover);
-            font-weight: 500;
-        }
-        
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .status-ativa { background-color: #fef3c7; color: #92400e; }
-        .status-titulocancelado, .status-fornecedorcancelado { background-color: #fecaca; color: #991b1b; }
-        .status-suspensaoencerrada { background-color: #d1d5db; color: #4b5563; }
-        
-        .no-results {
-            text-align: center;
-            padding: 2rem;
-            color: var(--secondary-color);
-            font-style: italic;
-        }
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; font-size: 0.8rem; text-align: center; }
+        .status-badge.status-transferidoparacp { background-color: var(--status-transferidoparacp-bg); color: var(--status-transferidoparacp-text); }
+        .status-badge.status-naotransferidoparacp { background-color: var(--status-naotransferidoparacp-bg); color: var(--status-naotransferidoparacp-text); }
         
         /* Estilos do Formulário */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary-color); font-size: 0.9rem; }
+        .form-field-display { background-color: #f9fafb; color: var(--text-dark); min-height: 44px; display: flex; align-items: center; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; }
+        .form-field-display.currency { font-weight: 600; color: var(--primary-color); }
+        .form-actions { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--secondary-color);
-            font-size: 0.9rem;
-        }
-
-        .form-field, select, textarea, input[type="text"], input[type="date"] {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            background-color: #ffffff;
-            color: var(--text-dark);
-            font-family: var(--font-family);
-        }
-        
-        .form-field-display {
-            background-color: #f9fafb;
-        }
-        
-        .form-field:disabled, select:disabled, textarea:disabled, input:disabled {
-            background-color: #f9fafb;
-            cursor: not-allowed;
-            color: #6b7280;
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .form-actions {
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
+        /* Estilos do Modal (Popup) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 500px; transform: scale(0.95); transition: transform 0.3s; }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-content h2 { margin-top: 0; margin-bottom: 1.5rem; font-size: 1.25rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+        .radio-group { display: flex; flex-direction: column; gap: 1rem; }
+        .radio-option { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+        .radio-option input { accent-color: var(--primary-color); }
 
         /* Estilos do Toast (Notificação) */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 2000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
-        }
-        .toast.success { background-color: var(--success-bg); }
-        .toast.error { background-color: var(--error-bg); }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .toast { position: fixed; bottom: 20px; right: 20px; background-color: #28a745; color: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; opacity: 0; transform: translateY(20px); transition: opacity 0.3s, transform 0.3s; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
     </style>
 </head>
 <body>
@@ -350,339 +253,449 @@
     </header>
 
     <div class="content-wrapper">
+        <!-- VIEW: GRID DE PARCELAS -->
         <div id="grid-view" class="view active">
             <main class="main-container">
-                <div class="header-controls">
-                    <h1>Suspensões e Cancelamentos</h1>
-                    <div class="controls">
-                        <div class="filter-container">
-                            <input type="text" id="filterInput" placeholder="Filtrar suspensões...">
+                <div class="page-header">
+                    <h1>Parcelas</h1>
+                    <div class="page-filters">
+                        <div class="filter-group">
+                           <label for="dateStart">Data Inicial</label>
+                           <input type="date" id="dateStart" class="input-filter">
                         </div>
-                        <button id="btnAdd" class="btn btn-primary">Incluir</button>
-                        <button id="btnView" class="btn btn-secondary" disabled>Visualizar</button>
-                        <button id="btnEdit" class="btn btn-secondary" disabled>Alterar</button>
-                        <button id="btnDelete" class="btn btn-secondary" disabled>Excluir</button>
-                        <button id="btnRevert" class="btn btn-secondary" disabled>Reverter</button>
-                        <button id="btnConvert" class="btn btn-danger" disabled>Converter</button>
-                        <button id="btnPrint" class="btn btn-secondary" disabled>Imprimir</button>
+                        <div class="filter-group">
+                           <label for="dateEnd">Data Final</label>
+                           <input type="date" id="dateEnd" class="input-filter">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls-header">
+                    <div class="filter-group">
+                        <label for="filterInput">Filtro Rápido</label>
+                        <div class="filter-container">
+                            <input type="text" id="filterInput" class="input-filter" placeholder="Filtrar por titular...">
+                        </div>
+                    </div>
+                    <div class="actions-container">
+                         <button id="btnProjectNew" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" /></svg>
+                            Projetar
+                         </button>
+                         <button id="btnTransfer" class="btn btn-primary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+                            Transferir LP para CP
+                        </button>
+                        <button id="btnView" class="btn btn-secondary" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-7.087a1.012 1.012 0 0 1 1.585-.343l.118.118a1.012 1.012 0 0 0 1.414 0l.118-.118a1.012 1.012 0 0 1 1.585.343l4.43 7.087a1.012 1.012 0 0 1 0 .639l-4.43 7.087a1.012 1.012 0 0 1-1.585-.343l-.118-.118a1.012 1.012 0 0 0-1.414 0l-.118.118a1.012 1.012 0 0 1-1.585-.343l-4.43-7.087Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                            Visualizar
+                        </button>
                     </div>
                 </div>
                 <div class="grid-container">
                     <table class="data-grid">
                         <thead>
                             <tr>
-                                <th>Tipo</th>
-                                <th>Fornecedor</th>
-                                <th>Situação</th>
-                                <th>Início Vigência</th>
-                                <th>Fim Vigência</th>
+                                <th><input type="checkbox" id="selectAllCheckbox"></th>
+                                <th scope="col">Número</th>
+                                <th scope="col">Titular</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="valor">Saldo Devedor do Título</th>
+                                <th scope="col" class="valor">Valor da Parcela</th>
+                                <th scope="col">Data Prevista</th>
+                                <th scope="col">Data Transferência</th>
                             </tr>
                         </thead>
                         <tbody id="gridBody"></tbody>
                     </table>
-                    <div id="no-results-row" class="no-results" style="display: none;">Nenhum resultado encontrado.</div>
+                    <div id="no-results-row" class="no-results" style="display: none;">Nenhuma parcela encontrada.</div>
                 </div>
             </main>
         </div>
 
+        <!-- VIEW: DETALHES DA PARCELA -->
         <div id="form-view" class="view">
             <main class="main-container">
-                <h1 id="form-title">Nova Suspensão</h1>
-                <form id="suspensao-form">
+                <h1>Parcela</h1>
+                <form onsubmit="event.preventDefault();">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label for="tipoImpedimento">Tipo de Impedimento</label>
-                            <select id="tipoImpedimento">
-                                <option value="Suspensão">Suspensão</option>
-                                <option value="Cancelamento">Cancelamento</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="escopo">Escopo da Suspensão</label>
-                            <select id="escopo">
-                                <option value="Fornecedor">Fornecedor</option>
-                                <option value="Título">Título</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="cpfCnpj">CPF/CNPJ do Fornecedor</label>
-                            <input type="text" id="cpfCnpj" placeholder="00.000.000/0000-00">
-                        </div>
-                        <div class="form-group">
-                            <label for="nomeFornecedor">Nome do Fornecedor</label>
-                            <div id="nomeFornecedor" class="form-field form-field-display">Preenchido automaticamente</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="numeroTitulo">Número do Título</label>
-                            <input type="text" id="numeroTitulo" placeholder="Obrigatório se escopo for Título">
-                        </div>
-                        <div class="form-group">
-                            <label for="inicioVigencia">Data de Início da Vigência</label>
-                            <input type="date" id="inicioVigencia">
-                        </div>
-                        <div class="form-group">
-                            <label for="fimVigencia">Data de Fim da Vigência</label>
-                            <input type="date" id="fimVigencia">
-                        </div>
-                        <div class="form-group">
-                            <label for="autor">Autor</label>
-                            <div id="autor" class="form-field form-field-display"></div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Número</label>
+                            <div id="form-numero" class="form-field-display"></div>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label for="justificativa">Justificativa</label>
-                            <textarea id="justificativa" placeholder="Motivo que fundamenta a suspensão (mínimo 10 caracteres)"></textarea>
+                             <label>Titular</label>
+                            <div id="form-nome" class="form-field-display"></div>
                         </div>
                         <div class="form-group">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="motivoJudicial">
-                                <label for="motivoJudicial">Motivo Judicial?</label>
-                            </div>
+                            <label>Saldo Devedor do Título</label>
+                            <div id="form-saldo-devedor" class="form-field-display currency"></div>
                         </div>
                         <div class="form-group">
-                            <label for="processoJudicial">Número do Processo Judicial</label>
-                            <input type="text" id="processoJudicial" placeholder="Obrigatório se motivo for judicial">
+                            <label>Valor da Parcela</label>
+                            <div id="form-valor" class="form-field-display currency"></div>
                         </div>
-                         <div class="form-group">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="impactaTransferencia" checked>
-                                <label for="impactaTransferencia">Impacta Transferência para Curto Prazo?</label>
-                            </div>
+                        <div class="form-group">
+                            <label>Data Prevista</label>
+                            <div id="form-data-prevista" class="form-field-display"></div>
+                        </div>
+                         <div class="form-group" id="form-data-transferencia-group" style="display: none;">
+                            <label>Data Transferência</label>
+                            <div id="form-data-transferencia" class="form-field-display"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <div id="form-status" class="form-field-display"></div>
+                        </div>
+                        <div class="form-group" id="form-nota-group" style="display: none;">
+                            <label>Nota Patrimonial Gerada</label>
+                            <div id="form-nota" class="form-field-display"></div>
                         </div>
                     </div>
                     <div class="form-actions">
+                        <button type="button" id="btnTransferForm" class="btn btn-primary" style="display: none;">Transferir LP para CP</button>
                         <button type="button" id="btnBackToGrid" class="btn btn-secondary">Voltar para o Grid</button>
-                        <button type="submit" id="btnSave" class="btn btn-primary">Salvar Alterações</button>
                     </div>
                 </form>
             </main>
         </div>
     </div>
+    
+    <!-- MODAL DE PROJEÇÃO -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Qual regra projetar?</h2>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="regra" value="atual" checked>
+                    Regra Atual
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="regra" value="direta">
+                    Regra para Órgãos da Administração Direta
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="regra" value="indireta">
+                    Regra para Órgãos da Administração Indireta
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button id="btnCancelProject" class="btn btn-secondary">Cancelar</button>
+                <button id="btnConfirmProject" class="btn btn-primary">Projetar</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- TOAST DE NOTIFICAÇÃO -->
     <div id="toast-notification" class="toast"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let suspensoesData = [
-                { id: 1, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '20476731000115', nome: '4ID MEDICOS ASSOCIADOS EIRELLI', titulo: '', inicio: '2025-07-01', fim: '', situacao: 'Ativa', justificativa: 'Bloqueio judicial determinado no processo X.', autor: 'PGM' },
-                { id: 2, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '33892738000160', nome: 'ABRIGO TERESA DE JESUS', titulo: '2025-00123', inicio: '2025-06-10', fim: '2025-08-10', situacao: 'Suspensão Encerrada', justificativa: 'Pendente de comprovação de serviço.', autor: 'CGM' },
-                { id: 3, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '10189253000109', nome: 'A FRUGONI LOCACAO DE MAO DE OBRA LTDA', titulo: '2025-00456', inicio: '2025-05-20', fim: '', situacao: 'Título Cancelado', justificativa: 'Contrato rescindido por quebra de cláusula.', autor: 'SME' },
-                { id: 4, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '04491152000195', nome: '4LINUX SOFTWARE E COMERCIO DE PROGRAMAS LTDA', titulo: '', inicio: '2025-08-01', fim: '', situacao: 'Ativa', justificativa: 'Análise de documentação fiscal.', autor: 'SMFP' },
-                { id: 5, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '26592256000129', nome: '8 AM COMERCIO E SERVICOS DE MOVEIS', titulo: '2025-00789', inicio: '2025-08-15', fim: '', situacao: 'Ativa', justificativa: 'Aguardando laudo técnico.', autor: 'SMO' },
-                { id: 6, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '29913267000151', nome: 'A I M DE AGUIAR PRODUCAO DE FILMES ME', titulo: '', inicio: '2025-04-01', fim: '2025-07-30', situacao: 'Suspensão Encerrada', justificativa: 'Regularização concluída.', autor: 'PGM' },
-                { id: 7, tipo: 'Cancelamento', escopo: 'Título', cpfCnpj: '12664453000100', nome: 'A7 DISTRIBUIDORA DE MEDICAMENTOS LTDA EPP', titulo: '2025-00991', inicio: '2025-08-19', fim: '', situacao: 'Título Cancelado', justificativa: 'Item descontinuado pelo fornecedor.', autor: 'SMS' },
-                { id: 8, tipo: 'Cancelamento', escopo: 'Fornecedor', cpfCnpj: '04615160000104', nome: 'ABMR CONSERVADORA DE ELEVADORES LTDA', titulo: '', inicio: '2025-03-15', fim: '', situacao: 'Fornecedor Cancelado', justificativa: 'Encerramento de atividades da empresa.', autor: 'SMFP' },
-                { id: 9, tipo: 'Suspensão', escopo: 'Título', cpfCnpj: '00462017000160', nome: 'ABRIGO DOCE MORADA', titulo: '2025-01002', inicio: '2025-08-20', fim: '', situacao: 'Ativa', justificativa: 'Averiguação de conformidade.', autor: 'SMAS' },
-                { id: 10, tipo: 'Suspensão', escopo: 'Fornecedor', cpfCnpj: '01290665753', nome: 'MARIO SOUZA FERREIRA', titulo: '', inicio: '2025-01-10', fim: '2025-06-30', situacao: 'Suspensão Encerrada', justificativa: 'Período de suspensão contratual finalizado.', autor: 'SME' }
+            // --- FUNÇÕES HELPER ---
+            const getSixteenthWorkingDay = (year, month) => {
+                let date = new Date(year, month - 1, 1);
+                let workingDays = 0;
+                while (workingDays < 16) {
+                    const dayOfWeek = date.getDay();
+                    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Ignora Domingo (0) e Sábado (6)
+                        workingDays++;
+                    }
+                    if (workingDays < 16) {
+                        date.setDate(date.getDate() + 1);
+                    }
+                }
+                return date;
+            };
+
+            const formatCurrency = (value) => Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const formatDate = (date) => date ? new Date(date).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '';
+            const slugifyStatus = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
+
+            // --- DADOS E CONFIGURAÇÕES ---
+            const dataPrevista2026 = getSixteenthWorkingDay(2026, 7); // Julho
+            let notaPatrimonialCounter = 1;
+
+            let parcelasDataRaw = [
+                { id: 1, numero: '00104659000198_100_3_1', nome: 'HADDAD RENT A CAR LOCADORA LTDA', valorParcela: 50000.00, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 2, numero: '00299904000160_100_3_1', nome: 'DIMENSIONAL ENGENHARIA LTDA', valorParcela: 161304.68, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 3, numero: '00472805000308_100_3_1', nome: 'TRACADO CONSTRUCOES E SERVICOS LTDA', valorParcela: 221050.87, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 4, numero: '00487626000174_100_3_1', nome: 'IPE ENGENHARIA LTDA', valorParcela: 55000.00, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 5, numero: '00768165000108_100_3_1', nome: 'HB MULTISERVICOS LTDA', valorParcela: 61558.17, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 6, numero: '01077145000153_100_3_1', nome: 'DATAMETRICA CONTACT CENTER LTDA', valorParcela: 50424.11, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 7, numero: '01771935000215_100_3_1', nome: 'INGRAM MICRO BRASIL LTDA', valorParcela: 70000.00, status: 'Não Transferido para CP', notaPatrimonial: null, dataTransferencia: null },
+                { id: 8, numero: '01953247000195_100_3_1', nome: 'INSTITUTO CARIOCA DE ATIVIDADES', valorParcela: 188763.49, status: 'Transferido para CP', notaPatrimonial: '2026NP00001', dataTransferencia: new Date('2025-07-20T10:00:00Z') },
+                { id: 9, numero: '02329307000166_100_3_1', nome: 'PETRA MG INDUSTRIA E COMERCIO', valorParcela: 67493.56, status: 'Transferido para CP', notaPatrimonial: '2026NP00002', dataTransferencia: new Date('2025-07-21T11:30:00Z') },
+                { id: 10, numero: '03506307000157_100_3_1', nome: 'TICKET SOLUCOES HDFGT S A', valorParcela: 45000.00, status: 'Transferido para CP', notaPatrimonial: '2026NP00003', dataTransferencia: new Date('2025-07-22T14:00:00Z') }
             ];
 
+            // Processa os dados para adicionar o saldo devedor inicial
+            let parcelasData = parcelasDataRaw.map(p => {
+                const saldoDevedorTitulo = p.status === 'Transferido para CP' ? p.valorParcela * 5 : p.valorParcela * 6;
+                return { ...p, saldoDevedorTitulo, dataPrevista: dataPrevista2026 };
+            });
+
+            const notasExistentes = parcelasData.map(p => p.notaPatrimonial).filter(Boolean);
+            if (notasExistentes.length > 0) {
+                 const maxNota = Math.max(...notasExistentes.map(n => parseInt(n.replace('2026NP', ''), 10)));
+                 notaPatrimonialCounter = maxNota + 1;
+            }
+
+            // --- ELEMENTOS DO DOM ---
             const gridView = document.getElementById('grid-view');
             const formView = document.getElementById('form-view');
             const gridBody = document.getElementById('gridBody');
             const filterInput = document.getElementById('filterInput');
+            const dateStartInput = document.getElementById('dateStart');
+            const dateEndInput = document.getElementById('dateEnd');
             const noResultsRow = document.getElementById('no-results-row');
-            
-            const btnAdd = document.getElementById('btnAdd');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             const btnView = document.getElementById('btnView');
-            const btnEdit = document.getElementById('btnEdit');
-            const btnDelete = document.getElementById('btnDelete');
-            const btnRevert = document.getElementById('btnRevert');
-            const btnConvert = document.getElementById('btnConvert');
-            const btnPrint = document.getElementById('btnPrint');
+            const btnTransfer = document.getElementById('btnTransfer');
             const btnBackToGrid = document.getElementById('btnBackToGrid');
-            const btnSave = document.getElementById('btnSave');
-            const formTitle = document.getElementById('form-title');
-            const suspensaoForm = document.getElementById('suspensao-form');
+            const btnTransferForm = document.getElementById('btnTransferForm');
+            const formNotaGroup = document.getElementById('form-nota-group');
+            const formNota = document.getElementById('form-nota');
+            const formDataTransferenciaGroup = document.getElementById('form-data-transferencia-group');
+            const formDataTransferencia = document.getElementById('form-data-transferencia');
+            const projectModal = document.getElementById('project-modal');
+            const btnProjectNew = document.getElementById('btnProjectNew');
+            const btnCancelProject = document.getElementById('btnCancelProject');
+            const btnConfirmProject = document.getElementById('btnConfirmProject');
             const toast = document.getElementById('toast-notification');
 
-            let selectedRow = null;
-            let currentMode = 'view';
-            let editingId = null;
 
-            const showToast = (message, type = 'success') => {
-                toast.textContent = message;
-                toast.className = 'toast';
-                toast.classList.add(type);
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
-            };
+            let selectedRows = new Set();
 
-            const formatDate = (dateString) => {
-                if (!dateString) return '';
-                const [year, month, day] = dateString.split('-');
-                return `${day}/${month}/${year}`;
-            };
-            
-            const slugifyStatus = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '');
-
+            // --- FUNÇÕES PRINCIPAIS ---
             const populateGrid = (data) => {
                 gridBody.innerHTML = '';
                 data.forEach(item => {
+                    const statusClass = slugifyStatus(item.status);
                     const row = document.createElement('tr');
                     row.dataset.id = item.id;
                     row.innerHTML = `
-                        <td>${item.tipo}</td>
+                        <td><input type="checkbox" data-id="${item.id}"></td>
+                        <td>${item.numero}</td>
                         <td>${item.nome}</td>
-                        <td><span class="status-badge status-${slugifyStatus(item.situacao)}">${item.situacao}</span></td>
-                        <td>${formatDate(item.inicio)}</td>
-                        <td>${formatDate(item.fim)}</td>
+                        <td><span class="status-badge status-${statusClass}">${item.status}</span></td>
+                        <td class="valor">${formatCurrency(item.saldoDevedorTitulo)}</td>
+                        <td class="valor">${formatCurrency(item.valorParcela)}</td>
+                        <td>${formatDate(item.dataPrevista)}</td>
+                        <td>${formatDate(item.dataTransferencia)}</td>
                     `;
                     gridBody.appendChild(row);
                 });
             };
 
             const updateButtonState = () => {
-                const hasSelection = selectedRow !== null;
-                btnView.disabled = !hasSelection;
-                btnEdit.disabled = !hasSelection;
-                btnDelete.disabled = !hasSelection;
-                btnPrint.disabled = !hasSelection;
-
-                let isAtiva = false;
-                if (hasSelection) {
-                    const selectedId = parseInt(selectedRow.dataset.id);
-                    const item = suspensoesData.find(s => s.id === selectedId);
-                    if (item && item.situacao === 'Ativa') {
-                        isAtiva = true;
+                const selectionCount = selectedRows.size;
+                btnView.disabled = selectionCount !== 1;
+                btnTransfer.disabled = selectionCount === 0;
+            };
+            
+            const updateSelectionVisuals = () => {
+                gridBody.querySelectorAll('tr').forEach(row => {
+                    const id = row.dataset.id;
+                    const checkbox = row.querySelector('input[type="checkbox"]');
+                    if (selectedRows.has(id)) {
+                        row.classList.add('selected');
+                        checkbox.checked = true;
+                    } else {
+                        row.classList.remove('selected');
+                        checkbox.checked = false;
                     }
-                }
-                btnRevert.disabled = !isAtiva;
-                btnConvert.disabled = !isAtiva;
+                });
+                const allVisibleCheckboxes = [...gridBody.querySelectorAll('tr:not([style*="display: none"]) input[type="checkbox"]')];
+                const allVisibleSelected = allVisibleCheckboxes.every(cb => cb.checked);
+                selectAllCheckbox.checked = allVisibleCheckboxes.length > 0 && allVisibleSelected;
+                updateButtonState();
             };
 
-            const showView = (viewId) => {
+            const switchView = (viewId) => {
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
                 document.getElementById(viewId).classList.add('active');
             };
-            
-            const setFormFieldsReadOnly = (isReadOnly) => {
-                 const formElements = suspensaoForm.elements;
-                 for(let i=0; i < formElements.length; i++) {
-                     if(formElements[i].id !== 'btnBackToGrid' && formElements[i].id !== 'btnSave') {
-                         formElements[i].disabled = isReadOnly;
-                     }
-                 }
-            };
 
-            const openForm = (mode, dataId = null) => {
-                currentMode = mode;
-                editingId = dataId;
-                suspensaoForm.reset();
+            const showFormForSelectedRow = () => {
+                if (selectedRows.size !== 1) return;
+                const selectedId = parseInt(selectedRows.values().next().value, 10);
+                const item = parcelasData.find(p => p.id === selectedId);
+                if (!item) return;
 
-                if (mode === 'view' || mode === 'edit') {
-                    const data = suspensoesData.find(r => r.id === dataId);
-                    if (!data) return;
-
-                    formTitle.textContent = mode === 'view' ? 'Detalhes da Suspensão' : 'Alterar Suspensão';
-                    document.getElementById('tipoImpedimento').value = data.tipo;
-                    document.getElementById('escopo').value = data.escopo;
-                    document.getElementById('cpfCnpj').value = data.cpfCnpj;
-                    document.getElementById('nomeFornecedor').textContent = data.nome;
-                    document.getElementById('numeroTitulo').value = data.titulo;
-                    document.getElementById('inicioVigencia').value = data.inicio;
-                    document.getElementById('fimVigencia').value = data.fim;
-                    document.getElementById('justificativa').value = data.justificativa;
-                    document.getElementById('autor').textContent = data.autor;
-                    
-                    setFormFieldsReadOnly(mode === 'view');
-                    btnSave.style.display = mode === 'edit' ? 'inline-flex' : 'none';
-
-                } else if (mode === 'new') {
-                    formTitle.textContent = "Nova Suspensão";
-                    document.getElementById('nomeFornecedor').textContent = 'Preenchido automaticamente';
-                    document.getElementById('autor').textContent = 'Usuário Logado'; // Example
-                    setFormFieldsReadOnly(false);
-                    btnSave.style.display = 'inline-flex';
+                document.getElementById('form-numero').textContent = item.numero;
+                document.getElementById('form-nome').textContent = item.nome;
+                document.getElementById('form-saldo-devedor').textContent = formatCurrency(item.saldoDevedorTitulo);
+                document.getElementById('form-valor').textContent = formatCurrency(item.valorParcela);
+                document.getElementById('form-data-prevista').textContent = formatDate(item.dataPrevista);
+                document.getElementById('form-status').textContent = item.status;
+                
+                if(item.dataTransferencia) {
+                    formDataTransferencia.textContent = formatDate(item.dataTransferencia);
+                    formDataTransferenciaGroup.style.display = 'flex';
+                } else {
+                    formDataTransferenciaGroup.style.display = 'none';
                 }
-                showView('form-view');
-            };
 
-            filterInput.addEventListener('keyup', () => {
+                if(item.notaPatrimonial) {
+                    formNota.textContent = item.notaPatrimonial;
+                    formNotaGroup.style.display = 'flex';
+                } else {
+                    formNotaGroup.style.display = 'none';
+                }
+
+                if (item.status === 'Não Transferido para CP') {
+                    btnTransferForm.style.display = 'inline-flex';
+                } else {
+                    btnTransferForm.style.display = 'none';
+                }
+                
+                switchView('form-view');
+            };
+            
+            const applyFilters = () => {
                 const filterText = filterInput.value.toLowerCase();
-                const filteredData = suspensoesData.filter(item => 
-                    Object.values(item).some(val => 
-                        String(val).toLowerCase().includes(filterText)
-                    )
-                );
+                const startDate = new Date(dateStartInput.value + 'T00:00:00');
+                const endDate = new Date(dateEndInput.value + 'T23:59:59');
+
+                const filteredData = parcelasData.filter(item => {
+                    const textMatch = item.nome.toLowerCase().includes(filterText);
+                    const dateMatch = item.dataPrevista >= startDate && item.dataPrevista <= endDate;
+                    return textMatch && dateMatch;
+                });
+
                 populateGrid(filteredData);
                 noResultsRow.style.display = filteredData.length === 0 ? '' : 'none';
-            });
+                updateSelectionVisuals();
+            };
             
-            gridBody.addEventListener('click', (event) => {
-                const clickedRow = event.target.closest('tr');
-                if (!clickedRow) return;
+            const transferirParcelas = (ids) => {
+                let transferredCount = 0;
+                ids.forEach(id => {
+                    const numericId = parseInt(id, 10);
+                    const item = parcelasData.find(p => p.id === numericId);
 
-                if (selectedRow) selectedRow.classList.remove('selected');
-                if (selectedRow === clickedRow) {
-                    selectedRow = null;
-                } else {
-                    clickedRow.classList.add('selected');
-                    selectedRow = clickedRow;
+                    if (item && item.status === 'Não Transferido para CP') {
+                        item.status = 'Transferido para CP';
+                        item.dataTransferencia = new Date();
+                        item.saldoDevedorTitulo -= item.valorParcela; // Abate o saldo
+                        const paddedCounter = String(notaPatrimonialCounter).padStart(5, '0');
+                        item.notaPatrimonial = `2026NP${paddedCounter}`;
+                        notaPatrimonialCounter++;
+                        transferredCount++;
+                    }
+                });
+                return transferredCount;
+            };
+
+            const showToast = (message) => {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            };
+
+            // --- EVENT LISTENERS ---
+            gridBody.addEventListener('click', (event) => {
+                const row = event.target.closest('tr');
+                if (!row) return;
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                const id = row.dataset.id;
+
+                if (event.target.type !== 'checkbox') {
+                    checkbox.checked = !checkbox.checked;
                 }
-                updateButtonState();
+
+                if (checkbox.checked) {
+                    selectedRows.add(id);
+                } else {
+                    selectedRows.delete(id);
+                }
+                updateSelectionVisuals();
             });
             
             gridBody.addEventListener('dblclick', (event) => {
-                const clickedRow = event.target.closest('tr');
-                if (clickedRow) {
-                    openForm('view', parseInt(clickedRow.dataset.id));
+                const row = event.target.closest('tr');
+                if (row) {
+                    const id = row.dataset.id;
+                    selectedRows.clear();
+                    selectedRows.add(id);
+                    updateSelectionVisuals();
+                    showFormForSelectedRow();
                 }
+            });
+
+            selectAllCheckbox.addEventListener('change', () => {
+                const visibleRows = gridBody.querySelectorAll('tr:not([style*="display: none"])');
+                visibleRows.forEach(row => {
+                    const id = row.dataset.id;
+                    if (selectAllCheckbox.checked) {
+                        selectedRows.add(id);
+                    } else {
+                        selectedRows.delete(id);
+                    }
+                });
+                updateSelectionVisuals();
             });
             
-            // --- Ações dos Botões ---
-            btnAdd.addEventListener('click', () => openForm('new'));
-            btnView.addEventListener('click', () => {
-                if (selectedRow) openForm('view', parseInt(selectedRow.dataset.id));
+            [filterInput, dateStartInput, dateEndInput].forEach(input => {
+                input.addEventListener('input', applyFilters);
             });
-            btnEdit.addEventListener('click', () => {
-                if (selectedRow) openForm('edit', parseInt(selectedRow.dataset.id));
-            });
-            btnBackToGrid.addEventListener('click', () => showView('grid-view'));
             
-            suspensaoForm.addEventListener('submit', () => {
-                // Lógica para salvar (novo ou edição)
-                showToast('Alterações salvas com sucesso!');
-                showView('grid-view');
-                populateGrid(suspensoesData);
-            });
-
-            btnDelete.addEventListener('click', () => {
-                if (selectedRow) showToast(`Ação: Excluir (inativar) a suspensão ID ${selectedRow.dataset.id}.`, 'success');
-            });
-
-            btnRevert.addEventListener('click', () => {
-                if (selectedRow) {
-                    const selectedId = parseInt(selectedRow.dataset.id);
-                    const item = suspensoesData.find(s => s.id === selectedId);
-                    if (item && item.situacao === 'Ativa') {
-                        item.situacao = 'Suspensão Encerrada';
-                        item.fim = new Date().toISOString().split('T')[0]; // Data de hoje
-                        populateGrid(suspensoesData);
-                        showToast(`Suspensão ID ${item.id} revertida para Encerrada.`);
-                    }
+            btnView.addEventListener('click', showFormForSelectedRow);
+            
+            btnTransfer.addEventListener('click', () => {
+                const transferredCount = transferirParcelas(selectedRows);
+                if (transferredCount > 0) {
+                    showToast(`${transferredCount} parcela(s) transferida(s) com sucesso.`);
+                    selectedRows.clear();
+                    applyFilters();
+                } else {
+                    alert('Nenhuma parcela elegível (com status "Não Transferido para CP") foi selecionada para transferência.');
                 }
             });
 
-            btnConvert.addEventListener('click', () => {
-                 if (selectedRow) {
-                    const selectedId = parseInt(selectedRow.dataset.id);
-                    const item = suspensoesData.find(s => s.id === selectedId);
-                    if (item && item.situacao === 'Ativa') {
-                        item.tipo = 'Cancelamento';
-                        item.situacao = item.escopo === 'Título' ? 'Título Cancelado' : 'Fornecedor Cancelado';
-                        populateGrid(suspensoesData);
-                        showToast(`Suspensão ID ${item.id} convertida para Cancelamento.`);
-                    }
+            btnTransferForm.addEventListener('click', () => {
+                const transferredCount = transferirParcelas(selectedRows);
+                 if (transferredCount > 0) {
+                    showToast(`Parcela transferida com sucesso.`);
+                    selectedRows.clear();
+                    switchView('grid-view');
+                    applyFilters();
                 }
             });
 
-            btnPrint.addEventListener('click', () => {
-                if (selectedRow) showToast(`Imprimindo suspensão ID ${selectedRow.dataset.id}...`);
+            btnBackToGrid.addEventListener('click', () => switchView('grid-view'));
+
+            // Modal Logic
+            btnProjectNew.addEventListener('click', () => {
+                projectModal.classList.add('visible');
+            });
+
+            const closeModal = () => {
+                projectModal.classList.remove('visible');
+            };
+
+            btnCancelProject.addEventListener('click', closeModal);
+            projectModal.addEventListener('click', (e) => {
+                if (e.target === projectModal) {
+                    closeModal();
+                }
+            });
+
+            btnConfirmProject.addEventListener('click', () => {
+                closeModal();
+                showToast('1000 parcelas foram projetadas com sucesso.');
             });
             
             // --- INICIALIZAÇÃO ---
-            populateGrid(suspensoesData);
+            const setDefaultDates = () => {
+                dateStartInput.value = '2026-01-01';
+                dateEndInput.value = '2026-12-31';
+            };
+            
+            setDefaultDates();
+            applyFilters();
             updateButtonState();
         });
     </script>
